@@ -104,9 +104,9 @@ showBottomSheet(
               labelText: isUpdate ? 'Update Item' : 'Add Item',
               hintText: 'Enter An Item',
             ),
-            onChanged: (String _val) {
+            onChanged: (String val) {
               // Storing the value of the text entered in the variable value.
-              value = _val;
+              value = val;
             },
           ),
         ),
