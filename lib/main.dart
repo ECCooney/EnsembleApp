@@ -1,4 +1,4 @@
-import 'package:ensemble/auth/login_page.dart';
+import 'package:ensemble/pages/auth/login_page.dart';
 import 'package:ensemble/helper/helper_function.dart';
 import 'package:ensemble/pages/home_page.dart';
 import 'package:ensemble/shared/constants.dart';
@@ -56,6 +56,10 @@ class _MyAppState extends State<MyApp> {
   }
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Constants().primaryColor,
+        scaffoldBackgroundColor: Colors.white,
+      ),
       debugShowCheckedModeBanner: false,
       //if isSignedIn = True show Homepage, else show LoginPage
       home: _isSignedIn ? HomePage() : LoginPage(),
