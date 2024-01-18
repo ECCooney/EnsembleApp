@@ -1,3 +1,5 @@
+import 'package:ensemble/auth/login_page.dart';
+import 'package:ensemble/helper/helper_function.dart';
 import 'package:ensemble/pages/home_page.dart';
 import 'package:ensemble/shared/constants.dart';
 import 'package:flutter/material.dart';
@@ -28,15 +30,35 @@ void main() async {
 final db = FirebaseFirestore.instance;
 String? value;
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key); // takes an optional Key parameter, which can be used to uniquely identify this widget. The super(key: key) part calls the constructor of the superclass (StatefulWidget).
-
-  // This widget is the root of your application.
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  bool _isSignedIn = false; //underscore in dart means the varible is private to it's library
+ // takes an optional Key parameter, which can be used to uniquely identify this widget. The super(key: key) part calls the constructor of the superclass (StatefulWidget).
+  @override
+  void initState() {
+    super.initState();
+    getUserLoggedInStatus();
+  }
+
+  getUserLoggedInStatus() async {
+    await HelperFunctions.getUserLoggedInStatus().then((value){
+      if(value!=null){
+        _isSignedIn = value;
+
+      }
+    });
+  }
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      //if isSignedIn = True show Homepage, else show LoginPage
+      home: _isSignedIn ? HomePage() : LoginPage(),
     );
   }
 }
