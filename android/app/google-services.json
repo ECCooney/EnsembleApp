@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "537569368518",
+    "project_id": "ensemble-dbb5d",
+    "storage_bucket": "ensemble-dbb5d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:537569368518:android:94977a6a448f0cb5a6bac7",
+        "android_client_info": {
+          "package_name": "com.ensemble.ensemble"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "537569368518-igge3u35l1jd3q4dmes3bbb6ltbkh2kn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ensemble.ensemble",
+            "certificate_hash": "cbed005557df364adf17d36b627349623eb4198d"
+          }
+        },
+        {
+          "client_id": "537569368518-2kug63u7kdrceh87ahekj5jtva446cpt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwEjcSeASyF12MYGef3fg7QhtCgYBHSkA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "537569368518-2kug63u7kdrceh87ahekj5jtva446cpt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "537569368518-4nr3u5q5t89cfp815k73ktkkspd5oi6f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ensemble.ensemble"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
