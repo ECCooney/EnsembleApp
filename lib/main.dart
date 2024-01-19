@@ -49,8 +49,9 @@ class _MyAppState extends State<MyApp> {
   getUserLoggedInStatus() async {
     await HelperFunctions.getUserLoggedInStatus().then((value){
       if(value!=null){
-        _isSignedIn = value;
-
+        setState(() {
+          _isSignedIn = value;
+        });
       }
     });
   }
@@ -62,7 +63,7 @@ class _MyAppState extends State<MyApp> {
       ),
       debugShowCheckedModeBanner: false,
       //if isSignedIn = True show Homepage, else show LoginPage
-      home: _isSignedIn ? HomePage() : LoginPage(),
+      home: _isSignedIn ? const HomePage() : const LoginPage(),
     );
   }
 }

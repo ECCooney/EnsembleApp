@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HelperFunctions {
 
   //keys
-  static String userLoggedInKey = "LOGGEDINKET";
+  static String userLoggedInKey = "LOGGEDINKEY";
   static String userNameKey = "USERNAMEKKEY";
   static String userEmailKey = "USEREMAILKEY";
 
@@ -23,7 +23,7 @@ class HelperFunctions {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return await sf.setString(userEmailKey, userEmail);
   }
-  //getting the data from Shared Preferences
+  //getting the data from Shared Preferences. Shared pref stores info in device so if app is closed and reopened the user will still be logged in
 
   // Future in Flutter refers to an object that represents a value that is not yet available but will be at some point in the future.
   // A Future can be used to represent an asynchronous operation that is being performed,

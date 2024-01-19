@@ -79,7 +79,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       onChanged: (val){
                         setState((){
                           email= val;
-                          print (email);
                         });
                       },
                       //validate whether it's an acceoptable email
