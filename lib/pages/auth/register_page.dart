@@ -1,7 +1,10 @@
+import 'package:ensemble/pages/home_page.dart';
+import 'package:ensemble/service/auth_service.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ensemble/pages/auth/login_page.dart';
+import '../../helper/helper_function.dart';
 import '../../widgets/widgets.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -12,12 +15,13 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  bool _isLoading = false;
+  AuthService authService = AuthService();
   final formKey = GlobalKey<FormState>();
   String email = "";
   String password = "";
-  String firstName = "";
+  String fullName = "";
 
-  String lastName = "";
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +29,9 @@ class _RegisterPageState extends State<RegisterPage> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
         ),
-        body: SingleChildScrollView( //creates scroll bar if screen overflows
+        //if the body is still loading give progress indicator, else (:) generate the single child scroll view
+        body: _isLoading? Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor)) :
+        SingleChildScrollView( //creates scroll bar if screen overflows
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
             child: Form(
@@ -44,35 +50,14 @@ class _RegisterPageState extends State<RegisterPage> {
                     const SizedBox(height: 20),
                     TextFormField(
                       decoration: textInputDecoration.copyWith( //from widgets folder with added  behaviour
-                          labelText: "First Name",
+                          labelText: "Full Name",
                           prefixIcon: Icon(
                             Icons.perm_identity,
                             color: Theme.of(context).primaryColor,
                           )),
                       onChanged: (val){
                         setState((){
-                          firstName= val;
-                        });
-                      },
-                      validator: (val){
-                        if (val!.isNotEmpty) {
-                          return null;
-                        } else {
-                          return "Name cannot be empty";
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      decoration: textInputDecoration.copyWith( //from widgets folder with added  behaviour
-                          labelText: "Last Name",
-                          prefixIcon: Icon(
-                            Icons.perm_identity,
-                            color: Theme.of(context).primaryColor,
-                          )),
-                      onChanged: (val){
-                        setState((){
-                          lastName= val;
+                          fullName= val;
                         });
                       },
                       validator: (val){
@@ -169,7 +154,29 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  register(){
+  register() async{
+    if(formKey.currentState!.validate()) {
+      setState((){
+        _isLoading = true;
+      });
+      await authService
+          .registerUserWithEmailandPassword(fullName, email, password)
+          .then((value) async{
+        if(value == true){
+          //save shared pref state
+          await HelperFunctions.saveUserLoggedInStatus(true);
+          await HelperFunctions.saveUserEmailSF(email);
+          await HelperFunctions.saveUserNameSF(fullName);
+          nextScreenReplace(context, const HomePage());
+
+        } else{
+          showSnackBar(context, Colors.red, value);
+          setState((){
+            _isLoading = false;
+          });
+        }
+      });
+    }
 
   }
 }

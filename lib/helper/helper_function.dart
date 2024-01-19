@@ -6,9 +6,23 @@ class HelperFunctions {
   //keys
   static String userLoggedInKey = "LOGGEDINKET";
   static String userNameKey = "USERNAMEKKEY";
-  static String userEmailKey = "USEREMAIKEY";
-  //saving the data to Shared Preferences
+  static String userEmailKey = "USEREMAILKEY";
 
+
+  //saving the data to Shared Preferences
+  static Future<bool> saveUserLoggedInStatus(bool isUserLoggedIn)async{
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return await sf.setBool(userLoggedInKey, isUserLoggedIn);
+  }
+
+  static Future<bool> saveUserNameSF (String userName)async{
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return await sf.setString(userNameKey , userName);
+  }
+  static Future<bool> saveUserEmailSF(String userEmail)async{
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return await sf.setString(userEmailKey, userEmail);
+  }
   //getting the data from Shared Preferences
 
   // Future in Flutter refers to an object that represents a value that is not yet available but will be at some point in the future.

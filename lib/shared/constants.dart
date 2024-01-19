@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ensemble/env/env.dart';
 class Constants {
-  static String appId = "1:537569368518:web:a3fcfef8050de777a6bac7";
-  static String apiKey = "AIzaSyCZ686lYWvDoDWpcKrecDd3A48_1o7RevU";
-  static String messagingSenderId = "537569368518";
-  static String projectId = "ensemble-dbb5d";
+  static String appId = Env.appId;
+  static String apiKey = Env.apiKey;
+  static String messagingSenderId = Env.messagingSenderId;
+  static String projectId = Env.projectId;
   final primaryColor = const Color(0xFFee7b64);
 
 }
