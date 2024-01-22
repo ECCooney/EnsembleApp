@@ -43,4 +43,5 @@ app.*.map.json
 /android/app/release
 
 #secret keys
-/lib/shared/constants.dart
+*.env
+env.g.dart
