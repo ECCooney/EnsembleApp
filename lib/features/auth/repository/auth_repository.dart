@@ -44,6 +44,7 @@ class AuthRepository {
 
   CollectionReference get _users => _firestore.collection(FirebaseConstants.usersCollection);
 
+  //get info from firebase if user logs out
   Stream<User?> get authStateChange => _auth.authStateChanges();
 
   FutureEither<UserModel> signInWithGoogle(bool isFromLogin) async {
@@ -76,7 +77,7 @@ class AuthRepository {
         userModel = UserModel(
           name: userCredential.user!.displayName ?? 'No Name',
           profilePic: userCredential.user!.photoURL ?? Constants.avatarDefault,
-          email: userCredential.user?.email?? 'No Email',
+          email: userCredential.user!.email?? 'No Email',
           uid: userCredential.user!.uid,
         );
         await _users.doc(userCredential.user!.uid).set(userModel.toMap());
@@ -91,72 +92,75 @@ class AuthRepository {
     }
   }
 
+  //go to user, get snapshot of the data, map it to the user model and return it. Will also be used
+  //to persist the state of the application. Can also be used to view other users profile data (on wishlist)
   Stream<UserModel> getUserData(String uid) {
     return _users.doc(uid).snapshots().map((event) => UserModel.fromMap(event.data() as Map<String, dynamic>));
   }
 
-  Future<void> signUpWithEmailAndPassword(
-      String email,
-      String password,
-      String name,
-      String profilePic,
-      BuildContext context) async {
-    try {
-      _auth
-          .createUserWithEmailAndPassword(email: email, password: password)
-          .then((currentUser) => FirebaseFirestore.instance
-          .collection('users')
-          .doc(currentUser.user?.uid)
-          .set({
-        "uid": currentUser.user?.uid,
-        "email": email,
-        "password": password,
-        "name": name,
-        "profilePic": profilePic,
-      }));
-    } on FirebaseAuthException catch (e) {
-      await showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: Text('Error Occurred'),
-            content: Text(e.toString()),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                  },
-                  child: Text("OK"))
-            ],
-          ));
-    } catch (e) {
-      // Dedicated message if an email is repeated.
-      if (e == 'email-already-in-use') {
-        print('Email already in use');
-      } else {
-        print('Error: $e');
-      }
-    }
-  }
 
-  Future<void> loginWithEmailAndPassword(
-      String email, String password, BuildContext context) async {
-    try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
-    } on FirebaseAuthException catch (e) {
-      await showDialog(
-          context: context,
-          builder: (ctx) => AlertDialog(
-              title: const Text("Error Occurred"),
-              content: Text(e.toString()),
-              actions: [
-                TextButton(
-                    onPressed: () {
-                      Navigator.of(ctx).pop();
-                    },
-                    child: const Text("OK"))
-              ]));
-    }
-  }
+  // Future<void> signUpWithEmailAndPassword(
+  //     String email,
+  //     String password,
+  //     String name,
+  //     String profilePic,
+  //     BuildContext context) async {
+  //   try {
+  //     _auth
+  //         .createUserWithEmailAndPassword(email: email, password: password)
+  //         .then((currentUser) => FirebaseFirestore.instance
+  //         .collection('users')
+  //         .doc(currentUser.user?.uid)
+  //         .set({
+  //       "uid": currentUser.user?.uid,
+  //       "email": email,
+  //       "password": password,
+  //       "name": name,
+  //       "profilePic": profilePic,
+  //     }));
+  //   } on FirebaseAuthException catch (e) {
+  //     await showDialog(
+  //         context: context,
+  //         builder: (ctx) => AlertDialog(
+  //           title: Text('Error Occurred'),
+  //           content: Text(e.toString()),
+  //           actions: [
+  //             TextButton(
+  //                 onPressed: () {
+  //                   Navigator.of(ctx).pop();
+  //                 },
+  //                 child: Text("OK"))
+  //           ],
+  //         ));
+  //   } catch (e) {
+  //     // Dedicated message if an email is repeated.
+  //     if (e == 'email-already-in-use') {
+  //       print('Email already in use');
+  //     } else {
+  //       print('Error: $e');
+  //     }
+  //   }
+  // }
+  //
+  // Future<void> loginWithEmailAndPassword(
+  //     String email, String password, BuildContext context) async {
+  //   try {
+  //     await _auth.signInWithEmailAndPassword(email: email, password: password);
+  //   } on FirebaseAuthException catch (e) {
+  //     await showDialog(
+  //         context: context,
+  //         builder: (ctx) => AlertDialog(
+  //             title: const Text("Error Occurred"),
+  //             content: Text(e.toString()),
+  //             actions: [
+  //               TextButton(
+  //                   onPressed: () {
+  //                     Navigator.of(ctx).pop();
+  //                   },
+  //                   child: const Text("OK"))
+  //             ]));
+  //   }
+  // }
   void signOut() async {
     await _auth.signOut();
     print('signout');

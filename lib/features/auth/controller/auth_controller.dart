@@ -20,11 +20,14 @@ final authStateChangeProvider = StreamProvider((ref) {
   return authController.authStateChange;
 });
 
+//
+
 final getUserDataProvider = StreamProvider.family((ref, String uid) {
   final authController = ref.watch(authControllerProvider.notifier);
   return authController.getUserData(uid);
 });
 
+//extends StateNotifier to notify all providers listening. This here represents isLoading so we pass in a boolean
 class AuthController extends StateNotifier<bool> {
   final AuthRepository _authRepository;
   final Ref _ref;
@@ -33,6 +36,7 @@ class AuthController extends StateNotifier<bool> {
         _ref = ref,
         super(false); // loading
 
+  //user below comes from firebaseAuth
   Stream<User?> get authStateChange => _authRepository.authStateChange;
 
   void signInWithGoogle(BuildContext context, bool isFromLogin) async {

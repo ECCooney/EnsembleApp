@@ -1,15 +1,18 @@
 import 'package:ensemble/core/common/sign_in_button.dart';
+import 'package:ensemble/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/common/loader.dart';
 import '../../../core/constants/constants.dart';
 import '../../../theme/pallete.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final GlobalKey<FormState> _formKey = GlobalKey();
-    bool _isLoading = false;
+    final isLoading = ref.watch(authControllerProvider);
     String email = "";
     String password = "";
     return Scaffold(
@@ -29,7 +32,7 @@ class LoginScreen extends StatelessWidget {
           ],
           backgroundColor: Pallete.orangeCustomColor,
         ),
-        body: _isLoading ? Center(child: CircularProgressIndicator(color: Theme.of(context).primaryColor),):
+        body: isLoading ? const Loader():
         SingleChildScrollView( //creates scroll bar if screen overflows
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 80),
