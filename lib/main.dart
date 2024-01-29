@@ -1,69 +1,73 @@
-import 'package:ensemble/pages/auth/login_page.dart';
-import 'package:ensemble/helper/helper_function.dart';
-import 'package:ensemble/pages/home_page.dart';
-import 'package:ensemble/shared/constants.dart';
+import 'package:ensemble/core/common/error_text.dart';
+import 'package:ensemble/core/common/loader.dart';
+import 'package:ensemble/features/auth/controller/auth_controller.dart';
+import 'package:ensemble/features/auth/screens/login_screen.dart';
+import 'package:ensemble/router.dart';
+import 'package:ensemble/theme/pallete.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
+
+import 'firebase_options.dart';
+import 'models/user_model.dart';
 
 void main() async {
- WidgetsFlutterBinding.ensureInitialized(); //ensure all Widgets are initilised
- if (kIsWeb){
-   //run the initialisation for web
-   await Firebase.initializeApp(
-       options: FirebaseOptions
-         (apiKey: Constants.apiKey,
-          appId: Constants.appId,
-          messagingSenderId: Constants.messagingSenderId,
-          projectId: Constants.projectId));
- }
- else{
-   //run intialization for android/iOs
-   await Firebase.initializeApp(); //initialises Anroid and IoS if no options provided
- }
-
- runApp(const MyApp());
-
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
-final db = FirebaseFirestore.instance;
-String? value;
+class MyApp extends ConsumerStatefulWidget {
+  const MyApp({super.key});
 
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
   @override
-  State<MyApp> createState() => _MyAppState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends ConsumerState<MyApp> {
+  UserModel? userModel;
 
-  bool _isSignedIn = false; //underscore in dart means the varible is private to it's library
- // takes an optional Key parameter, which can be used to uniquely identify this widget. The super(key: key) part calls the constructor of the superclass (StatefulWidget).
+  void getData(WidgetRef ref, User data) async {
+    userModel = await ref
+        .watch(authControllerProvider.notifier)
+        .getUserData(data.uid)
+        .first;
+    ref.read(userProvider.notifier).update((state) => userModel);
+    setState((){});
+  }
+
   @override
-  void initState() {
-    super.initState();
-    getUserLoggedInStatus();
-  }
-
-  getUserLoggedInStatus() async {
-    await HelperFunctions.getUserLoggedInStatus().then((value){
-      if(value!=null){
-        setState(() {
-          _isSignedIn = value;
-        });
-      }
-    });
-  }
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: Constants().primaryColor,
-        scaffoldBackgroundColor: Colors.white,
+    return ref.watch(authStateChangeProvider).when(
+      data: (data) => MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        title: 'Reddit Tutorial',
+        theme: Pallete.lightModeAppTheme,
+        routerDelegate: RoutemasterDelegate(
+          routesBuilder: (context) {
+            if (data != null) {
+              getData(ref, data);
+              if (userModel != null) {
+                return loggedInRoute;
+              }
+            }
+            return loggedOutRoute;
+          },
+        ),
+        routeInformationParser: const RoutemasterParser(),
       ),
-      debugShowCheckedModeBanner: false,
-      //if isSignedIn = True show Homepage, else show LoginPage
-      home: _isSignedIn ? const HomePage() : const LoginPage(),
+      error: (error, stackTrace) => ErrorText(error: error.toString()),
+      loading: () => const Loader(),
     );
   }
 }
