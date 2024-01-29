@@ -1,6 +1,7 @@
 //logged out
 
-import 'package:ensemble/features/home/screens.dart';
+import 'package:ensemble/features/group/screens/create_group_screen.dart';
+import 'package:ensemble/features/home/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -14,5 +15,6 @@ final loggedOutRoute = RouteMap(routes: {
 
 final loggedInRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child:HomeScreen()),
+  '/create-group': (_) => const MaterialPage(child: CreateGroupScreen()),
 });
 

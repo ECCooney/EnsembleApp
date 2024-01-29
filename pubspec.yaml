@@ -46,6 +46,7 @@ dependencies:
   provider: ^6.1.1
   fpdart: ^1.1.0
   routemaster: ^1.0.1
+  uuid: ^4.3.2
 
 
 dev_dependencies:
