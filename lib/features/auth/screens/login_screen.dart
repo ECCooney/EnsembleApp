@@ -9,12 +9,16 @@ import '../../../theme/pallete.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final GlobalKey<FormState> _formKey = GlobalKey();
     final isLoading = ref.watch(authControllerProvider);
-    String email = "";
-    String password = "";
+
+    // TextEditingControllers for data inputs
+    final TextEditingController _email = TextEditingController(text: '');
+    final TextEditingController _password = TextEditingController(text: '');
+
     return Scaffold(
         appBar: AppBar(
           title: Image.asset(Constants.initialLogoPath,height: 40,),

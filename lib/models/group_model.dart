@@ -22,7 +22,7 @@ class GroupModel {
 
   GroupModel copyWith({
     String? name,
-    String? GroupPic,
+    String? groupPic,
     String? id,
     String? description,
     List<String>? members,

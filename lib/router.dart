@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 
 import 'features/auth/screens/login_screen.dart';
+import 'features/auth/screens/register_screen.dart';
 
 final loggedOutRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child:LoginScreen()),
@@ -16,5 +17,6 @@ final loggedOutRoute = RouteMap(routes: {
 final loggedInRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child:HomeScreen()),
   '/create-group': (_) => const MaterialPage(child: CreateGroupScreen()),
+  '/register': (_) => const MaterialPage(child: RegisterScreen()),
 });
 

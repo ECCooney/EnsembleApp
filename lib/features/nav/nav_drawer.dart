@@ -8,8 +8,12 @@ import '../auth/controller/auth_controller.dart';
 class NavDrawer extends ConsumerWidget {
   const NavDrawer({super.key});
 
-  void navigateToCreategroup(BuildContext context){
+  void navigateToCreateGroup(BuildContext context){
     Routemaster.of(context).push('/create-group');
+  }
+
+  void navigateToHome(BuildContext context){
+    Routemaster.of(context).push('/');
   }
 
   void logOut(WidgetRef ref) {
@@ -44,7 +48,7 @@ class NavDrawer extends ConsumerWidget {
             height: 2,
           ),
           ListTile(
-            onTap: () {},
+            onTap: () => navigateToHome(context),
             selectedColor: Pallete.orangeCustomColor,
             selected: true,
             contentPadding:
@@ -68,7 +72,7 @@ class NavDrawer extends ConsumerWidget {
             ),
           ),
           ListTile(
-            onTap: () => navigateToCreategroup(context),
+            onTap: () => navigateToCreateGroup(context),
             selectedColor: Pallete.orangeCustomColor,
             selected: true,
             contentPadding:

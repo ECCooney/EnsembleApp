@@ -9,6 +9,11 @@ import '../../../core/utils.dart';
 import '../../../models/group_model.dart';
 import '../../auth/controller/auth_controller.dart';
 
+final userGroupsProvider = StreamProvider((ref) {
+  final groupController = ref.watch(groupControllerProvider.notifier);
+  return groupController.getUserGroups();
+});
+
 final groupControllerProvider = StateNotifierProvider<GroupController, bool>((ref) {
   final groupRepository = ref.watch(groupRepositoryProvider);
   return GroupController(groupRepository: groupRepository, ref: ref);
@@ -43,5 +48,10 @@ class GroupController extends StateNotifier<bool> {
       showSnackBar(context, 'Group Created Successfully!');
       Routemaster.of(context).pop();
     });
+  }
+
+  Stream<List<GroupModel>> getUserGroups() {
+    final uid = _ref.read(userProvider)!.uid;
+    return _groupRepository.getUserGroups(uid);
   }
 }

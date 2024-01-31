@@ -25,8 +25,17 @@ class GroupRepository {
     }
     catch (e){
       return left(Failure(e.toString()));
-
     }
+  }
+
+  Stream<List<GroupModel>> getUserGroups(String uid) {
+    return _groups.where('members', arrayContains: uid).snapshots().map((event) {
+      List<GroupModel> groups = [];
+      for (var doc in event.docs) {
+        groups.add(GroupModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return groups;
+    });
   }
 
   CollectionReference get _groups => _firestore.collection(FirebaseConstants.groupsCollection);

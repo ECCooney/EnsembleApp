@@ -11,6 +11,7 @@ import '../../../core/constants/constants.dart';
 import '../../../core/constants/firebase_constants.dart';
 import '../../../core/failure.dart';
 import '../../../core/type_defs.dart';
+import '../../../core/utils.dart';
 import '../../../models/user_model.dart';
 
 // Provider: This is a function that takes a callback as an argument. The callback is executed when the provider is accessed, and it is responsible for creating and providing the value.
@@ -92,6 +93,28 @@ class AuthRepository {
     }
   }
 
+  Future<Either<String, User>> signupWithEmail(
+      {required String email, required String password}) async {
+    try {
+      final response = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      return right(response.user!);
+    } on FirebaseAuthException catch (e) {
+      return left(e.message ?? 'Failed to Signup.');
+    }
+  }
+  Future<Either<String, User?>> loginWithEmail(
+      {required String email, required String password}) async {
+    try {
+      final response = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      return right(response.user);
+    } on FirebaseAuthException catch (e) {
+      return left(e.message ?? 'Failed to Login');
+    }
+  }
   //go to user, get snapshot of the data, map it to the user model and return it. Will also be used
   //to persist the state of the application. Can also be used to view other users profile data (on wishlist)
   Stream<UserModel> getUserData(String uid) {
@@ -99,68 +122,9 @@ class AuthRepository {
   }
 
 
-  // Future<void> signUpWithEmailAndPassword(
-  //     String email,
-  //     String password,
-  //     String name,
-  //     String profilePic,
-  //     BuildContext context) async {
-  //   try {
-  //     _auth
-  //         .createUserWithEmailAndPassword(email: email, password: password)
-  //         .then((currentUser) => FirebaseFirestore.instance
-  //         .collection('users')
-  //         .doc(currentUser.user?.uid)
-  //         .set({
-  //       "uid": currentUser.user?.uid,
-  //       "email": email,
-  //       "password": password,
-  //       "name": name,
-  //       "profilePic": profilePic,
-  //     }));
-  //   } on FirebaseAuthException catch (e) {
-  //     await showDialog(
-  //         context: context,
-  //         builder: (ctx) => AlertDialog(
-  //           title: Text('Error Occurred'),
-  //           content: Text(e.toString()),
-  //           actions: [
-  //             TextButton(
-  //                 onPressed: () {
-  //                   Navigator.of(ctx).pop();
-  //                 },
-  //                 child: Text("OK"))
-  //           ],
-  //         ));
-  //   } catch (e) {
-  //     // Dedicated message if an email is repeated.
-  //     if (e == 'email-already-in-use') {
-  //       print('Email already in use');
-  //     } else {
-  //       print('Error: $e');
-  //     }
-  //   }
-  // }
-  //
-  // Future<void> loginWithEmailAndPassword(
-  //     String email, String password, BuildContext context) async {
-  //   try {
-  //     await _auth.signInWithEmailAndPassword(email: email, password: password);
-  //   } on FirebaseAuthException catch (e) {
-  //     await showDialog(
-  //         context: context,
-  //         builder: (ctx) => AlertDialog(
-  //             title: const Text("Error Occurred"),
-  //             content: Text(e.toString()),
-  //             actions: [
-  //               TextButton(
-  //                   onPressed: () {
-  //                     Navigator.of(ctx).pop();
-  //                   },
-  //                   child: const Text("OK"))
-  //             ]));
-  //   }
-  // }
+
+  // Sign up new user with email and password
+
   void signOut() async {
     await _auth.signOut();
     print('signout');
