@@ -1,14 +1,21 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
 
+  final Icon icon;
+
+  final FormFieldValidator validator;
+
+
   const CustomTextField({
     Key? key,
     required this.controller,
     required this.hintText,
+    required this.validator,
+    required this.icon,
   }) : super(key: key);
 
   @override
@@ -29,6 +36,7 @@ class CustomTextField extends StatelessWidget {
         filled: true,
         fillColor: const Color(0xffF5F6FA),
         hintText: hintText,
+        icon: icon,
         hintStyle: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w400,

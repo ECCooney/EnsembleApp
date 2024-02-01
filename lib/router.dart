@@ -10,6 +10,7 @@ import 'features/auth/screens/register_screen.dart';
 
 final loggedOutRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child:LoginScreen()),
+  '/register': (_) => const MaterialPage(child: RegisterScreen()),
 });
 
 //logged in routes
@@ -17,6 +18,5 @@ final loggedOutRoute = RouteMap(routes: {
 final loggedInRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child:HomeScreen()),
   '/create-group': (_) => const MaterialPage(child: CreateGroupScreen()),
-  '/register': (_) => const MaterialPage(child: RegisterScreen()),
 });
 

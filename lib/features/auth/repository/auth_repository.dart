@@ -47,6 +47,7 @@ class AuthRepository {
 
   //get info from firebase if user logs out
   Stream<User?> get authStateChange => _auth.authStateChanges();
+  User? get currentUser => _auth.currentUser;
 
   FutureEither<UserModel> signInWithGoogle(bool isFromLogin) async {
     try {
@@ -79,6 +80,7 @@ class AuthRepository {
           name: userCredential.user!.displayName ?? 'No Name',
           profilePic: userCredential.user!.photoURL ?? Constants.avatarDefault,
           email: userCredential.user!.email?? 'No Email',
+          password: 'No password',
           uid: userCredential.user!.uid,
         );
         await _users.doc(userCredential.user!.uid).set(userModel.toMap());
@@ -93,28 +95,43 @@ class AuthRepository {
     }
   }
 
-  Future<Either<String, User>> signupWithEmail(
-      {required String email, required String password}) async {
+  Future<void> loginWithEmail({
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
     try {
-      final response = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      return right(response.user!);
-    } on FirebaseAuthException catch (e) {
-      return left(e.message ?? 'Failed to Signup.');
-    }
-  }
-  Future<Either<String, User?>> loginWithEmail(
-      {required String email, required String password}) async {
-    try {
-      final response = await _auth.signInWithEmailAndPassword(
+      await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      return right(response.user);
     } on FirebaseAuthException catch (e) {
-      return left(e.message ?? 'Failed to Login');
+      showSnackBar(context, e.message!); // Displaying the error message
     }
   }
+
+  Future signUpWithEmail({
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
+    try {
+      await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      // if you want to display your own custom error message
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+      showSnackBar(
+          context, e.message!); // Displaying the usual firebase error message
+    }
+  }
+
   //go to user, get snapshot of the data, map it to the user model and return it. Will also be used
   //to persist the state of the application. Can also be used to view other users profile data (on wishlist)
   Stream<UserModel> getUserData(String uid) {

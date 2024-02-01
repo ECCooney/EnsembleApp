@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/pallete.dart';
 import '../constants/constants.dart';
 
-class SignInButton extends ConsumerWidget {
+class GoogleSignInButton extends ConsumerWidget {
   final bool isFromLogin;
-  const SignInButton({Key? key, this.isFromLogin = true}) : super(key: key);
+  const GoogleSignInButton({Key? key, this.isFromLogin = true}) : super(key: key);
 
   void signInWithGoogle(BuildContext context, WidgetRef ref) {
     ref.read(authControllerProvider.notifier).signInWithGoogle(context, isFromLogin);
@@ -28,10 +28,11 @@ class SignInButton extends ConsumerWidget {
           style: TextStyle(fontSize: 18),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Pallete.greyColor,
+          backgroundColor: Pallete.orangeCustomColor,
+          elevation: 0,
           minimumSize: const Size(double.infinity, 50),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(30),
           ),
         ),
       ),

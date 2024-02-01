@@ -1,23 +1,46 @@
-import 'package:ensemble/core/common/sign_in_button.dart';
+import 'package:ensemble/core/common/google_sign_in_button.dart';
 import 'package:ensemble/features/auth/controller/auth_controller.dart';
+import 'package:ensemble/features/auth/repository/auth_repository.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
+import '../../../core/common/custom_text_field.dart';
 import '../../../core/common/loader.dart';
 import '../../../core/constants/constants.dart';
 import '../../../theme/pallete.dart';
 
-class LoginScreen extends ConsumerWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  void logIn() {
+    ref.read(authControllerProvider.notifier).loginWithEmail(
+        emailController.text.trim(),
+        passwordController.text.trim(),
+        context);
+  }
+
+  void navigateToRegister(BuildContext context){
+    Routemaster.of(context).push('/register');
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final GlobalKey<FormState> _formKey = GlobalKey();
     final isLoading = ref.watch(authControllerProvider);
 
     // TextEditingControllers for data inputs
-    final TextEditingController _email = TextEditingController(text: '');
-    final TextEditingController _password = TextEditingController(text: '');
+
 
     return Scaffold(
         appBar: AppBar(
@@ -54,28 +77,28 @@ class LoginScreen extends ConsumerWidget {
                     const SizedBox(height: 30),
                     Image.asset(Constants.logoPath),
                     const SizedBox(height: 30),
-                    TextFormField(
-                      decoration: const InputDecoration(
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      child: CustomTextField(
                         icon: Icon(Icons.email),
-                        hintText: 'Enter the email you registered with',
-                        labelText: 'Email',
+                        controller: emailController,
+                        hintText: 'Enter your email',
+                        validator: (val) {
+                          return RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              .hasMatch(val!)
+                              ? null //return nothing if that value matchs the pattern
+                              : "Please enter a valid email";
+                        },
                       ),
-                      //validate whether it's an acceoptable email
-                      validator: (val) {
-                        return RegExp(
-                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                            .hasMatch(val!)
-                            ? null //return nothing if that value matchs the pattern
-                            : "Please enter a valid email";
-                      },
                     ),
                     const SizedBox(height: 15),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                        icon: Icon(Icons.lock),
-                        hintText: 'Password',
-                        labelText: 'Password',
-                      ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      child: CustomTextField(
+                        icon: Icon(Icons.password),
+                        controller: passwordController,
+                        hintText: 'Enter your password',
                         validator: (val){
                           if (val!.length < 6) {
                             return "Password must be at least 6 characters";
@@ -83,6 +106,7 @@ class LoginScreen extends ConsumerWidget {
                             return null;
                           }
                         },
+                      ),
                     ),
                     const SizedBox(height: 20),
                     SizedBox(
@@ -95,11 +119,11 @@ class LoginScreen extends ConsumerWidget {
                         ),
                         child: const Text("Sign In", style: TextStyle(color: Colors.white, fontSize: 16)
                         ),
-                        onPressed: () {},
+                        onPressed: logIn
                       ),
                     ),
                     const SizedBox(height: 10),
-                    const Text.rich(//can create two text children in one text piece using Text.rich
+                    Text.rich(//can create two text children in one text piece using Text.rich
                         TextSpan(
                             text: "Don't have an account? ",
                             style: TextStyle(color: Colors.black, fontSize: 14),
@@ -107,11 +131,12 @@ class LoginScreen extends ConsumerWidget {
                               TextSpan(
                                   text: "Register Here",
                                   style: TextStyle(color: Colors.black, decoration: TextDecoration.underline),
+                                recognizer: TapGestureRecognizer()..onTap = () => navigateToRegister(context),
                               )
                             ]
                         )
                     ),
-              const SignInButton(),
+              const GoogleSignInButton(),
                   ],
                 )
             ),
@@ -120,4 +145,5 @@ class LoginScreen extends ConsumerWidget {
         )
     );
   }
+
 }

@@ -105,7 +105,7 @@ class NavDrawer extends ConsumerWidget {
                             onPressed: () async {logOut(ref);},
                             icon: const Icon(
                               Icons.done,
-                              color: Pallete.sageCustomColor
+                              color: Colors.green
                             )),
                       ],
                     );

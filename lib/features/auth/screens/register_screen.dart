@@ -1,4 +1,4 @@
-import 'package:ensemble/core/common/sign_in_button.dart';
+import 'package:ensemble/core/common/google_sign_in_button.dart';
 import 'package:ensemble/features/auth/controller/auth_controller.dart';
 import 'package:ensemble/features/auth/repository/auth_repository.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +13,6 @@ class RegisterScreen extends ConsumerStatefulWidget {
 
   const RegisterScreen({super.key});
 
-
-
   @override
   ConsumerState createState() => _RegisterScreenState();
 }
@@ -22,7 +20,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final nameController = TextEditingController();
+  final profilePicController = TextEditingController();
 
+  void signUp() {
+    ref.read(authControllerProvider.notifier).signUpWithEmail(
+      //trim removes white space at end of anything typed in
+      nameController.text.trim(),
+      emailController.text.trim(),
+      passwordController.text.trim(),
+      profilePicController.text.trim(),
+      context);
+    }
 
 
   @override
@@ -58,21 +67,54 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: CustomTextField(
+            icon: Icon(Icons.person),
+            controller: nameController,
+            hintText: 'Enter your name',
+            validator: (val){
+              if (val!.length < 6) {
+                return "Name must be at least 6 characters";
+              } else {
+                return null;
+              }
+            },
+          )
+        ),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20),
+          child: CustomTextField(
+            icon: Icon(Icons.email),
             controller: emailController,
             hintText: 'Enter your email',
+            validator: (val) {
+              return RegExp(
+                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                  .hasMatch(val!)
+                  ? null //return nothing if that value matchs the pattern
+                  : "Please enter a valid email";
+            },
           ),
         ),
         const SizedBox(height: 20),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: CustomTextField(
+            icon: Icon(Icons.lock),
             controller: passwordController,
             hintText: 'Enter your password',
+            validator: (val){
+              if (val!.length < 6) {
+                return "Password must be at least 6 characters";
+              } else {
+                return null;
+              }
+            },
           ),
         ),
         const SizedBox(height: 40),
         ElevatedButton(
           onPressed: (){},
+          // onPressed: signUp,
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(Colors.blue),
             textStyle: MaterialStateProperty.all(
@@ -92,3 +134,4 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     );
   }
 }
+

@@ -26,20 +26,20 @@ class GroupController extends StateNotifier<bool> {
     required GroupRepository groupRepository,
     required Ref ref,
   }): _groupRepository = groupRepository,
-      _ref = ref,
-      super(false);
+        _ref = ref,
+        super(false);
 
   void createGroup(String name, String description, BuildContext context) async {
     state = true;
     final uid = _ref.read(userProvider)?.uid ?? '';
     String groupId = const Uuid().v1();
     GroupModel group = GroupModel(
-        id: groupId,
-        name: name,
-        description: description,
-        groupPic: Constants.avatarDefault,
-        members: [uid],
-        admins: [uid],
+      id: groupId,
+      name: name,
+      description: description,
+      groupPic: Constants.avatarDefault,
+      members: [uid],
+      admins: [uid],
     );
 
     final res = await _groupRepository.createGroup(group);
