@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:uuid/uuid.dart';
 
-import '../../../core/constants/constants.dart';
-import '../../../core/utils.dart';
-import '../../../models/user_model.dart';
-import '../repository/auth_repository.dart';
+import 'package:ensemble/core/constants/constants.dart';
+import 'package:ensemble/core/utils.dart';
+import 'package:ensemble/models/user_model.dart';
+import 'package:ensemble/features/auth/repository/auth_repository.dart';
 
 final userProvider = StateProvider<UserModel?>((ref) => null);
 

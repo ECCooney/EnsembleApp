@@ -3,9 +3,9 @@ import 'package:ensemble/core/providers/firebase_providers.dart';
 import 'package:ensemble/models/group_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
-import '../../../core/constants/firebase_constants.dart';
-import '../../../core/failure.dart';
-import '../../../core/type_defs.dart';
+import 'package:ensemble/core/constants/firebase_constants.dart';
+import 'package:ensemble/core/failure.dart';
+import 'package:ensemble/core/type_defs.dart';
 
 final groupRepositoryProvider = Provider
   ((ref) {
@@ -36,6 +36,20 @@ class GroupRepository {
       }
       return groups;
     });
+  }
+
+  Stream<GroupModel> getGroupById(String id) {
+    return _groups.doc(id).snapshots().map((event) => GroupModel.fromMap(event.data() as Map<String, dynamic>));
+  }
+
+  FutureVoid deleteGroup(GroupModel group) async {
+    try {
+      return right(_groups.doc(group.id).delete());
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
   }
 
   CollectionReference get _groups => _firestore.collection(FirebaseConstants.groupsCollection);

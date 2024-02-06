@@ -7,12 +7,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../../core/constants/constants.dart';
-import '../../../core/constants/firebase_constants.dart';
-import '../../../core/failure.dart';
-import '../../../core/type_defs.dart';
-import '../../../core/utils.dart';
-import '../../../models/user_model.dart';
+import 'package:ensemble/core/constants/constants.dart';
+import 'package:ensemble/core/constants/firebase_constants.dart';
+import 'package:ensemble/core/failure.dart';
+import 'package:ensemble/core/type_defs.dart';
+import 'package:ensemble/core/utils.dart';
+import 'package:ensemble/models/user_model.dart';
 
 // Provider: This is a function that takes a callback as an argument. The callback is executed when the provider is accessed, and it is responsible for creating and providing the value.
 //
@@ -144,6 +144,5 @@ class AuthRepository {
 
   void signOut() async {
     await _auth.signOut();
-    print('signout');
   }
 }

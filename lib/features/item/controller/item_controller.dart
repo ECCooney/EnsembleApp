@@ -1,0 +1,82 @@
+import 'package:ensemble/features/group/controller/group_controller.dart';
+import 'package:ensemble/features/item/repository/item_repository.dart';
+import 'package:ensemble/models/group_model.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:routemaster/routemaster.dart';
+import 'package:uuid/uuid.dart';
+import 'package:ensemble/core/constants/constants.dart';
+import 'package:ensemble/core/utils.dart';
+import 'package:ensemble/models/item_model.dart';
+import 'package:ensemble/features/auth/controller/auth_controller.dart';
+
+final itemsProvider = StreamProvider.family((ref, List<GroupModel> groups) {
+  final itemController = ref.watch(itemControllerProvider.notifier);
+  return itemController.getItems(groups);
+});
+
+final itemControllerProvider = StateNotifierProvider<ItemController, bool>((ref) {
+  final itemRepository = ref.watch(itemRepositoryProvider);
+  return ItemController(itemRepository: itemRepository, ref: ref);
+});
+
+final getItemByIdProvider = StreamProvider.family((ref, String id) {
+  final itemController = ref.watch(itemControllerProvider.notifier);
+  return itemController.getItemById(id);
+});
+
+class ItemController extends StateNotifier<bool> {
+  final ItemRepository _itemRepository;
+  final Ref _ref;
+  ItemController({
+    required ItemRepository itemRepository,
+    required Ref ref,
+  }): _itemRepository = itemRepository,
+        _ref = ref,
+        super(false);
+
+  void createItem(String name, String description, String category, GroupModel selectedGroup, BuildContext context) async {
+    state = true;
+    final uid = _ref.read(userProvider)?.uid ?? '';
+    String itemId = const Uuid().v1();
+    ItemModel item = ItemModel(
+      id: itemId,
+      name: name,
+      description: description,
+      groupId: selectedGroup.id,
+      category: category,
+      itemPic: Constants.groupAvatarDefault,
+      owner: uid,
+    );
+
+    final res = await _itemRepository.addItem(item);
+    state = false;
+    res.fold((l) => showSnackBar(context, l.message), (r) {
+      showSnackBar(context, 'Item Created Successfully!');
+      Routemaster.of(context).pop();
+    });
+  }
+
+  Stream<List<ItemModel>> getItems(List<GroupModel> groups) {
+    if (groups.isNotEmpty) {
+      return _itemRepository.getItems(groups);
+    }
+    return Stream.value([]);
+  }
+
+  void deleteItem(ItemModel item, BuildContext context) async {
+    final res = await _itemRepository.deleteItem(item);
+    res.fold((l) => null, (r) => showSnackBar(context, 'Item Deleted successfully!'));
+  }
+
+
+  // Stream<List<ItemModel>> getUserItems() {
+  //   final uid = _ref.read(userProvider)!.uid;
+  //   return _itemRepository.getUserItems(uid);
+  // }
+
+  Stream<ItemModel> getItemById(String id) {
+    return _itemRepository.getItemById(id);
+  }
+}

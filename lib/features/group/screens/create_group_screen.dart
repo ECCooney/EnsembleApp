@@ -2,7 +2,7 @@ import 'package:ensemble/features/group/controller/group_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/common/loader.dart';
+import 'package:ensemble/core/common/loader.dart';
 
 class CreateGroupScreen extends ConsumerStatefulWidget {
   const CreateGroupScreen({super.key});

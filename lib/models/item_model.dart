@@ -5,14 +5,18 @@ class ItemModel {
   final String name;
   final String itemPic;
   final String id;
+  final String groupId;
   final String description;
+  final String category;
   final String owner;
 
   ItemModel({
     required this.name,
     required this.itemPic,
     required this.id,
+    required this.groupId,
     required this.description,
+    required this.category,
     required this.owner,
   });
 
@@ -22,14 +26,18 @@ class ItemModel {
     String? name,
     String? itemPic,
     String? id,
+    String? groupId,
     String? description,
+    String? category,
     String? owner,
   }) {
     return ItemModel(
       name: name ?? this.name,
       itemPic: itemPic ?? this.itemPic,
       id: id ?? this.id,
+      groupId: groupId ?? this.groupId,
       description: description ?? this.description,
+      category: category ?? this.category,
       owner: owner ?? this.owner,
     );
   }
@@ -39,7 +47,9 @@ class ItemModel {
       'name': name,
       'itemPic': itemPic,
       'id': id,
+      'groupId': groupId,
       'description': description,
+      'category': category,
       'owner': owner,
     };
   }
@@ -49,14 +59,16 @@ class ItemModel {
       name: map['name'] ?? '',
       itemPic: map['itemPic'] ?? '',
       id: map['id'] ?? '',
+      groupId: map['groupId'] ?? '',
       description: map['description'] ?? '',
+      category: map['category'] ?? '',
       owner: map['owner'] ?? '',
     );
   }
 
   @override
   String toString() {
-    return 'ItemModel(name: $name, itemPic: $itemPic, id: $id, description: $description, owner: $owner)';
+    return 'ItemModel(name: $name, itemPic: $itemPic, id: $id, groupId: $groupId, description: $description, category: $category, owner: $owner)';
   }
 
   @override
@@ -67,7 +79,9 @@ class ItemModel {
         other.name == name &&
         other.itemPic == itemPic &&
         other.id == id &&
+        other.groupId == groupId &&
         other.description == description &&
+        other.category == category &&
         other.owner == owner;
   }
 
@@ -76,7 +90,9 @@ class ItemModel {
     return name.hashCode ^
     itemPic.hashCode ^
     id.hashCode ^
+    groupId.hashCode ^
     description.hashCode ^
+    category.hashCode ^
     owner.hashCode;
   }
 }

@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 
-import '../../../core/common/custom_text_field.dart';
-import '../../../core/common/loader.dart';
-import '../../../core/constants/constants.dart';
-import '../../../theme/pallete.dart';
+import 'package:ensemble/core/common/custom_text_field.dart';
+import 'package:ensemble/core/common/loader.dart';
+import 'package:ensemble/core/constants/constants.dart';
+import 'package:ensemble/theme/pallete.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -80,7 +80,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 20),
                       child: CustomTextField(
-                        icon: Icon(Icons.email),
+                        icon: const Icon(Icons.email),
                         controller: emailController,
                         hintText: 'Enter your email',
                         validator: (val) {
@@ -96,7 +96,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 20),
                       child: CustomTextField(
-                        icon: Icon(Icons.password),
+                        icon: const Icon(Icons.password),
                         controller: passwordController,
                         hintText: 'Enter your password',
                         validator: (val){
@@ -117,20 +117,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             elevation: 0,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))
                         ),
+                        onPressed: logIn,
                         child: const Text("Sign In", style: TextStyle(color: Colors.white, fontSize: 16)
-                        ),
-                        onPressed: logIn
+                        )
                       ),
                     ),
                     const SizedBox(height: 10),
                     Text.rich(//can create two text children in one text piece using Text.rich
                         TextSpan(
                             text: "Don't have an account? ",
-                            style: TextStyle(color: Colors.black, fontSize: 14),
+                            style: const TextStyle(color: Colors.black, fontSize: 14),
                             children: <TextSpan>[
                               TextSpan(
                                   text: "Register Here",
-                                  style: TextStyle(color: Colors.black, decoration: TextDecoration.underline),
+                                  style: const TextStyle(color: Colors.black, decoration: TextDecoration.underline),
                                 recognizer: TapGestureRecognizer()..onTap = () => navigateToRegister(context),
                               )
                             ]

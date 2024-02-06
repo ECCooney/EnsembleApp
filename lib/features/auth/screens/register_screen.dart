@@ -4,10 +4,10 @@ import 'package:ensemble/features/auth/repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/common/custom_text_field.dart';
-import '../../../core/common/loader.dart';
-import '../../../core/constants/constants.dart';
-import '../../../theme/pallete.dart';
+import 'package:ensemble/core/common/custom_text_field.dart';
+import 'package:ensemble/core/common/loader.dart';
+import 'package:ensemble/core/constants/constants.dart';
+import 'package:ensemble/theme/pallete.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
 
@@ -67,7 +67,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: CustomTextField(
-            icon: Icon(Icons.person),
+            icon: const Icon(Icons.person),
             controller: nameController,
             hintText: 'Enter your name',
             validator: (val){
@@ -83,7 +83,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: CustomTextField(
-            icon: Icon(Icons.email),
+            icon: const Icon(Icons.email),
             controller: emailController,
             hintText: 'Enter your email',
             validator: (val) {
@@ -99,7 +99,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
           child: CustomTextField(
-            icon: Icon(Icons.lock),
+            icon: const Icon(Icons.lock),
             controller: passwordController,
             hintText: 'Enter your password',
             validator: (val){
