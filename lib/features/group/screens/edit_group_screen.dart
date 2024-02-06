@@ -23,7 +23,9 @@ class EditGroupScreen extends ConsumerStatefulWidget {
 class _EditGroupScreenState extends ConsumerState<EditGroupScreen> {
 
   File? groupBannerFile;
-  File? groupImageFile;
+  File? groupPicFile;
+
+  final groupDescriptionController = TextEditingController();
 
   void chooseBannerImage() async {
     final res = await pickImage();
@@ -40,13 +42,20 @@ class _EditGroupScreenState extends ConsumerState<EditGroupScreen> {
 
     if (res != null) {
       setState(() {
-        groupImageFile = File(res.files.first.path!);
+        groupPicFile = File(res.files.first.path!);
       });
     }
   }
 
-
-
+  void saveEdit(GroupModel group) {
+    ref.read(groupControllerProvider.notifier).editGroup(
+      groupPicFile: groupPicFile,
+      groupBannerFile: groupBannerFile,
+      description: groupDescriptionController.text.trim(),
+      context: context,
+      group: group,
+    );
+  }
 
   void deleteGroup(GroupModel group) {
     ref.read(groupControllerProvider.notifier).deleteGroup(group, context);
@@ -62,7 +71,7 @@ class _EditGroupScreenState extends ConsumerState<EditGroupScreen> {
           title: const Text('Edit Group'),
           centerTitle: false,
           actions: [
-            TextButton(onPressed: (){}, child: const Text('Save')),
+            TextButton(onPressed: () => saveEdit(group), child: const Text('Save')),
           ]
         ),
         body: isLoading
@@ -107,9 +116,9 @@ class _EditGroupScreenState extends ConsumerState<EditGroupScreen> {
                           left: 20,
                           child: GestureDetector(
                             onTap: chooseGroupImage,
-                            child: groupImageFile!=null?
+                            child: groupPicFile!=null?
                               CircleAvatar(
-                              backgroundImage: FileImage(groupImageFile!),
+                              backgroundImage: FileImage(groupPicFile!),
                               radius: 32,
                             )
                                 : CircleAvatar(
@@ -122,14 +131,15 @@ class _EditGroupScreenState extends ConsumerState<EditGroupScreen> {
                     ),
                   ),
                   const SizedBox(height: 10,),
-                  const SizedBox(
+                 SizedBox(
                     height: 140, // <-- TextField height
                     child:
                     TextField(
+                      controller: groupDescriptionController,
                       maxLines: null,
                       expands: true,
                       keyboardType: TextInputType.multiline,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Add a New Description',
                         filled: true,
                         border: InputBorder.none,

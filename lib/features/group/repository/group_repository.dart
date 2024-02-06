@@ -42,6 +42,16 @@ class GroupRepository {
     return _groups.doc(id).snapshots().map((event) => GroupModel.fromMap(event.data() as Map<String, dynamic>));
   }
 
+  FutureVoid editGroup(GroupModel group) async {
+    try {
+      return right(_groups.doc(group.id).update(group.toMap()));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
   FutureVoid deleteGroup(GroupModel group) async {
     try {
       return right(_groups.doc(group.id).delete());
