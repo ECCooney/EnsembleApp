@@ -4,12 +4,14 @@ class UserModel {
   final String profilePic;
   final String uid;
   final String email;
+  final String password;
 
   UserModel({
     required this.name,
     required this.profilePic,
     required this.uid,
     required this.email,
+    required this.password,
   });
 
   //copyWith function as variables above are final
@@ -19,12 +21,15 @@ class UserModel {
     String? profilePic,
     String? uid,
     String? email,
+    String? password,
   }) {
     return UserModel(
       name: name ?? this.name,
       profilePic: profilePic ?? this.profilePic,
       uid: uid ?? this.uid,
       email: email ?? this.email,
+      password: password ?? this.password,
+
     );
   }
 
@@ -34,6 +39,7 @@ class UserModel {
       'profilePic': profilePic,
       'uid': uid,
       'email': email,
+      'password': password
     };
   }
 
@@ -43,12 +49,13 @@ class UserModel {
       profilePic: map['profilePic'] ?? '',
       uid: map['uid'] ?? '',
       email: map['email'] ?? '',
+      password: map['password'] ?? '',
     );
   }
 
   @override
   String toString() {
-    return 'UserModel(name: $name, profilePic: $profilePic, uid: $uid, email: $email)';
+    return 'UserModel(name: $name, profilePic: $profilePic, uid: $uid, email: $email, password: $password)';
   }
 
   @override
@@ -59,7 +66,8 @@ class UserModel {
         other.name == name &&
         other.profilePic == profilePic &&
         other.uid == uid &&
-        other.email == email;
+        other.email == email &&
+        other.password == password;
   }
 
   @override
@@ -67,6 +75,7 @@ class UserModel {
     return name.hashCode ^
     profilePic.hashCode ^
     uid.hashCode ^
-    email.hashCode;
+    email.hashCode^
+    password.hashCode;
   }
 }
