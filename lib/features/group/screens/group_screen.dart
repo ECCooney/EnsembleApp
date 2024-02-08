@@ -8,12 +8,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ensemble/core/common/error_text.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../../../core/common/item_card.dart';
 import '../../auth/controller/auth_controller.dart';
 
 class GroupScreen extends ConsumerWidget {
 
   //id needed for dyanmic routing
   final String id;
+
+
   const GroupScreen({
     super.key,
     required this.id,
@@ -92,23 +95,40 @@ class GroupScreen extends ConsumerWidget {
                               ),
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Text(
-                              group.description
-                            )
-                          ),
+
                     ])
                     )
 
                   )
+
                 ];
               },
-              body: const Text('Display items here')
-              ),
-
-         error:(error, stackTrace) => ErrorText(error: error.toString()),
-         loading: () => const Loader()),
+            body: ref.watch(getGroupItemsProvider(id)).when(
+              data: (data) {
+                    return GridView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final item = data[index];
+                        return ItemCard(item: item);
+                      },
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, // number of items in each row
+                        mainAxisSpacing: 8.0, // spacing between rows
+                        crossAxisSpacing: 8.0, // spacing between columns
+                        childAspectRatio: 2 / 3
+                      ),
+                    
+                    );
+              },
+              error: (error, stackTrace) {
+                return ErrorText(error: error.toString());
+              },
+              loading: () => const Loader(),
+            ),
+          ),
+        error: (error, stackTrace) => ErrorText(error: error.toString()),
+        loading: () => const Loader(),
+      ),
         floatingActionButton: FloatingActionButton(
         onPressed: () {
       navigateToCreateItem(context);

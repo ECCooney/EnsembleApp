@@ -12,6 +12,7 @@ import 'package:ensemble/models/group_model.dart';
 import 'package:ensemble/features/auth/controller/auth_controller.dart';
 
 import '../../../core/providers/storage_repository_providers.dart';
+import '../../../models/item_model.dart';
 
 final groupProvider = StateProvider<GroupModel?>((ref) => null);
 
@@ -32,6 +33,11 @@ final groupControllerProvider = StateNotifierProvider<GroupController, bool>((re
 final getGroupByIdProvider = StreamProvider.family((ref, String id) {
   final groupController = ref.watch(groupControllerProvider.notifier);
   return groupController.getGroupById(id);
+});
+
+final getGroupItemsProvider = StreamProvider.family((ref, String id) {
+  final groupController = ref.watch(groupControllerProvider.notifier);
+  return groupController.getGroupItems(id);
 });
 
 class GroupController extends StateNotifier<bool> {
@@ -127,7 +133,12 @@ class GroupController extends StateNotifier<bool> {
     });
   }
 
+
   Stream<GroupModel> getGroupById(String id) {
     return _groupRepository.getGroupById(id);
+  }
+
+  Stream<List<ItemModel>> getGroupItems(String id) {
+    return _groupRepository.getGroupItems(id);
   }
 }

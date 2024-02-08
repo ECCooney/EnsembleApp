@@ -7,6 +7,8 @@ import 'package:ensemble/core/constants/firebase_constants.dart';
 import 'package:ensemble/core/failure.dart';
 import 'package:ensemble/core/type_defs.dart';
 
+import '../../../models/item_model.dart';
+
 final groupRepositoryProvider = Provider
   ((ref) {
   return GroupRepository(firestore: ref.watch(firestoreProvider));
@@ -61,6 +63,20 @@ class GroupRepository {
       return left(Failure(e.toString()));
     }
   }
+
+  Stream<List<ItemModel>> getGroupItems(String id) {
+    return _items.where('groupId', isEqualTo: id).snapshots().map(
+          (event) => event.docs
+          .map(
+            (e) => ItemModel.fromMap(
+          e.data() as Map<String, dynamic>,
+        ),
+      )
+          .toList(),
+    );
+  }
+
+  CollectionReference get _items => _firestore.collection(FirebaseConstants.itemsCollection);
 
   CollectionReference get _groups => _firestore.collection(FirebaseConstants.groupsCollection);
 }
