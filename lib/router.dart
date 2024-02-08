@@ -10,6 +10,7 @@ import 'package:routemaster/routemaster.dart';
 import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/register_screen.dart';
 import 'features/group/screens/group_screen.dart';
+import 'features/item/screens/create_item_screen.dart';
 
 final loggedOutRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child:LoginScreen()),
@@ -22,6 +23,9 @@ final loggedInRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child:HomeScreen()),
   '/create-group': (_) => const MaterialPage(child: CreateGroupScreen()),
   '/admin-tools/:id': (routeData) => MaterialPage(child: AdminToolsScreen(
+    id: routeData.pathParameters['id']!,
+  )),
+  '/create-item/:id': (routeData) => MaterialPage(child: CreateItemScreen(
     id: routeData.pathParameters['id']!,
   )),
   '/edit-group/:id': (routeData) => MaterialPage(child: EditGroupScreen(

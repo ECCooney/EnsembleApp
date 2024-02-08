@@ -1,6 +1,7 @@
 import 'package:ensemble/core/common/loader.dart';
 import 'package:ensemble/core/constants/constants.dart';
 import 'package:ensemble/features/group/controller/group_controller.dart';
+import 'package:ensemble/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,6 +21,10 @@ class GroupScreen extends ConsumerWidget {
 
   void navigateToAdminTools(BuildContext context) {
     Routemaster.of(context).push('/admin-tools/$id');
+  }
+
+  void navigateToCreateItem(BuildContext context) {
+    Routemaster.of(context).push('/create-item/$id');
   }
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -99,9 +104,18 @@ class GroupScreen extends ConsumerWidget {
                   )
                 ];
               },
-              body: const Text('Display items here')),
+              body: const Text('Display items here')
+              ),
+
          error:(error, stackTrace) => ErrorText(error: error.toString()),
-         loading: () => const Loader())
+         loading: () => const Loader()),
+        floatingActionButton: FloatingActionButton(
+        onPressed: () {
+      navigateToCreateItem(context);
+    },
+    child: Icon(Icons.add),
+    backgroundColor: Pallete.sageCustomColor,
+    ),
     );
   }
 }

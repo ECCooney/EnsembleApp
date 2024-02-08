@@ -13,6 +13,8 @@ import 'package:ensemble/features/auth/controller/auth_controller.dart';
 
 import '../../../core/providers/storage_repository_providers.dart';
 
+final groupProvider = StateProvider<GroupModel?>((ref) => null);
+
 final userGroupsProvider = StreamProvider((ref) {
   final groupController = ref.watch(groupControllerProvider.notifier);
   return groupController.getUserGroups();
