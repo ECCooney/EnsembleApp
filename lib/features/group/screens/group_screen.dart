@@ -31,6 +31,7 @@ class GroupScreen extends ConsumerWidget {
   }
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final width = MediaQuery.of(context).size.width;
     final user = ref.watch(userProvider)!;
     return Scaffold(
       body: ref.watch(getGroupByIdProvider(id)).when(
@@ -104,20 +105,13 @@ class GroupScreen extends ConsumerWidget {
                 ];
               },
             body: ref.watch(getGroupItemsProvider(id)).when(
-              data: (data) {
-                    return GridView.builder(
-                      itemCount: data.length,
+              data: (items) {
+                    return ListView.builder(
+                      itemCount: items.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final item = data[index];
+                        final item = items[index];
                         return ItemCard(item: item);
                       },
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, // number of items in each row
-                        mainAxisSpacing: 8.0, // spacing between rows
-                        crossAxisSpacing: 8.0, // spacing between columns
-                        childAspectRatio: 2 / 3
-                      ),
-                    
                     );
               },
               error: (error, stackTrace) {
@@ -133,8 +127,8 @@ class GroupScreen extends ConsumerWidget {
         onPressed: () {
       navigateToCreateItem(context);
     },
-    child: Icon(Icons.add),
     backgroundColor: Pallete.sageCustomColor,
+    child: const Icon(Icons.add),
     ),
     );
   }

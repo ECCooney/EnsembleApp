@@ -16,6 +16,10 @@ class HomeScreen extends ConsumerWidget {
     Routemaster.of(context).push('/${group.id}');
   }
 
+  void navigateToUserProfile(BuildContext context, String uid) {
+    Routemaster.of(context).push('/user/$uid');
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
@@ -31,7 +35,7 @@ class HomeScreen extends ConsumerWidget {
               },
             ),
             actions: [
-              IconButton(onPressed: (){}, icon: const Icon(Icons.search),),
+              IconButton(onPressed: ()  => navigateToUserProfile(context, user!.uid), icon: const Icon(Icons.search),),
               IconButton(
                 icon: CircleAvatar(
                   backgroundImage: NetworkImage(user!.profilePic),

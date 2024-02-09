@@ -5,7 +5,7 @@ import 'package:ensemble/features/item/repository/item_repository.dart';
 import 'package:ensemble/models/group_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fpdart/fpdart.dart';
+import 'dart:io';
 import 'package:routemaster/routemaster.dart';
 import 'package:uuid/uuid.dart';
 import 'package:ensemble/core/constants/constants.dart';
@@ -70,6 +70,35 @@ class ItemController extends StateNotifier<bool> {
       showSnackBar(context, 'Added successfully!');
       Routemaster.of(context).pop();
     });
+  }
+
+  void editItem({
+    required File? itemPicFile,
+    required String? description,
+    required BuildContext context,
+    required ItemModel item,
+  }) async {
+    if (itemPicFile != null) {
+      // groups/groupPic/groupId
+      final res = await _storageRepository.storeFile(
+        path: 'items/itemPic',
+        id: item.id,
+        file: itemPicFile,
+      );
+      res.fold(
+            (l) => showSnackBar(context, l.message),
+            (r) => item = item.copyWith(itemPic: r),
+      );
+    }
+    if (description != null) {
+      item = item.copyWith(description: description);
+    }
+    final res = await _itemRepository.editItem(item);
+
+    res.fold(
+          (l) => showSnackBar(context, l.message),
+          (r) => Routemaster.of(context).pop(),
+    );
   }
 
 

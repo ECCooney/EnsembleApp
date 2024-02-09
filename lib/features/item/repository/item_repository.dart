@@ -46,6 +46,16 @@ class ItemRepository {
     );
   }
 
+  FutureVoid editItem(ItemModel item) async {
+    try {
+      return right(_items.doc(item.id).update(item.toMap()));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
 
   FutureVoid deleteItem(ItemModel item) async {
     try {
