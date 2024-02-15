@@ -13,6 +13,8 @@ import 'package:ensemble/core/utils.dart';
 import 'package:ensemble/models/item_model.dart';
 import 'package:ensemble/features/auth/controller/auth_controller.dart';
 
+import '../../../models/booking_model.dart';
+
 final itemsProvider = StreamProvider.family((ref, List<GroupModel> groups) {
   final itemController = ref.watch(itemControllerProvider.notifier);
   return itemController.getItems(groups);
@@ -28,6 +30,13 @@ final getItemByIdProvider = StreamProvider.family((ref, String id) {
   final itemController = ref.watch(itemControllerProvider.notifier);
   return itemController.getItemById(id);
 });
+
+final getItemBookingsProvider = StreamProvider.family((ref, String id) {
+  final itemController = ref.watch(itemControllerProvider.notifier);
+  return itemController.getItemBookings(id);
+});
+
+
 
 class ItemController extends StateNotifier<bool> {
   final ItemRepository _itemRepository;
@@ -122,5 +131,9 @@ class ItemController extends StateNotifier<bool> {
 
   Stream<ItemModel> getItemById(String id) {
     return _itemRepository.getItemById(id);
+  }
+
+  Stream<List<BookingModel>> getItemBookings(String id) {
+    return _itemRepository.getItemBookings(id);
   }
 }

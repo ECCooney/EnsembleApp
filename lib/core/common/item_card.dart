@@ -175,13 +175,16 @@ class ItemCard extends ConsumerWidget {
                         style: TextStyle(color: Pallete.blackColor),
                         children: [
                           TextSpan(
-                            text:item.description,
+                            text: ' ${item.description}',
                             style: const TextStyle(
-                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
                             ),
                           ),
-                          TextSpan(
-                            text: ' ${item.description}',
+                          const TextSpan(
+                            text: 'Available Today',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                            )
                           ),
                         ],
                       ),

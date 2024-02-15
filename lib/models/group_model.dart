@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 
 class GroupModel {
@@ -9,6 +8,7 @@ class GroupModel {
   final String description;
   final List<String> members;
   final List<String> admins;
+  final String inviteCode; // New field
 
   GroupModel({
     required this.name,
@@ -18,6 +18,7 @@ class GroupModel {
     required this.description,
     required this.members,
     required this.admins,
+    required this.inviteCode, // New field
   });
 
   //copyWith function as variables above are final
@@ -30,6 +31,7 @@ class GroupModel {
     String? description,
     List<String>? members,
     List<String>? admins,
+    String? inviteCode, // New field
   }) {
     return GroupModel(
       name: name ?? this.name,
@@ -39,6 +41,7 @@ class GroupModel {
       description: description ?? this.description,
       members: members ?? this.members,
       admins: admins ?? this.admins,
+      inviteCode: inviteCode ?? this.inviteCode, // New field
     );
   }
 
@@ -51,6 +54,7 @@ class GroupModel {
       'description': description,
       'members': members,
       'admins': admins,
+      'inviteCode': inviteCode, // New field
     };
   }
 
@@ -63,12 +67,13 @@ class GroupModel {
       description: map['description'] ?? '',
       members: List<String>.from(map['members']),
       admins: List<String>.from(map['admins']),
+      inviteCode: map['inviteCode'] ?? '', // New field
     );
   }
 
   @override
   String toString() {
-    return 'GroupModel(name: $name, groupPic: $groupPic, groupBanner: $groupBanner, id: $id, description: $description, members: $members, admins: $admins)';
+    return 'GroupModel(name: $name, groupPic: $groupPic, groupBanner: $groupBanner, id: $id, description: $description, members: $members, admins: $admins, inviteCode: $inviteCode)';
   }
 
   @override
@@ -82,17 +87,19 @@ class GroupModel {
         other.id == id &&
         other.description == description &&
         listEquals(other.members, members) &&
-        listEquals(other.admins, admins);
+        listEquals(other.admins, admins) &&
+        other.inviteCode == inviteCode; // New field
   }
 
   @override
   int get hashCode {
     return name.hashCode ^
     groupPic.hashCode ^
-    groupBanner.hashCode^
+    groupBanner.hashCode ^
     id.hashCode ^
     description.hashCode ^
-    members.hashCode ^ 
-    admins.hashCode;
+    members.hashCode ^
+    admins.hashCode ^
+    inviteCode.hashCode; // New field
   }
 }

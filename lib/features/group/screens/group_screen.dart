@@ -26,6 +26,10 @@ class GroupScreen extends ConsumerWidget {
     Routemaster.of(context).push('/admin-tools/$id');
   }
 
+  void navigateToJoinGroup(BuildContext context) {
+    Routemaster.of(context).push('/join-group/$id');
+  }
+
   void navigateToCreateItem(BuildContext context) {
     Routemaster.of(context).push('/create-item/$id');
   }
@@ -85,14 +89,14 @@ class GroupScreen extends ConsumerWidget {
                               )
                               :
                               OutlinedButton(
-                                onPressed: (){},
+                                onPressed: () => navigateToJoinGroup(context),
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   padding: const EdgeInsets.symmetric(horizontal: 25),
                                 ),
-                                child: Text(group.members.contains(user.uid)? 'Joined' : 'Join'),
+                                child: const Text('Join'),
                               ),
                             ],
                           ),

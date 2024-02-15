@@ -26,6 +26,9 @@ class CreateItemScreen extends ConsumerStatefulWidget {
 class _CreateItemScreenState extends ConsumerState<CreateItemScreen> {
   File? itemPicFile;
 
+  List<String> categories = ['DIY', 'Household', 'Clothing', 'Other'];
+  String? category;
+
   final itemNameController = TextEditingController();
   final itemDescriptionController = TextEditingController();
   final itemCategoryController = TextEditingController();
@@ -54,7 +57,7 @@ class _CreateItemScreenState extends ConsumerState<CreateItemScreen> {
         context: context,
         name: itemNameController.text.trim(),
         description: itemDescriptionController.text.trim(),
-        category: itemCategoryController.text.trim(),
+        category: category ?? categories[0],
         group: group,
       );
     } else {
@@ -94,16 +97,32 @@ class _CreateItemScreenState extends ConsumerState<CreateItemScreen> {
                   ),
                   maxLength: 30,
                 ),
-                const SizedBox(height: 10,),
-                TextField(
-                  controller: itemCategoryController,
-                  decoration: const InputDecoration(
-                    hintText: 'Add a Category',
-                    filled: true,
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(18),
+
+                const SizedBox(height: 20),
+                const Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'Select Category',
                   ),
-                  maxLength: 30,
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: DropdownButton(
+                    value: category ?? categories[0],
+                    items: categories
+                        .map(
+                          (e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e), // Changed 'category' to e
+                      ),
+                    )
+                        .toList(),
+                    onChanged: (val) {
+                      setState(() {
+                        category = val;
+                      });
+                    },
+                  ),
                 ),
                 const Align(
                   alignment: Alignment.topLeft,

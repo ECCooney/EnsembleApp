@@ -9,6 +9,8 @@ import 'package:ensemble/core/common/error_text.dart';
 import 'package:ensemble/core/common/loader.dart';
 import 'package:ensemble/models/group_model.dart';
 
+import '../delegates/search_group_delegate.dart';
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -20,6 +22,10 @@ class HomeScreen extends ConsumerWidget {
     Routemaster.of(context).push('/user/$uid');
   }
 
+  void displayDrawer(BuildContext context) {
+    Scaffold.of(context).openDrawer();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
@@ -28,19 +34,24 @@ class HomeScreen extends ConsumerWidget {
         appBar:AppBar(
             title:const Text('Home'),
             centerTitle: false,
-            leading: IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: (){
-                const NavDrawer();
-              },
-            ),
+            leading: Builder(builder: (context) {
+              return IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () => displayDrawer(context),
+              );
+            }),
             actions: [
-              IconButton(onPressed: ()  => navigateToUserProfile(context, user!.uid), icon: const Icon(Icons.search),),
+              IconButton(
+                onPressed: () {
+                  showSearch(context: context, delegate: SearchGroupDelegate(ref));
+                },
+                icon: const Icon(Icons.search),
+              ),
               IconButton(
                 icon: CircleAvatar(
                   backgroundImage: NetworkImage(user!.profilePic),
                 ),
-                onPressed:(){},
+                onPressed:()=> navigateToUserProfile(context, user!.uid),
               ),
             ]
         ),
