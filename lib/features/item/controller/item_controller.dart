@@ -5,13 +5,15 @@ import 'package:ensemble/features/item/repository/item_repository.dart';
 import 'package:ensemble/models/group_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fpdart/fpdart.dart';
+import 'dart:io';
 import 'package:routemaster/routemaster.dart';
 import 'package:uuid/uuid.dart';
 import 'package:ensemble/core/constants/constants.dart';
 import 'package:ensemble/core/utils.dart';
 import 'package:ensemble/models/item_model.dart';
 import 'package:ensemble/features/auth/controller/auth_controller.dart';
+
+import '../../../models/booking_model.dart';
 
 final itemsProvider = StreamProvider.family((ref, List<GroupModel> groups) {
   final itemController = ref.watch(itemControllerProvider.notifier);
@@ -28,6 +30,13 @@ final getItemByIdProvider = StreamProvider.family((ref, String id) {
   final itemController = ref.watch(itemControllerProvider.notifier);
   return itemController.getItemById(id);
 });
+
+final getItemBookingsProvider = StreamProvider.family((ref, String id) {
+  final itemController = ref.watch(itemControllerProvider.notifier);
+  return itemController.getItemBookings(id);
+});
+
+
 
 class ItemController extends StateNotifier<bool> {
   final ItemRepository _itemRepository;
@@ -72,6 +81,35 @@ class ItemController extends StateNotifier<bool> {
     });
   }
 
+  void editItem({
+    required File? itemPicFile,
+    required String? description,
+    required BuildContext context,
+    required ItemModel item,
+  }) async {
+    if (itemPicFile != null) {
+      // groups/groupPic/groupId
+      final res = await _storageRepository.storeFile(
+        path: 'items/itemPic',
+        id: item.id,
+        file: itemPicFile,
+      );
+      res.fold(
+            (l) => showSnackBar(context, l.message),
+            (r) => item = item.copyWith(itemPic: r),
+      );
+    }
+    if (description != null) {
+      item = item.copyWith(description: description);
+    }
+    final res = await _itemRepository.editItem(item);
+
+    res.fold(
+          (l) => showSnackBar(context, l.message),
+          (r) => Routemaster.of(context).pop(),
+    );
+  }
+
 
   Stream<List<ItemModel>> getItems(List<GroupModel> groups) {
     if (groups.isNotEmpty) {
@@ -93,5 +131,9 @@ class ItemController extends StateNotifier<bool> {
 
   Stream<ItemModel> getItemById(String id) {
     return _itemRepository.getItemById(id);
+  }
+
+  Stream<List<BookingModel>> getItemBookings(String id) {
+    return _itemRepository.getItemBookings(id);
   }
 }

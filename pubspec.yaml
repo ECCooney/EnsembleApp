@@ -37,7 +37,7 @@ dependencies:
   cloud_firestore: ^4.14.0
   firebase_storage: ^11.6.0
   firebase_auth: ^4.16.0
-  shared_preferences: ^2.2.2 #used for storing logged in state of the user
+  shared_preferences: ^2.2.2
   google_sign_in: ^6.2.1
   envied: ^0.3.0
   flutter_riverpod: ^2.4.9
@@ -47,6 +47,9 @@ dependencies:
   uuid: ^4.3.2
   dotted_border: ^2.1.0
   file_picker: ^6.1.1
+  syncfusion_flutter_calendar: ^24.2.5
+  calendar_date_picker2: ^0.5.3
+  syncfusion_flutter_charts: ^24.2.6
 
 
 dev_dependencies:

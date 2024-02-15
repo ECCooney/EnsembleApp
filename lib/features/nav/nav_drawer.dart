@@ -16,6 +16,10 @@ class NavDrawer extends ConsumerWidget {
     Routemaster.of(context).push('/');
   }
 
+  void navigateToUserProfile(BuildContext context, String uid) {
+    Routemaster.of(context).push('/user/$uid');
+  }
+
   void logOut(WidgetRef ref) {
     ref.read(authControllerProvider.notifier).signOut();
   }
@@ -60,7 +64,7 @@ class NavDrawer extends ConsumerWidget {
             ),
           ),
           ListTile(
-            onTap: () {},
+            onTap: ()  => navigateToUserProfile(context, user.uid),
             selectedColor: Pallete.orangeCustomColor,
             selected: true,
             contentPadding:

@@ -9,11 +9,21 @@ import 'package:ensemble/core/common/error_text.dart';
 import 'package:ensemble/core/common/loader.dart';
 import 'package:ensemble/models/group_model.dart';
 
+import '../delegates/search_group_delegate.dart';
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   void navigateToGroup(BuildContext context, GroupModel group) {
     Routemaster.of(context).push('/${group.id}');
+  }
+
+  void navigateToUserProfile(BuildContext context, String uid) {
+    Routemaster.of(context).push('/user/$uid');
+  }
+
+  void displayDrawer(BuildContext context) {
+    Scaffold.of(context).openDrawer();
   }
 
   @override
@@ -24,19 +34,24 @@ class HomeScreen extends ConsumerWidget {
         appBar:AppBar(
             title:const Text('Home'),
             centerTitle: false,
-            leading: IconButton(
-              icon: const Icon(Icons.menu),
-              onPressed: (){
-                const NavDrawer();
-              },
-            ),
+            leading: Builder(builder: (context) {
+              return IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () => displayDrawer(context),
+              );
+            }),
             actions: [
-              IconButton(onPressed: (){}, icon: const Icon(Icons.search),),
+              IconButton(
+                onPressed: () {
+                  showSearch(context: context, delegate: SearchGroupDelegate(ref));
+                },
+                icon: const Icon(Icons.search),
+              ),
               IconButton(
                 icon: CircleAvatar(
                   backgroundImage: NetworkImage(user!.profilePic),
                 ),
-                onPressed:(){},
+                onPressed:()=> navigateToUserProfile(context, user!.uid),
               ),
             ]
         ),

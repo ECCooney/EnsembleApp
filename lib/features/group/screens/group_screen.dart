@@ -8,12 +8,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ensemble/core/common/error_text.dart';
 import 'package:routemaster/routemaster.dart';
 
+import '../../../core/common/item_card.dart';
 import '../../auth/controller/auth_controller.dart';
 
 class GroupScreen extends ConsumerWidget {
 
   //id needed for dyanmic routing
   final String id;
+
+
   const GroupScreen({
     super.key,
     required this.id,
@@ -23,11 +26,16 @@ class GroupScreen extends ConsumerWidget {
     Routemaster.of(context).push('/admin-tools/$id');
   }
 
+  void navigateToJoinGroup(BuildContext context) {
+    Routemaster.of(context).push('/join-group/$id');
+  }
+
   void navigateToCreateItem(BuildContext context) {
     Routemaster.of(context).push('/create-item/$id');
   }
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final width = MediaQuery.of(context).size.width;
     final user = ref.watch(userProvider)!;
     return Scaffold(
       body: ref.watch(getGroupByIdProvider(id)).when(
@@ -81,40 +89,50 @@ class GroupScreen extends ConsumerWidget {
                               )
                               :
                               OutlinedButton(
-                                onPressed: (){},
+                                onPressed: () => navigateToJoinGroup(context),
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   padding: const EdgeInsets.symmetric(horizontal: 25),
                                 ),
-                                child: Text(group.members.contains(user.uid)? 'Joined' : 'Join'),
+                                child: const Text('Join'),
                               ),
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Text(
-                              group.description
-                            )
-                          ),
+
                     ])
                     )
 
                   )
+
                 ];
               },
-              body: const Text('Display items here')
-              ),
-
-         error:(error, stackTrace) => ErrorText(error: error.toString()),
-         loading: () => const Loader()),
+            body: ref.watch(getGroupItemsProvider(id)).when(
+              data: (items) {
+                    return ListView.builder(
+                      itemCount: items.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final item = items[index];
+                        return ItemCard(item: item);
+                      },
+                    );
+              },
+              error: (error, stackTrace) {
+                return ErrorText(error: error.toString());
+              },
+              loading: () => const Loader(),
+            ),
+          ),
+        error: (error, stackTrace) => ErrorText(error: error.toString()),
+        loading: () => const Loader(),
+      ),
         floatingActionButton: FloatingActionButton(
         onPressed: () {
       navigateToCreateItem(context);
     },
-    child: Icon(Icons.add),
     backgroundColor: Pallete.sageCustomColor,
+    child: const Icon(Icons.add),
     ),
     );
   }

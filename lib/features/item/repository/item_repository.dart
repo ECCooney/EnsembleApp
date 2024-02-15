@@ -5,6 +5,7 @@ import '../../../core/constants/firebase_constants.dart';
 import '../../../core/failure.dart';
 import '../../../core/providers/firebase_providers.dart';
 import '../../../core/type_defs.dart';
+import '../../../models/booking_model.dart';
 import '../../../models/group_model.dart';
 import '../../../models/item_model.dart';
 
@@ -31,6 +32,18 @@ class ItemRepository {
     }
   }
 
+  Stream<List<BookingModel>> getItemBookings(String id) {
+    return _bookings.where('itemId', isEqualTo: id).snapshots().map(
+          (event) => event.docs
+          .map(
+            (e) => BookingModel.fromMap(
+          e.data() as Map<String, dynamic>,
+        ),
+      )
+          .toList(),
+    );
+  }
+
   Stream<List<ItemModel>> getItems(List<GroupModel> groups) {
     return _items
         .where('id', whereIn: groups.map((e) => e.id).toList())
@@ -44,6 +57,16 @@ class ItemRepository {
       )
           .toList(),
     );
+  }
+
+  FutureVoid editItem(ItemModel item) async {
+    try {
+      return right(_items.doc(item.id).update(item.toMap()));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
   }
 
 
@@ -60,5 +83,7 @@ class ItemRepository {
   Stream<ItemModel> getItemById(String id) {
     return _items.doc(id).snapshots().map((event) => ItemModel.fromMap(event.data() as Map<String, dynamic>));
   }
+
+  CollectionReference get _bookings => _firestore.collection(FirebaseConstants.bookingsCollection);
 
 }
