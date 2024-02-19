@@ -124,11 +124,6 @@ class ItemController extends StateNotifier<bool> {
   }
 
 
-  // Stream<List<ItemModel>> getUserItems() {
-  //   final uid = _ref.read(userProvider)!.uid;
-  //   return _itemRepository.getUserItems(uid);
-  // }
-
   Stream<ItemModel> getItemById(String id) {
     return _itemRepository.getItemById(id);
   }

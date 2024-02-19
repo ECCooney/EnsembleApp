@@ -5,6 +5,7 @@ import 'dart:io';
 
 import '../../../core/providers/storage_repository_providers.dart';
 import '../../../core/utils.dart';
+import '../../../models/booking_model.dart';
 import '../../../models/item_model.dart';
 import '../../../models/user_model.dart';
 import '../../auth/controller/auth_controller.dart';
@@ -73,5 +74,9 @@ class UserController extends StateNotifier<bool> {
 
   Stream<List<ItemModel>> getUserItems(String uid) {
     return _userRepository.getUserItems(uid);
+  }
+
+  Stream<List<BookingModel>> getUserBookings(String uid) {
+    return _userRepository.getUserBookings(uid);
   }
 }

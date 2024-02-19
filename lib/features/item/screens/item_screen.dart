@@ -1,5 +1,6 @@
 import 'package:ensemble/models/booking_model.dart';
 import 'package:ensemble/theme/pallete.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
@@ -12,6 +13,7 @@ import '../../../models/item_model.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../../booking/controller/booking_controller.dart';
 import '../controller/item_controller.dart';
+import 'package:booking_calendar/booking_calendar.dart';
 
 class ItemScreen extends ConsumerStatefulWidget {
 
@@ -30,24 +32,66 @@ class ItemScreen extends ConsumerStatefulWidget {
 
 
 class _ItemScreenState extends ConsumerState<ItemScreen> {
-  final DateTime _minDate = DateTime.now();
-  DateTime _start = DateTime.now();
+  late DateTime today = DateTime.now();
+  late DateTime _bookingStart;
+  late DateTime _bookingEnd;
+
+  List<DateTime> blackoutDates = <DateTime>[];
+
 
   @override
   initState(){
     super.initState();
   }
 
+  void selectionChanged(DateRangePickerSelectionChangedArgs args) {
+    if (args.value is PickerDateRange) {
+      final PickerDateRange range = args.value!;
+      _bookingStart = range.startDate!;
+      _bookingEnd = range.endDate!;
+    }
+  }
 
   createBooking(ItemModel item) {
     ref.read(bookingControllerProvider.notifier).createBooking(
-      bookingStart: DateTime.now(),
-      bookingEnd: DateTime.now(),
+      bookingStart: _bookingStart,
+      bookingEnd: _bookingEnd,
       bookingStatus: 'Pending',
       item: item,
       context: context,
     );
   }
+
+  //support.syncfusion.com/kb/article/10751/how-to-update-blackout-dates-in-the-flutter-date-range-picker
+
+   Future <List<DateTime>> getDates(ItemModel item) async {
+    var id = item.id;
+    var bookings = ref.watch(getItemBookingsProvider(id));
+    List<DateTime> blackoutDates = <DateTime>[];
+
+    // Check the state of the AsyncValue
+    bookings.when(
+      data: (bookings) {
+
+        for (var booking in bookings) {
+
+          final bookingStart = booking.bookingStart;
+          final bookingEnd = booking.bookingEnd;
+
+          final bookingRange = List<DateTime>.generate(
+            (bookingEnd.difference(bookingStart).inDays + 1),
+                (index) => bookingStart.add(Duration(days: index)),
+          );
+          blackoutDates.add(today);
+          blackoutDates.addAll(bookingRange);
+        }
+      },
+      loading: () => const Loader(),
+      error: (error, stackTrace) => ErrorText(error: error.toString(),),
+    );
+    return blackoutDates;
+  }
+
 
   DateRangePickerController _datePickerController = DateRangePickerController();
 
@@ -113,7 +157,6 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
                   ),
                 ];
               },
-              // <-- Added closing bracket here
               body: ref.watch(getItemBookingsProvider(widget.id)).when(
                 data: (bookings) {
                   return Center(
@@ -124,13 +167,22 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
                         child: SfDateRangePicker(
                           initialSelectedDate: DateTime.now(),
                           view: DateRangePickerView.month,
+                          monthViewSettings: DateRangePickerMonthViewSettings(
+                              blackoutDates: blackoutDates),
+                          monthCellStyle: const DateRangePickerMonthCellStyle(blackoutDateTextStyle:
+                          TextStyle(
+                              color: Colors.red,
+                              decoration: TextDecoration.lineThrough),
+                          ),
                           selectionMode: DateRangePickerSelectionMode.range,
                           selectionColor: Pallete.sageCustomColor,
+                          onSelectionChanged: selectionChanged,
                           showActionButtons: true,
                           onSubmit: (bookings) {
                             createBooking(item);
                             Navigator.pop(context);
                           },
+                          // onViewChanged: viewChanged,
                           onCancel: () {
                             _datePickerController.selectedRanges = null;
                           },

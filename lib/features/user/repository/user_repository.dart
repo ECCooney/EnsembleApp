@@ -6,6 +6,7 @@ import '../../../core/constants/firebase_constants.dart';
 import '../../../core/failure.dart';
 import '../../../core/providers/firebase_providers.dart';
 import '../../../core/type_defs.dart';
+import '../../../models/booking_model.dart';
 import '../../../models/item_model.dart';
 import '../../../models/user_model.dart';
 
@@ -20,6 +21,7 @@ class UserRepository {
 
   CollectionReference get _users => _firestore.collection(FirebaseConstants.usersCollection);
   CollectionReference get _items => _firestore.collection(FirebaseConstants.itemsCollection);
+  CollectionReference get _bookings => _firestore.collection(FirebaseConstants.bookingsCollection);
 
   FutureVoid editProfile(UserModel user) async {
     try {
@@ -36,6 +38,18 @@ class UserRepository {
           (event) => event.docs
           .map(
             (e) => ItemModel.fromMap(
+          e.data() as Map<String, dynamic>,
+        ),
+      )
+          .toList(),
+    );
+  }
+
+  Stream<List<BookingModel>> getUserBookings(String uid) {
+    return _bookings.where('requester', isEqualTo: uid).snapshots().map(
+          (event) => event.docs
+          .map(
+            (e) => BookingModel.fromMap(
           e.data() as Map<String, dynamic>,
         ),
       )
