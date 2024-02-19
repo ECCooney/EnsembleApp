@@ -9,6 +9,7 @@ import 'package:ensemble/core/common/error_text.dart';
 import 'package:routemaster/routemaster.dart';
 
 import '../../../core/common/item_card.dart';
+import '../../../models/group_model.dart';
 import '../../auth/controller/auth_controller.dart';
 
 class GroupScreen extends ConsumerWidget {
@@ -33,6 +34,11 @@ class GroupScreen extends ConsumerWidget {
   void navigateToCreateItem(BuildContext context) {
     Routemaster.of(context).push('/create-item/$id');
   }
+
+  void leaveGroup(WidgetRef ref, GroupModel group, BuildContext context) {
+    ref.read(groupControllerProvider.notifier).leaveGroup(group, context);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final width = MediaQuery.of(context).size.width;
@@ -74,10 +80,15 @@ class GroupScreen extends ConsumerWidget {
                                 fontWeight: FontWeight.bold,
                               )
                               ),
-                              group.admins.contains(user.uid)?
                               OutlinedButton(
                                 onPressed: () {
-                                  navigateToAdminTools(context);
+                                  if (group.admins.contains(user.uid)) {
+                                    navigateToAdminTools(context);
+                                  } else if (group.members.contains(user.uid)) {
+                                    leaveGroup(ref, group, context);
+                                  } else {
+                                    navigateToJoinGroup(context);
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
@@ -85,18 +96,13 @@ class GroupScreen extends ConsumerWidget {
                                   ),
                                   padding: const EdgeInsets.symmetric(horizontal: 25),
                                 ),
-                                child: const Text('Admin Tools'),
-                              )
-                              :
-                              OutlinedButton(
-                                onPressed: () => navigateToJoinGroup(context),
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                                child: Text(
+                                  group.admins.contains(user.uid)
+                                      ? 'Admin Tools'
+                                      : group.members.contains(user.uid)
+                                      ? 'Leave'
+                                      : 'Join',
                                 ),
-                                child: const Text('Join'),
                               ),
                             ],
                           ),

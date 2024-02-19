@@ -106,7 +106,8 @@ class NavDrawer extends ConsumerWidget {
                               color: Pallete.redCustomColor
                             )),
                         IconButton(
-                            onPressed: () async {logOut(ref);},
+                            onPressed: () async {logOut(ref);
+                            Navigator.pop(context);},
                             icon: const Icon(
                               Icons.done,
                               color: Colors.green

@@ -29,6 +29,10 @@ class _AdminToolsScreenState extends ConsumerState<AdminToolsScreen> {
     Routemaster.of(context).push('/edit-group/${widget.id}');
   }
 
+  void navigateToAddAdmins(BuildContext context) {
+    Routemaster.of(context).push('/add-admins/${widget.id}');
+  }
+
 
   @override
   Widget build(BuildContext context) {final isLoading = ref.watch(groupControllerProvider);
@@ -43,13 +47,7 @@ class _AdminToolsScreenState extends ConsumerState<AdminToolsScreen> {
             ListTile(
               leading: const Icon(Icons.add_moderator),
               title: const Text('Add New Admin'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: const Icon(Icons.person_add_alt_1),
-              title: const Text('Invite Members'),
-              onTap: () {
-              },
+              onTap: () => navigateToAddAdmins(context),
             ),
             ListTile(
               leading: const Icon(Icons.edit),

@@ -9,6 +9,7 @@ import 'package:routemaster/routemaster.dart';
 
 import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/register_screen.dart';
+import 'features/group/screens/add_admins_screen.dart';
 import 'features/group/screens/group_screen.dart';
 import 'features/group/screens/join_group.dart';
 import 'features/item/screens/create_item_screen.dart';
@@ -45,6 +46,11 @@ final loggedInRoute = RouteMap(routes: {
   '/admin-tools/:id': (routeData) => MaterialPage(child: AdminToolsScreen(
     id: routeData.pathParameters['id']!,
   )),
+  '/add-admins/:id': (routeData) => MaterialPage(
+    child: AddAdminsScreen(
+      id: routeData.pathParameters['id']!,
+    ),
+  ),
 
   //item
   '/create-item/:id': (routeData) => MaterialPage(child: CreateItemScreen(

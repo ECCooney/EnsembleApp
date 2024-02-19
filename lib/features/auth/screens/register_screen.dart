@@ -21,7 +21,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final nameController = TextEditingController();
-  final profilePicController = TextEditingController();
 
   void signUp() {
     ref.read(authControllerProvider.notifier).signUpWithEmail(
@@ -29,7 +28,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       nameController.text.trim(),
       emailController.text.trim(),
       passwordController.text.trim(),
-      profilePicController.text.trim(),
       context);
     }
 
@@ -113,8 +111,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         ),
         const SizedBox(height: 40),
         ElevatedButton(
-          onPressed: (){},
-          // onPressed: signUp,
+          onPressed: () {
+            signUp();
+            Navigator.pop(context);
+          },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(Colors.blue),
             textStyle: MaterialStateProperty.all(

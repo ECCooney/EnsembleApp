@@ -9,7 +9,7 @@ import 'package:ensemble/core/utils.dart';
 import 'package:ensemble/models/user_model.dart';
 import 'package:ensemble/features/auth/repository/auth_repository.dart';
 
-final userProvider = StateProvider<UserModel?>((ref) => null);
+var userProvider = StateProvider<UserModel?>((ref) => null);
 
 final authControllerProvider = StateNotifierProvider<AuthController, bool>(
       (ref) => AuthController(
@@ -54,9 +54,9 @@ class AuthController extends StateNotifier<bool> {
     );
   }
 
-  void signUpWithEmail(String name, String email, String password, String profilePic, BuildContext context) async {
+  void signUpWithEmail(String name, String email, String password, BuildContext context) async {
     state = true;
-    final user = await _authRepository.signUpWithEmail(email: email, password: password, context: context);
+    final user = await _authRepository.signUpWithEmail(name: name, email: email, password: password, context: context);
     state = false;
     user.fold(
           (l) => showSnackBar(context, l.message),

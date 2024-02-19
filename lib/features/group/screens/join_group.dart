@@ -32,13 +32,14 @@ class _JoinGroupScreenState extends ConsumerState<JoinGroupScreen> {
   final inviteCodeController = TextEditingController();
 
 
-  void joinCommunity(WidgetRef ref, GroupModel group, String inviteCode, BuildContext context) {
+  void joinGroup(WidgetRef ref, GroupModel group, String inviteCode, BuildContext context) {
     ref.read(groupControllerProvider.notifier).joinGroup(group, inviteCodeController.text, context);
   }
 
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider)!;
     final GlobalKey<FormState> _formKey = GlobalKey();
     final isLoading = ref.watch(authControllerProvider);
 
@@ -71,7 +72,6 @@ class _JoinGroupScreenState extends ConsumerState<JoinGroupScreen> {
                               backgroundImage: NetworkImage(group.groupPic),
                               radius: 30),
                         ),
-                        const SizedBox(height: 5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -81,24 +81,8 @@ class _JoinGroupScreenState extends ConsumerState<JoinGroupScreen> {
                                   fontWeight: FontWeight.bold,
                                 )
                             ),
-                            const SizedBox(height: 15),
-                            Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 20),
-                              child: CustomTextField(
-                                icon: const Icon(Icons.password),
-                                controller: inviteCodeController,
-                                hintText: 'Enter your password',
-                                validator: (val){
-                                  if (val!.length < 6) {
-                                    return "Password must be at least 6 characters";
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                            ),
                             OutlinedButton(
-                              onPressed: (){},
+                              onPressed: () => joinGroup(ref, group, group.inviteCode, context),
                               style: ElevatedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
@@ -117,7 +101,21 @@ class _JoinGroupScreenState extends ConsumerState<JoinGroupScreen> {
 
             ];
           },
-          body:  SizedBox()
+          body:  Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            child: CustomTextField(
+              icon: const Icon(Icons.password),
+              controller: inviteCodeController,
+              hintText: 'Enter the Provided Code',
+              validator: (val){
+                if (val!=group.inviteCode) {
+                  return "Invalid Code";
+                } else {
+                  return null;
+                }
+              },
+            ),
+          ),
         ), error: (error, stackTrace) => ErrorText(error: error.toString()),
         loading: () => const Loader(),
       ),
