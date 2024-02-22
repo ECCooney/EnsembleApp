@@ -131,4 +131,5 @@ class ItemController extends StateNotifier<bool> {
   Stream<List<BookingModel>> getItemBookings(String id) {
     return _itemRepository.getItemBookings(id);
   }
+
 }
