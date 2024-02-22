@@ -109,19 +109,17 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
       appBar: AppBar(
         title: const Text('Item Details'),
       ),
-      body: _blackoutDatesFuture == null
-          ? const Loader() // Show loader if _blackoutDatesFuture is not initialized
-          : FutureBuilder<List<DateTime>>(
+      body: FutureBuilder<List<DateTime>>(
         future: _blackoutDatesFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting ||
-              snapshot.data == null) {
-            return const Loader(); // Show a loader while waiting for data or if data is null
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Loader(); // Show a loader while waiting for data
           } else if (snapshot.hasError) {
             return ErrorText(
                 error: snapshot.error.toString()); // Show error if any
           } else {
-            List<DateTime> blackoutDates = snapshot.data!;
+            List<DateTime> blackoutDates = snapshot.data ??
+                []; // Use empty list if data is null
             return ref.watch(getItemByIdProvider(widget.id)).when(
               data: (item) =>
                   NestedScrollView(
@@ -164,8 +162,7 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
                                         navigateToEditItem(context),
                                     style: ElevatedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                        BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(20),
                                       ),
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 25),
@@ -173,6 +170,18 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
                                     child: const Text('Edit Item'),
                                   )
                                       : SizedBox(),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween,
+                                children: [
+                                  Text(
+                                    item.description,
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ]),
@@ -221,7 +230,7 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
                     ),
                   ),
               error: (error, stackTrace) => ErrorText(error: error.toString()),
-              loading: () => const Loader(),
+              loading: () => Loader(),
             );
           }
         },
