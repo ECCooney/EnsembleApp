@@ -7,6 +7,7 @@ import '../../../core/failure.dart';
 import '../../../core/providers/firebase_providers.dart';
 import '../../../core/type_defs.dart';
 import '../../../models/booking_model.dart';
+import '../../../models/item_message_model.dart';
 import '../../../models/item_model.dart';
 import '../../../models/user_model.dart';
 
@@ -21,6 +22,7 @@ class UserRepository {
 
   CollectionReference get _users => _firestore.collection(FirebaseConstants.usersCollection);
   CollectionReference get _items => _firestore.collection(FirebaseConstants.itemsCollection);
+  CollectionReference get _itemMessages => _firestore.collection(FirebaseConstants.itemMessagesCollection);
   CollectionReference get _bookings => _firestore.collection(FirebaseConstants.bookingsCollection);
 
   FutureVoid editProfile(UserModel user) async {
@@ -38,6 +40,18 @@ class UserRepository {
           (event) => event.docs
           .map(
             (e) => ItemModel.fromMap(
+          e.data() as Map<String, dynamic>,
+        ),
+      )
+          .toList(),
+    );
+  }
+
+  Stream<List<ItemMessageModel>> getUserSentMessages(String uid) {
+    return _itemMessages.where('sender', isEqualTo: uid).snapshots().map(
+          (event) => event.docs
+          .map(
+            (e) => ItemMessageModel.fromMap(
           e.data() as Map<String, dynamic>,
         ),
       )

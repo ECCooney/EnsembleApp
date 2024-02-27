@@ -87,7 +87,6 @@ class BookingController extends StateNotifier<bool> {
     );
   }
 
-
   Stream<List<BookingModel>> getBookings(List<ItemModel> items) {
     if (items.isNotEmpty) {
       return _bookingRepository.getBookings(items);
@@ -95,13 +94,10 @@ class BookingController extends StateNotifier<bool> {
     return Stream.value([]);
   }
 
-
-
   void deleteBooking(BookingModel booking, BuildContext context) async {
     final res = await _bookingRepository.deleteBooking(booking);
     res.fold((l) => null, (r) => showSnackBar(context, 'Booking Deleted successfully!'));
   }
-
 
   Stream<BookingModel> getBookingById(String id) {
     return _bookingRepository.getBookingById(id);

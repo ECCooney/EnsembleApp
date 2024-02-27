@@ -1,3 +1,4 @@
+import 'package:ensemble/models/item_message_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -25,6 +26,13 @@ final getUserItemsProvider = StreamProvider.family((ref, String uid) {
   return ref.read(userControllerProvider.notifier).getUserItems(uid);
 });
 
+final getUserBookingsProvider = StreamProvider.family((ref, String uid) {
+  return ref.read(userControllerProvider.notifier).getUserBookings(uid);
+});
+
+final getUserSentMessagesProvider = StreamProvider.family((ref, String uid) {
+  return ref.read(userControllerProvider.notifier).getUserSentMessages(uid);
+});
 class UserController extends StateNotifier<bool> {
   final UserRepository _userRepository;
   final Ref _ref;
@@ -78,5 +86,9 @@ class UserController extends StateNotifier<bool> {
 
   Stream<List<BookingModel>> getUserBookings(String uid) {
     return _userRepository.getUserBookings(uid);
+  }
+
+  Stream<List<ItemMessageModel>> getUserSentMessages(String uid) {
+    return _userRepository.getUserSentMessages(uid);
   }
 }

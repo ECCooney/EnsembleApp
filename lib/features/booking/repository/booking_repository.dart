@@ -50,7 +50,7 @@ class BookingRepository {
 
   Stream<List<BookingModel>> getBookings(List<ItemModel> items) {
     return _bookings
-        .where('id', whereIn: items.map((e) => e.id).toList())
+        .where('itemId', whereIn: items.map((e) => e.id).toList())
         .snapshots()
         .map(
           (event) => event.docs
@@ -62,6 +62,7 @@ class BookingRepository {
           .toList(),
     );
   }
+
 
   FutureVoid editBooking(BookingModel booking) async {
     try {
