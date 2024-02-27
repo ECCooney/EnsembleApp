@@ -71,5 +71,21 @@ class UserRepository {
     );
   }
 
+  Stream<List<BookingModel>> getRequests(String uid) {
+    return _bookings
+        .where('itemOwner', isEqualTo: uid)
+        .where('bookingStatus', isEqualTo: 'Pending') // Filter by bookingStatus
+        .snapshots()
+        .map(
+          (event) => event.docs
+          .map(
+            (e) => BookingModel.fromMap(
+          e.data() as Map<String, dynamic>,
+        ),
+      )
+          .toList(),
+    );
+  }
+
 
 }

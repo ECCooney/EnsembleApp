@@ -63,8 +63,7 @@ class BookingRepository {
     );
   }
 
-
-  FutureVoid editBooking(BookingModel booking) async {
+  FutureVoid approveBooking(BookingModel booking) async {
     try {
       return right(_bookings.doc(booking.id).update(booking.toMap()));
     } on FirebaseException catch (e) {

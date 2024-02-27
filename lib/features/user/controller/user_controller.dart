@@ -33,6 +33,11 @@ final getUserBookingsProvider = StreamProvider.family((ref, String uid) {
 final getUserSentMessagesProvider = StreamProvider.family((ref, String uid) {
   return ref.read(userControllerProvider.notifier).getUserSentMessages(uid);
 });
+
+final getRequests = StreamProvider.family((ref, String uid) {
+  return ref.read(userControllerProvider.notifier).getRequests(uid);
+});
+
 class UserController extends StateNotifier<bool> {
   final UserRepository _userRepository;
   final Ref _ref;
@@ -90,5 +95,9 @@ class UserController extends StateNotifier<bool> {
 
   Stream<List<ItemMessageModel>> getUserSentMessages(String uid) {
     return _userRepository.getUserSentMessages(uid);
+  }
+
+  Stream<List<BookingModel>> getRequests(String uid) {
+    return _userRepository.getRequests(uid);
   }
 }

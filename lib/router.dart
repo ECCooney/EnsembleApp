@@ -1,5 +1,6 @@
 //logged out
 
+import 'package:ensemble/features/booking/screens/booking_requests.dart';
 import 'package:ensemble/features/group/screens/admin_tools_screen.dart';
 import 'package:ensemble/features/group/screens/create_group_screen.dart';
 import 'package:ensemble/features/group/screens/edit_group_screen.dart';
@@ -75,5 +76,19 @@ final loggedInRoute = RouteMap(routes: {
       uid: routeData.pathParameters['uid']!,
     ),
   ),
+
+  //bookings
+
+  '/booking-requests/:uid': (routeData) => MaterialPage(
+    child: BookingRequests(
+      uid: routeData.pathParameters['uid']!,
+    ),
+  ),
+  '/booking-request-details/:id': (routeData) => MaterialPage(
+    child: BookingRequests(
+      uid: routeData.pathParameters['id']!,
+    ),
+  ),
+
 });
 
