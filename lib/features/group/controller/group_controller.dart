@@ -158,11 +158,22 @@ class GroupController extends StateNotifier<bool> {
 
     Either<Failure, void> res;
     if (inviteCode == group.inviteCode) {
-      res = await _groupRepository.joinGroup(group.id, group.inviteCode,user.uid);
+      res = await _groupRepository.joinGroup(group.id, group.inviteCode, user.uid);
+      res.fold((l) => showSnackBar(context, l.message), (r) {
+        showSnackBar(context, 'Joined Group!');
+        Routemaster.of(context).pop();
+      });
     }
 
   }
 
+  void addAdmins(String groupId, List<String> uids, BuildContext context) async {
+    final res = await _groupRepository.addAdmins(groupId, uids);
+    res.fold(
+          (l) => showSnackBar(context, l.message),
+          (r) => Routemaster.of(context).pop(),
+    );
+  }
 
   Stream<GroupModel> getGroupById(String id) {
     return _groupRepository.getGroupById(id);

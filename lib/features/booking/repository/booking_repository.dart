@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ensemble/core/providers/firebase_providers.dart';
 import 'package:ensemble/models/group_model.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:ensemble/core/constants/firebase_constants.dart';
@@ -32,6 +33,20 @@ class BookingRepository {
       return left(Failure(e.toString()));
     }
   }
+
+  //https://pub.dev/packages/booking_calendar
+  List<DateTimeRange> convertStreamResultFirebase(
+      {required dynamic streamResult}) {
+    ///here you can parse the streamresult and convert to [List<DateTimeRange>]
+    ///Note that this is dynamic, so you need to know what properties are available on your result, in our case the [SportBooking] has bookingStart and bookingEnd property
+    List<DateTimeRange> converted = [];
+    for (var i = 0; i < streamResult.size; i++) {
+      final booking = streamResult.docs[i].data();
+      converted.add(DateTimeRange(start: (booking.bookingStart!), end: (booking.bookingEnd!)));
+    }
+    return converted;
+  }
+
 
   Stream<List<BookingModel>> getBookings(List<ItemModel> items) {
     return _bookings

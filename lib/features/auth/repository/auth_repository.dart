@@ -101,48 +101,63 @@ class AuthRepository {
     required BuildContext context,
   }) async {
     try {
-      await _auth.signInWithEmailAndPassword(
+      UserCredential userCredential;
+      userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      String uid = userCredential.user!.uid;
+
     } on FirebaseAuthException catch (e) {
       showSnackBar(context, e.message!); // Displaying the error message
     }
   }
 
-  Future signUpWithEmail({
+  FutureEither<UserModel> signUpWithEmail({
+    required String name,
     required String email,
     required String password,
     required BuildContext context,
   }) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-    } on FirebaseAuthException catch (e) {
-      // if you want to display your own custom error message
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+
+      UserModel userModel;
+
+      if (userCredential.additionalUserInfo!.isNewUser) {
+        userModel = UserModel(
+          name: userCredential.user!.displayName ?? name,
+          profilePic: userCredential.user!.photoURL ?? Constants.avatarDefault,
+          email: userCredential.user!.email?? email,
+          password: password,
+          uid: userCredential.user!.uid,
+        );
+        await _users.doc(userCredential.user!.uid).set(userModel.toMap());
+      } else {
+        userModel = await getUserData(userCredential.user!.uid).first;
       }
-      showSnackBar(
-          context, e.message!); // Displaying the usual firebase error message
+      return right(userModel);
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
     }
   }
 
+
   //go to user, get snapshot of the data, map it to the user model and return it. Will also be used
-  //to persist the state of the application. Can also be used to view other users profile data (on wishlist)
+  //to persist the state of the application. Can also be used to view other users profile data
   Stream<UserModel> getUserData(String uid) {
     return _users.doc(uid).snapshots().map((event) => UserModel.fromMap(event.data() as Map<String, dynamic>));
   }
 
-
-
   // Sign up new user with email and password
 
   void signOut() async {
+    await _googleSignIn.signOut();
     await _auth.signOut();
   }
 }

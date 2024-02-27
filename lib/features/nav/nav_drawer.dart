@@ -88,6 +88,18 @@ class NavDrawer extends ConsumerWidget {
             ),
           ),
           ListTile(
+            onTap: (){},
+            selectedColor: Pallete.orangeCustomColor,
+            selected: true,
+            contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            leading: const Icon(Icons.add),
+            title: const Text(
+              "Messages",
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+          ),
+          ListTile(
             onTap: () async {
               showDialog(
                   barrierDismissible: false,
@@ -106,7 +118,8 @@ class NavDrawer extends ConsumerWidget {
                               color: Pallete.redCustomColor
                             )),
                         IconButton(
-                            onPressed: () async {logOut(ref);},
+                            onPressed: () async {logOut(ref);
+                            Navigator.pop(context);},
                             icon: const Icon(
                               Icons.done,
                               color: Colors.green

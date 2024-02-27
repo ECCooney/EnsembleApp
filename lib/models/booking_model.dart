@@ -6,8 +6,8 @@ class BookingModel {
   final String itemId;
   final String itemOwner;
   final String itemName; // New field
-  final DateTime bookingStart;
-  final DateTime bookingEnd;
+  late final DateTime bookingStart;
+  late final DateTime bookingEnd;
   final String bookingStatus;
 
   BookingModel({

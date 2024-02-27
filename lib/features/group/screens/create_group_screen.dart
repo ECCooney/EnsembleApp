@@ -42,6 +42,7 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
   Widget build(BuildContext context) {
     final isLoading = ref.watch(groupControllerProvider);
     return Scaffold(
+        resizeToAvoidBottomInset : false,
         appBar: AppBar(
           title: const Text ('Create a Group'),
         ),
@@ -49,71 +50,71 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
         const Loader() :
         Padding(
           padding: const EdgeInsets.all(10.0),
-          child: Column(
-              children: [
-                const Align(alignment: Alignment.topLeft,
-                  child: Text('Group Name'),),
-                const SizedBox(height: 10,),
-                TextField(
-                  controller: groupNameController,
-                  decoration: const InputDecoration(
-                    hintText: 'My Group Name',
-                    filled: true,
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(18),
-                  ),
-                  maxLength: 30,
-                ),
-                const Align(alignment: Alignment.topLeft,
-                  child: Text('Group Invite Code'),),
-                const SizedBox(height: 10,),
-                TextField(
-                  controller: groupNameController,
-                  decoration: const InputDecoration(
-                    hintText: 'Unique Invite Code',
-                    filled: true,
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(18),
-                  ),
-                  maxLength: 30,
-                ),
-                const Align(alignment: Alignment.topLeft,
-                  child: Text('Group Description'),),
-                const SizedBox(height: 10,),
-                SizedBox(
-                  height: 140, // <-- TextField height
-                  child:
+            child: Column(
+                children: [
+                  const Align(alignment: Alignment.topLeft,
+                    child: Text('Group Name'),),
+                  const SizedBox(height: 10,),
                   TextField(
-                    controller: groupDescriptionController,
-                    maxLines: null,
-                    expands: true,
-                    keyboardType: TextInputType.multiline,
+                    controller: groupNameController,
                     decoration: const InputDecoration(
-                      hintText: 'A Short Description',
+                      hintText: 'My Group Name',
                       filled: true,
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.all(18),
                     ),
-                    maxLength: 150,
+                    maxLength: 30,
                   ),
-                ),
-                const SizedBox(height: 30,),
-                ElevatedButton(
-                  onPressed: createGroup,
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      )),
-                  child: const Text(
-                    'Create Group',
-                    style: TextStyle(
-                      fontSize: 17,
+                  const Align(alignment: Alignment.topLeft,
+                    child: Text('Group Invite Code'),),
+                  const SizedBox(height: 10,),
+                  TextField(
+                    controller: groupInviteCodeController,
+                    decoration: const InputDecoration(
+                      hintText: 'Unique Invite Code',
+                      filled: true,
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(18),
+                    ),
+                    maxLength: 30,
+                  ),
+                  const Align(alignment: Alignment.topLeft,
+                    child: Text('Group Description'),),
+                  const SizedBox(height: 10,),
+                  SizedBox(
+                    height: 140, // <-- TextField height
+                    child:
+                    TextField(
+                      controller: groupDescriptionController,
+                      maxLines: null,
+                      expands: true,
+                      keyboardType: TextInputType.multiline,
+                      decoration: const InputDecoration(
+                        hintText: 'A Short Description',
+                        filled: true,
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.all(18),
+                      ),
+                      maxLength: 150,
                     ),
                   ),
-                ),
-              ]
-          ),
+                  const SizedBox(height: 30,),
+                  ElevatedButton(
+                    onPressed: createGroup,
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        )),
+                    child: const Text(
+                      'Create Group',
+                      style: TextStyle(
+                        fontSize: 17,
+                      ),
+                    ),
+                  ),
+                ]
+            ),
         )
     );
   }

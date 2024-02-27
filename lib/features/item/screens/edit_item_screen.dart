@@ -52,7 +52,6 @@ class _EditItemScreenState extends ConsumerState<EditItemScreen> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(itemControllerProvider);
-
     return ref.watch(getItemByIdProvider(widget.id)).when(
       data: (item) => Scaffold(
         appBar: AppBar(
@@ -114,6 +113,28 @@ class _EditItemScreenState extends ConsumerState<EditItemScreen> {
                 TextButton(
                   onPressed: () => deleteItem(item),
                   child: const Text('Delete Item'),
+                ),
+                Expanded(
+                  child: ref.watch(getItemBookingsProvider(widget.id)).when(
+                    data: (bookings) {
+                      return ListView.builder(
+                        itemCount: bookings.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final booking = bookings[index];
+                          return ListTile(
+                            title: Text(booking.itemName),
+                            subtitle: Text (booking.requester),
+                            trailing: Text (booking.bookingStart.toString()),
+                            onTap: () {},
+                          );
+                        },
+                      );
+                    },
+                    error: (error, stackTrace) {
+                      return ErrorText(error: error.toString());
+                    },
+                    loading: () => const Loader(),
+                  ),
                 ),
               ],
 

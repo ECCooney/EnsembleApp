@@ -98,7 +98,7 @@ class GroupRepository {
     });
   }
 
-  FutureVoid joinGroup(String groupId, String userId, String inviteCode) async {
+  FutureVoid joinGroup(String groupId, String inviteCode, String userId) async {
     try {
       return right(_groups.doc(groupId).update({
         'members': FieldValue.arrayUnion([userId]),
@@ -114,6 +114,18 @@ class GroupRepository {
     try {
       return right(_groups.doc(groupId).update({
         'members': FieldValue.arrayRemove([userId]),
+      }));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  FutureVoid addAdmins(String groupId, List<String> uids) async {
+    try {
+      return right(_groups.doc(groupId).update({
+        'mods': uids,
       }));
     } on FirebaseException catch (e) {
       throw e.message!;

@@ -36,6 +36,12 @@ final getItemBookingsProvider = StreamProvider.family((ref, String id) {
   return itemController.getItemBookings(id);
 });
 
+final getBookedDatesProvider =
+FutureProvider.family<List<DateTime>, String>((ref, itemId) async {
+  final itemController = ref.watch(itemControllerProvider.notifier);
+  return await itemController.getBookedDates(itemId);
+});
+
 
 
 class ItemController extends StateNotifier<bool> {
@@ -124,11 +130,6 @@ class ItemController extends StateNotifier<bool> {
   }
 
 
-  // Stream<List<ItemModel>> getUserItems() {
-  //   final uid = _ref.read(userProvider)!.uid;
-  //   return _itemRepository.getUserItems(uid);
-  // }
-
   Stream<ItemModel> getItemById(String id) {
     return _itemRepository.getItemById(id);
   }
@@ -136,4 +137,26 @@ class ItemController extends StateNotifier<bool> {
   Stream<List<BookingModel>> getItemBookings(String id) {
     return _itemRepository.getItemBookings(id);
   }
+
+  Future<List<DateTime>> getBookedDates(String itemId) async {
+    final bookings = await _itemRepository.getItemBookings(itemId).first;
+
+    List<DateTime> bookedDates = [];
+
+    if (bookings != null) {
+      for (var booking in bookings) {
+        final bookingStart = booking.bookingStart;
+        final bookingEnd = booking.bookingEnd;
+
+        final bookingRange = List<DateTime>.generate(
+          (bookingEnd.difference(bookingStart).inDays + 1),
+              (index) => bookingStart.add(Duration(days: index)),
+        );
+        bookedDates.addAll(bookingRange);
+      }
+    }
+    return bookedDates;
+  }
+
+
 }
