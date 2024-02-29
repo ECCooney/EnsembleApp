@@ -80,7 +80,6 @@ class AuthRepository {
           name: userCredential.user!.displayName ?? 'No Name',
           profilePic: userCredential.user!.photoURL ?? Constants.avatarDefault,
           email: userCredential.user!.email?? 'No Email',
-          password: 'No password',
           uid: userCredential.user!.uid,
         );
         await _users.doc(userCredential.user!.uid).set(userModel.toMap());
@@ -132,7 +131,6 @@ class AuthRepository {
           name: userCredential.user!.displayName ?? name,
           profilePic: userCredential.user!.photoURL ?? Constants.avatarDefault,
           email: userCredential.user!.email?? email,
-          password: password,
           uid: userCredential.user!.uid,
         );
         await _users.doc(userCredential.user!.uid).set(userModel.toMap());

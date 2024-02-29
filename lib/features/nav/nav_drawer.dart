@@ -99,9 +99,21 @@ class NavDrawer extends ConsumerWidget {
             selected: true,
             contentPadding:
             const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.add),
+            leading: const Icon(Icons.question_answer),
             title: const Text(
-              "Messages",
+              "Requests",
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+          ),
+          ListTile(
+            onTap: () => navigateToRequests(context, user.uid),
+            selectedColor: Pallete.orangeCustomColor,
+            selected: true,
+            contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            leading: const Icon(Icons.calendar_month),
+            title: const Text(
+              "Bookings",
               style: TextStyle(color: Colors.black, fontSize: 16),
             ),
           ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
 import '../../../models/booking_model.dart';
+import '../../auth/controller/auth_controller.dart';
 import '../controller/booking_controller.dart';
 
 class BookingRequestDetails extends ConsumerStatefulWidget {
@@ -24,24 +25,47 @@ class _BookingRequestDetailsState extends ConsumerState<BookingRequestDetails> {
       booking: booking,
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(bookingControllerProvider);
     return ref.watch(getBookingByIdProvider(widget.id)).when(
-      data: (booking) => Scaffold(
-        appBar: AppBar(
-            title: const Text('Request Details'),
-            centerTitle: false,
-            actions: [
-              TextButton(onPressed: () => approveBooking(booking), child: const Text('Approve')),
-            ]
-        ),
-        body: Column()
-      ),
+      data: (booking) =>
+          Scaffold(
+            appBar: AppBar(
+              title: const Text('Request Details'),
+              centerTitle: false,
+              actions: [
+                TextButton(
+                  onPressed: () => approveBooking(booking),
+                  child: const Text('Approve'),
+                ),
+              ],
+            ),
+            body: Column(
+              children: [
+                // Fetch user details using the booking.requester field
+                ref.watch(getUserDataProvider(booking.requester)).when(
+                  data: (userData) {
+                    // Display user details
+                    return Text('User Name: ${userData.name}');
+                  },
+                  loading: () => const CircularProgressIndicator(),
+                  // Show loading indicator while fetching user details
+                  error: (error, stackTrace) =>
+                      ErrorText(
+                        error: error.toString(),
+                      ),
+                ),
+                // Add other widgets as needed
+              ],
+            ),
+          ),
       loading: () => const Loader(),
-      error: (error, stackTrace) => ErrorText(
-        error: error.toString(),
-      ),
+      error: (error, stackTrace) =>
+          ErrorText(
+            error: error.toString(),
+          ),
     );
   }
 }

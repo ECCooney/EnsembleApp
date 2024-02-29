@@ -5,9 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:ensemble/core/common/custom_text_field.dart';
+
 import 'package:ensemble/core/common/loader.dart';
+import 'package:ensemble/core/common/protected_text_field.dart';
 import 'package:ensemble/core/constants/constants.dart';
 import 'package:ensemble/theme/pallete.dart';
+import 'package:routemaster/routemaster.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
 
@@ -17,6 +20,9 @@ class RegisterScreen extends ConsumerStatefulWidget {
   ConsumerState createState() => _RegisterScreenState();
 }
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
+
+ // https://stackoverflow.com/questions/49125064/how-to-show-hide-password-in-textformfield
+  bool _obscureText = true;
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -30,6 +36,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       passwordController.text.trim(),
       context);
     }
+
+  void navigateToHome(BuildContext context) {
+    Routemaster.of(context).push('/');
+  }
 
 
   @override
@@ -96,7 +106,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         const SizedBox(height: 20),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 20),
-          child: CustomTextField(
+          child: ProtectedTextField(
+            obscureText: _obscureText,
             icon: const Icon(Icons.lock),
             controller: passwordController,
             hintText: 'Enter your password',
@@ -113,7 +124,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         ElevatedButton(
           onPressed: () {
             signUp();
-            Navigator.pop(context);
+            navigateToHome(context);
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(Colors.blue),

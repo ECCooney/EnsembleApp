@@ -28,7 +28,7 @@ class GoogleSignInButton extends ConsumerWidget {
           style: TextStyle(fontSize: 18),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Pallete.orangeCustomColor,
+          backgroundColor: const Color(0xffF5F6FA),
           elevation: 0,
           minimumSize: const Size(double.infinity, 50),
           shape: RoundedRectangleBorder(
