@@ -95,7 +95,7 @@ class BookingController extends StateNotifier<bool> {
     return Stream.value([]);
   }
 
-  void deleteBooking(BookingModel booking, BuildContext context) async {
+  void cancelBooking(BookingModel booking, BuildContext context) async {
     final res = await _bookingRepository.deleteBooking(booking);
     res.fold((l) => null, (r) => showSnackBar(context, 'Booking Deleted successfully!'));
   }

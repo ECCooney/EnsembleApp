@@ -10,6 +10,8 @@ import 'package:routemaster/routemaster.dart';
 
 import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/register_screen.dart';
+import 'features/booking/screens/booking_details.dart';
+import 'features/booking/screens/bookings.dart';
 import 'features/group/screens/add_admins_screen.dart';
 import 'features/group/screens/group_screen.dart';
 import 'features/group/screens/join_group.dart';
@@ -87,6 +89,16 @@ final loggedInRoute = RouteMap(routes: {
   '/booking-request-details/:id': (routeData) => MaterialPage(
     child: BookingRequests(
       uid: routeData.pathParameters['id']!,
+    ),
+  ),
+  '/bookings/:uid': (routeData) => MaterialPage(
+    child: Bookings(
+      uid: routeData.pathParameters['uid']!,
+    ),
+  ),
+  '/booking-details/:id': (routeData) => MaterialPage(
+    child: BookingDetails(
+      id: routeData.pathParameters['id']!,
     ),
   ),
 

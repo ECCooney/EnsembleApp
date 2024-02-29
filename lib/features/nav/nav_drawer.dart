@@ -20,6 +20,10 @@ class NavDrawer extends ConsumerWidget {
     Routemaster.of(context).push('/');
   }
 
+  void navigateToBookings(BuildContext context, String uid){
+    Routemaster.of(context).push('/bookings/$uid');
+  }
+
   void navigateToUserProfile(BuildContext context, String uid) {
     Routemaster.of(context).push('/user/$uid');
   }
@@ -27,8 +31,6 @@ class NavDrawer extends ConsumerWidget {
   void logOut(WidgetRef ref) {
     ref.read(authControllerProvider.notifier).signOut();
   }
-  
-  
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -106,7 +108,7 @@ class NavDrawer extends ConsumerWidget {
             ),
           ),
           ListTile(
-            onTap: () => navigateToRequests(context, user.uid),
+            onTap: () => navigateToBookings(context, user.uid),
             selectedColor: Pallete.orangeCustomColor,
             selected: true,
             contentPadding:

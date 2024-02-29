@@ -7,23 +7,19 @@ import '../../../models/booking_model.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../controller/booking_controller.dart';
 
-class BookingRequestDetails extends ConsumerStatefulWidget {
+class BookingDetails extends ConsumerStatefulWidget {
 
   final String id;
-  const BookingRequestDetails({super.key, required this.id});
+  const BookingDetails({super.key, required this.id});
 
   @override
-  ConsumerState createState() => _BookingRequestDetailsState();
+  ConsumerState createState() => _BookingDetailsState();
 }
 
-class _BookingRequestDetailsState extends ConsumerState<BookingRequestDetails> {
+class _BookingDetailsState extends ConsumerState<BookingDetails> {
 
-  void approveBooking(BookingModel booking) {
-    ref.read(bookingControllerProvider.notifier).approveBooking(
-      bookingStatus: 'Confirmed',
-      context: context,
-      booking: booking,
-    );
+  void cancelBooking(BookingModel booking) {
+    ref.read(bookingControllerProvider.notifier).cancelBooking(booking, context);
   }
 
   Widget build(BuildContext context) {
@@ -36,8 +32,8 @@ class _BookingRequestDetailsState extends ConsumerState<BookingRequestDetails> {
               centerTitle: false,
               actions: [
                 TextButton(
-                  onPressed: () => approveBooking(booking),
-                  child: const Text('Approve'),
+                  onPressed: () => cancelBooking(booking),
+                  child: const Text('Cancel'),
                 ),
               ],
             ),
@@ -47,8 +43,8 @@ class _BookingRequestDetailsState extends ConsumerState<BookingRequestDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Requester Header
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
                       'Requester',
                       style: TextStyle(
@@ -77,8 +73,8 @@ class _BookingRequestDetailsState extends ConsumerState<BookingRequestDetails> {
                         ),
                   ),
                   // Booking Details Header
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: Text(
                       'Booking Details',
                       style: TextStyle(
