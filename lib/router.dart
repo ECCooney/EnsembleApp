@@ -18,6 +18,7 @@ import 'features/group/screens/join_group.dart';
 import 'features/item/screens/create_item_screen.dart';
 import 'features/item/screens/edit_item_screen.dart';
 import 'features/item/screens/item_screen.dart';
+import 'features/message/screens/message_admins_screen.dart';
 import 'features/user/screens/edit_profile_screen.dart';
 import 'features/user/screens/user_profile_screen.dart';
 
@@ -38,6 +39,9 @@ final loggedInRoute = RouteMap(routes: {
     id: routeData.pathParameters['id']!,
   )),
   '/join-group/:id': (routeData) => MaterialPage(child: JoinGroupScreen(
+    id: routeData.pathParameters['id']!,
+  )),
+  '/message-admins/:id': (routeData) => MaterialPage(child: MessageAdminsScreen(
     id: routeData.pathParameters['id']!,
   )),
   '/:id' : (route) => MaterialPage(

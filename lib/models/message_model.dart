@@ -1,95 +1,95 @@
 import 'package:flutter/foundation.dart';
 
-class ItemMessageModel {
+class MessageModel {
   final String senderName;
-  final String senderId; // New field
-  final String itemId;
+  final String senderId;
+  final String groupId;
   final String id;
   final String text;
   final String subject;
-  final String bookingID;
+  final bool isRead; // New field
 
-  ItemMessageModel({
+  MessageModel({
     required this.senderName,
-    required this.senderId, // Updated constructor
-    required this.itemId,
+    required this.senderId,
+    required this.groupId,
     required this.id,
     required this.text,
     required this.subject,
-    required this.bookingID,
+    this.isRead = false, // Default value for isRead
   });
 
-  ItemMessageModel copyWith({
+  MessageModel copyWith({
     String? senderName,
     String? senderId,
-    String? itemId,
+    String? groupId,
     String? id,
     String? text,
     String? subject,
-    String? bookingID,
+    bool? isRead, // Added isRead parameter
   }) {
-    return ItemMessageModel(
+    return MessageModel(
       senderName: senderName ?? this.senderName,
       senderId: senderId ?? this.senderId,
-      itemId: itemId ?? this.itemId,
+      groupId: groupId ?? this.groupId,
       id: id ?? this.id,
       text: text ?? this.text,
       subject: subject ?? this.subject,
-      bookingID: bookingID ?? this.bookingID,
+      isRead: isRead ?? this.isRead,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'senderName': senderName,
-      'senderId': senderId, // Added toMap
-      'itemId': itemId,
+      'senderId': senderId,
+      'groupId': groupId,
       'id': id,
       'text': text,
       'subject': subject,
-      'bookingID': bookingID,
+      'isRead': isRead, // Added isRead to the map
     };
   }
 
-  factory ItemMessageModel.fromMap(Map<String, dynamic> map) {
-    return ItemMessageModel(
+  factory MessageModel.fromMap(Map<String, dynamic> map) {
+    return MessageModel(
       senderName: map['senderName'] ?? '',
-      senderId: map['senderId'] ?? '', // Added fromMap
-      itemId: map['itemId'] ?? '',
+      senderId: map['senderId'] ?? '',
+      groupId: map['groupId'] ?? '',
       id: map['id'] ?? '',
       text: map['text'] ?? '',
       subject: map['subject'] ?? '',
-      bookingID: map['bookingID'] ?? '',
+      isRead: map['isRead'] ?? false, // Added isRead from map
     );
   }
 
   @override
   String toString() {
-    return 'ItemMessageModel(senderName: $senderName, senderId: $senderId, itemId: $itemId, id: $id, text: $text, subject: $subject, bookingID: $bookingID)';
+    return 'MessageModel(senderName: $senderName, senderId: $senderId, groupId: $groupId, id: $id, text: $text, subject: $subject, isRead: $isRead)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is ItemMessageModel &&
+    return other is MessageModel &&
         other.senderName == senderName &&
         other.senderId == senderId &&
-        other.itemId == itemId &&
+        other.groupId == groupId &&
         other.id == id &&
         other.text == text &&
         other.subject == subject &&
-        other.bookingID == bookingID;
+        other.isRead == isRead; // Added isRead comparison
   }
 
   @override
   int get hashCode {
     return senderName.hashCode ^
     senderId.hashCode ^
-    itemId.hashCode ^
+    groupId.hashCode ^
     id.hashCode ^
     text.hashCode ^
     subject.hashCode ^
-    bookingID.hashCode;
+    isRead.hashCode; // Added isRead hashCode
   }
 }

@@ -5,6 +5,7 @@ import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
 import '../../../models/booking_model.dart';
 import '../../auth/controller/auth_controller.dart';
+import '../../nav/nav_drawer.dart';
 import '../controller/booking_controller.dart';
 
 class BookingDetails extends ConsumerStatefulWidget {
@@ -37,6 +38,7 @@ class _BookingDetailsState extends ConsumerState<BookingDetails> {
                 ),
               ],
             ),
+            drawer: const NavDrawer(),
             body: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(

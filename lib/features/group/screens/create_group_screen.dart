@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:ensemble/core/common/loader.dart';
 
+import '../../nav/nav_drawer.dart';
+
 class CreateGroupScreen extends ConsumerStatefulWidget {
   const CreateGroupScreen({super.key});
 
@@ -46,6 +48,7 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
         appBar: AppBar(
           title: const Text ('Create a Group'),
         ),
+        drawer: const NavDrawer(),
         body: isLoading?
         const Loader() :
         Padding(

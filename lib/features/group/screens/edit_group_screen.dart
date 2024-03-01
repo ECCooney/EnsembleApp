@@ -9,6 +9,7 @@ import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
 import '../../../core/constants/constants.dart';
 import '../../../models/group_model.dart';
+import '../../nav/nav_drawer.dart';
 
 class EditGroupScreen extends ConsumerStatefulWidget {
   final String id;
@@ -74,6 +75,7 @@ class _EditGroupScreenState extends ConsumerState<EditGroupScreen> {
             TextButton(onPressed: () => saveEdit(group), child: const Text('Save')),
           ]
         ),
+        drawer: const NavDrawer(),
         body: isLoading
             ? const Loader()
             : Padding(

@@ -5,14 +5,15 @@ import 'package:uuid/uuid.dart';
 import '../../../core/providers/storage_repository_providers.dart';
 import '../../../core/utils.dart';
 import '../../../models/booking_model.dart';
-import '../../../models/item_message_model.dart';
+import '../../../models/group_model.dart';
 import '../../../models/item_model.dart';
+import '../../../models/message_model.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../repository/message_repository.dart';
 
-final itemMessagesProvider = StreamProvider.family((ref, List<ItemModel> items) {
+final messagesProvider = StreamProvider.family((ref, List<GroupModel> groups) {
   final messageController = ref.watch(messageControllerProvider.notifier);
-  return messageController.getItemMessages(items);
+  return messageController.getMessages(groups);
 });
 
 final messageControllerProvider = StateNotifierProvider<MessageController, bool>((ref) {
@@ -21,9 +22,9 @@ final messageControllerProvider = StateNotifierProvider<MessageController, bool>
   return MessageController(messageRepository: messageRepository, ref: ref, storageRepository: storageRepository);
 });
 
-final getItemMessageByIdProvider = StreamProvider.family((ref, String id) {
+final getMessageByIdProvider = StreamProvider.family((ref, String id) {
   final messageController = ref.watch(messageControllerProvider.notifier);
-  return messageController.getItemMessageById(id);
+  return messageController.getMessageById(id);
 });
 
 class MessageController extends StateNotifier<bool> {
@@ -39,29 +40,28 @@ class MessageController extends StateNotifier<bool> {
         _storageRepository = storageRepository,
         super(false);
 
-  void createItemMessage({
+  void sendMessage({
     required BuildContext context,
     required String subject,
     required String text,
-    required BookingModel booking
+    required GroupModel group
 
   }) async {
     state = true;
     String messageId = const Uuid().v1();
     final user = _ref.read(userProvider)!;
 
-    final ItemMessageModel itemMessage = ItemMessageModel(
+    final MessageModel message = MessageModel(
       id: messageId,
-      itemId: booking.itemId,
+      groupId: group.id,
       senderId: user.uid,
       senderName: user.name,
       subject: subject,
       text: text,
-      bookingID: booking.id
-
+      isRead: false,
     );
 
-    final res = await _messageRepository.addItemMessage(itemMessage);
+    final res = await _messageRepository.addMessage(message);
     state = false;
     res.fold((l) => showSnackBar(context, l.message), (r) {
       showSnackBar(context, 'Added successfully!');
@@ -70,19 +70,19 @@ class MessageController extends StateNotifier<bool> {
   }
 
 
-  Stream<List<ItemMessageModel>> getItemMessages(List<ItemModel> items) {
-    if (items.isNotEmpty) {
-      return _messageRepository.getItemMessages(items);
+  Stream<List<MessageModel>> getMessages(List<GroupModel> groups) {
+    if (groups.isNotEmpty) {
+      return _messageRepository.getMessages(groups);
     }
     return Stream.value([]);
   }
 
-  void deleteItemMessage(ItemMessageModel itemMessage, BuildContext context) async {
-    final res = await _messageRepository.deleteItemMessage(itemMessage);
+  void deleteMessage(MessageModel message, BuildContext context) async {
+    final res = await _messageRepository.deleteMessage(message);
     res.fold((l) => null, (r) => showSnackBar(context, 'Message Deleted successfully!'));
   }
 
-  Stream<ItemMessageModel> getItemMessageById(String id) {
-    return _messageRepository.getItemMessageById(id);
+  Stream<MessageModel> getMessageById(String id) {
+    return _messageRepository.getMessageById(id);
   }
 }

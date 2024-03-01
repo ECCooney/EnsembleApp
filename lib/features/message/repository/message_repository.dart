@@ -7,8 +7,8 @@ import 'package:fpdart/fpdart.dart';
 import 'package:ensemble/core/constants/firebase_constants.dart';
 import 'package:ensemble/core/failure.dart';
 import 'package:ensemble/core/type_defs.dart';
-import '../../../models/item_message_model.dart';
 import '../../../models/item_model.dart';
+import '../../../models/message_model.dart';
 import '../../../models/user_model.dart';
 
 final messageRepositoryProvider = Provider
@@ -21,12 +21,12 @@ class MessageRepository {
   final FirebaseFirestore _firestore;
   MessageRepository({required FirebaseFirestore firestore}) : _firestore = firestore;
 
-  CollectionReference get _itemMessages => _firestore.collection(FirebaseConstants.itemMessagesCollection);
+  CollectionReference get _messages => _firestore.collection(FirebaseConstants.messagesCollection);
   CollectionReference get _users => _firestore.collection(FirebaseConstants.usersCollection);
 
-  FutureVoid addItemMessage(ItemMessageModel itemMessage) async {
+  FutureVoid addMessage(MessageModel message) async {
     try {
-      return right(_itemMessages.doc(itemMessage.id).set(itemMessage.toMap()));
+      return right(_messages.doc(message.id).set(message.toMap()));
     } on FirebaseException catch (e) {
       throw e.message!;
     } catch (e) {
@@ -34,14 +34,14 @@ class MessageRepository {
     }
   }
 
-  Stream<List<ItemMessageModel>> getItemMessages(List<ItemModel> items) {
-    return _itemMessages
-        .where('itemId', whereIn: items.map((e) => e.id).toList())
+  Stream<List<MessageModel>> getMessages(List<GroupModel> groups) {
+    return _messages
+        .where('groupId', whereIn: groups.map((e) => e.id).toList())
         .snapshots()
         .map(
           (event) => event.docs
           .map(
-            (e) => ItemMessageModel.fromMap(
+            (e) => MessageModel.fromMap(
           e.data() as Map<String, dynamic>,
         ),
       )
@@ -49,9 +49,9 @@ class MessageRepository {
     );
   }
 
-  FutureVoid deleteItemMessage(ItemMessageModel itemMessage) async {
+  FutureVoid deleteMessage(MessageModel message) async {
     try {
-      return right(_itemMessages.doc(itemMessage.id).delete());
+      return right(_messages.doc(message.id).delete());
     } on FirebaseException catch (e) {
       throw e.message!;
     } catch (e) {
@@ -59,8 +59,8 @@ class MessageRepository {
     }
   }
 
-  Stream<ItemMessageModel> getItemMessageById(String id) {
-    return _itemMessages.doc(id).snapshots().map((event) => ItemMessageModel.fromMap(event.data() as Map<String, dynamic>));
+  Stream<MessageModel> getMessageById(String id) {
+    return _messages.doc(id).snapshots().map((event) => MessageModel.fromMap(event.data() as Map<String, dynamic>));
   }
 
 }

@@ -8,6 +8,7 @@ import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
 import '../../../models/booking_model.dart';
 import '../../auth/controller/auth_controller.dart';
+import '../../nav/nav_drawer.dart';
 import '../../user/controller/user_controller.dart';
 import '../../user/repository/user_repository.dart';
 import 'booking_details.dart';
@@ -27,6 +28,7 @@ class Bookings extends ConsumerWidget {
         appBar: AppBar(
           title: Text('Booking Details'),
         ),
+        drawer: const NavDrawer(),
         body: ref.watch(getUserBookingsProvider(uid)).when(
           data: (bookings) {
             return ListView.builder(

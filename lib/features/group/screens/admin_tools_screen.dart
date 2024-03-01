@@ -5,6 +5,7 @@ import 'package:routemaster/routemaster.dart';
 import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
 import '../../../models/group_model.dart';
+import '../../nav/nav_drawer.dart';
 import '../controller/group_controller.dart';
 
 
@@ -42,6 +43,7 @@ class _AdminToolsScreenState extends ConsumerState<AdminToolsScreen> {
       appBar: AppBar(
         title: const Text('Admin Tools'),
       ),
+        drawer: const NavDrawer(),
         body: Column(
           children: [
             ListTile(

@@ -1,14 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
-
 import '../../../core/constants/firebase_constants.dart';
 import '../../../core/failure.dart';
 import '../../../core/providers/firebase_providers.dart';
 import '../../../core/type_defs.dart';
 import '../../../models/booking_model.dart';
-import '../../../models/item_message_model.dart';
 import '../../../models/item_model.dart';
+import '../../../models/message_model.dart';
 import '../../../models/user_model.dart';
 
 final userRepositoryProvider = Provider((ref) {
@@ -22,7 +21,7 @@ class UserRepository {
 
   CollectionReference get _users => _firestore.collection(FirebaseConstants.usersCollection);
   CollectionReference get _items => _firestore.collection(FirebaseConstants.itemsCollection);
-  CollectionReference get _itemMessages => _firestore.collection(FirebaseConstants.itemMessagesCollection);
+  CollectionReference get _itemMessages => _firestore.collection(FirebaseConstants.messagesCollection);
   CollectionReference get _bookings => _firestore.collection(FirebaseConstants.bookingsCollection);
 
   FutureVoid editProfile(UserModel user) async {
@@ -47,11 +46,11 @@ class UserRepository {
     );
   }
 
-  Stream<List<ItemMessageModel>> getUserSentMessages(String uid) {
+  Stream<List<MessageModel>> getUserSentMessages(String uid) {
     return _itemMessages.where('sender', isEqualTo: uid).snapshots().map(
           (event) => event.docs
           .map(
-            (e) => ItemMessageModel.fromMap(
+            (e) => MessageModel.fromMap(
           e.data() as Map<String, dynamic>,
         ),
       )
@@ -86,6 +85,4 @@ class UserRepository {
           .toList(),
     );
   }
-
-
 }

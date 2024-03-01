@@ -1,4 +1,3 @@
-import 'package:ensemble/models/item_message_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -8,6 +7,7 @@ import '../../../core/providers/storage_repository_providers.dart';
 import '../../../core/utils.dart';
 import '../../../models/booking_model.dart';
 import '../../../models/item_model.dart';
+import '../../../models/message_model.dart';
 import '../../../models/user_model.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../repository/user_repository.dart';
@@ -93,7 +93,7 @@ class UserController extends StateNotifier<bool> {
     return _userRepository.getUserBookings(uid);
   }
 
-  Stream<List<ItemMessageModel>> getUserSentMessages(String uid) {
+  Stream<List<MessageModel>> getUserSentMessages(String uid) {
     return _userRepository.getUserSentMessages(uid);
   }
 

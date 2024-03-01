@@ -11,6 +11,7 @@ import '../../../theme/pallete.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../../booking/controller/booking_controller.dart';
 import '../../message/controller/message_controller.dart';
+import '../../nav/nav_drawer.dart';
 import '../controller/item_controller.dart';
 
 class ItemScreen extends ConsumerStatefulWidget {
@@ -135,6 +136,7 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
       appBar: AppBar(
         title: const Text('Item Details'),
       ),
+      drawer: const NavDrawer(),
       body: FutureBuilder<List<DateTime>>(
         future: _blackoutDatesFuture,
         builder: (context, snapshot) {

@@ -10,6 +10,7 @@ import '../../../core/common/loader.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/utils.dart';
 import '../../auth/controller/auth_controller.dart';
+import '../../nav/nav_drawer.dart';
 import '../controller/user_controller.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
@@ -75,6 +76,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
             ),
           ],
         ),
+        drawer: const NavDrawer(),
         body: isLoading
             ? const Loader()
           : Padding(
