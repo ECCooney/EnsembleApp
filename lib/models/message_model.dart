@@ -7,7 +7,8 @@ class MessageModel {
   final String id;
   final String text;
   final String subject;
-  final bool isRead; // New field
+  final bool isRead;
+  final String? response; // New field
 
   MessageModel({
     required this.senderName,
@@ -16,7 +17,8 @@ class MessageModel {
     required this.id,
     required this.text,
     required this.subject,
-    this.isRead = false, // Default value for isRead
+    this.isRead = false,
+    this.response, // Added response field
   });
 
   MessageModel copyWith({
@@ -26,7 +28,8 @@ class MessageModel {
     String? id,
     String? text,
     String? subject,
-    bool? isRead, // Added isRead parameter
+    bool? isRead,
+    String? response, // Added response parameter
   }) {
     return MessageModel(
       senderName: senderName ?? this.senderName,
@@ -36,6 +39,7 @@ class MessageModel {
       text: text ?? this.text,
       subject: subject ?? this.subject,
       isRead: isRead ?? this.isRead,
+      response: response ?? this.response, // Updated copyWith
     );
   }
 
@@ -47,7 +51,8 @@ class MessageModel {
       'id': id,
       'text': text,
       'subject': subject,
-      'isRead': isRead, // Added isRead to the map
+      'isRead': isRead,
+      'response': response, // Added response to the map
     };
   }
 
@@ -59,13 +64,14 @@ class MessageModel {
       id: map['id'] ?? '',
       text: map['text'] ?? '',
       subject: map['subject'] ?? '',
-      isRead: map['isRead'] ?? false, // Added isRead from map
+      isRead: map['isRead'] ?? false,
+      response: map['response'], // Added response from map
     );
   }
 
   @override
   String toString() {
-    return 'MessageModel(senderName: $senderName, senderId: $senderId, groupId: $groupId, id: $id, text: $text, subject: $subject, isRead: $isRead)';
+    return 'MessageModel(senderName: $senderName, senderId: $senderId, groupId: $groupId, id: $id, text: $text, subject: $subject, isRead: $isRead, response: $response)';
   }
 
   @override
@@ -79,7 +85,8 @@ class MessageModel {
         other.id == id &&
         other.text == text &&
         other.subject == subject &&
-        other.isRead == isRead; // Added isRead comparison
+        other.isRead == isRead &&
+        other.response == response; // Added response comparison
   }
 
   @override
@@ -90,6 +97,7 @@ class MessageModel {
     id.hashCode ^
     text.hashCode ^
     subject.hashCode ^
-    isRead.hashCode; // Added isRead hashCode
+    isRead.hashCode ^
+    response.hashCode; // Added response hashCode
   }
 }

@@ -28,6 +28,10 @@ class NavDrawer extends ConsumerWidget {
     Routemaster.of(context).push('/user/$uid');
   }
 
+  void navigateToMessageResponses(BuildContext context, String uid) {
+    Routemaster.of(context).push('/responses/$uid');
+  }
+
   void logOut(WidgetRef ref) {
     ref.read(authControllerProvider.notifier).signOut();
   }
@@ -116,6 +120,18 @@ class NavDrawer extends ConsumerWidget {
             leading: const Icon(Icons.calendar_month),
             title: const Text(
               "Bookings",
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+          ),
+          ListTile(
+            onTap: () => navigateToMessageResponses(context, user.uid),
+            selectedColor: Pallete.orangeCustomColor,
+            selected: true,
+            contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            leading: const Icon(Icons.message),
+            title: const Text(
+              "Message Responses",
               style: TextStyle(color: Colors.black, fontSize: 16),
             ),
           ),

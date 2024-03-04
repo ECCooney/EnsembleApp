@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/common/error_text.dart';
 import '../../../core/common/item_card.dart';
@@ -42,6 +43,8 @@ class GroupScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
+
+
     return Scaffold(
       drawer: const NavDrawer(),
       body: ref.watch(getGroupByIdProvider(id)).when(
@@ -120,20 +123,30 @@ class GroupScreen extends ConsumerWidget {
             body: isMember
                 ? ref.watch(getGroupItemsProvider(id)).when(
               data: (items) {
-                return ListView.builder(
+                return GridView.builder(
+                  padding: const EdgeInsets.all(4.0),
                   itemCount: items.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final item = items[index];
-                    return ItemCard(item: item);
-                  },
-                );
+                  shrinkWrap: true,
+                  physics: const ScrollPhysics(),gridDelegate:
+          const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 200,
+          childAspectRatio: 3 / 4.8,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10),
+          itemBuilder: (context, index) {
+          var item = items[index];
+          return GestureDetector(
+          onTap: () {},
+          child: ItemCard(item: item));
+          },
+                    );
               },
               error: (error, stackTrace) {
                 return ErrorText(error: error.toString());
               },
               loading: () => const Loader(),
             )
-                : const SizedBox(), // Non-members don't see the ListView
+                : const SizedBox(), // Non-members don't see the GridView
           );
         },
         error: (error, stackTrace) => ErrorText(error: error.toString()),

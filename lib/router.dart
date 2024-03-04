@@ -1,10 +1,12 @@
 //logged out
 
 import 'package:ensemble/features/booking/screens/booking_requests.dart';
+import 'package:ensemble/features/group/screens/admin_messages_screen.dart';
 import 'package:ensemble/features/group/screens/admin_tools_screen.dart';
 import 'package:ensemble/features/group/screens/create_group_screen.dart';
 import 'package:ensemble/features/group/screens/edit_group_screen.dart';
 import 'package:ensemble/features/home/screens/home_screen.dart';
+import 'package:ensemble/features/message/screens/message_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -19,6 +21,7 @@ import 'features/item/screens/create_item_screen.dart';
 import 'features/item/screens/edit_item_screen.dart';
 import 'features/item/screens/item_screen.dart';
 import 'features/message/screens/message_admins_screen.dart';
+import 'features/message/screens/message_responses_screen.dart';
 import 'features/user/screens/edit_profile_screen.dart';
 import 'features/user/screens/user_profile_screen.dart';
 
@@ -58,6 +61,17 @@ final loggedInRoute = RouteMap(routes: {
       id: routeData.pathParameters['id']!,
     ),
   ),
+  '/view-messages/:id': (routeData) => MaterialPage(
+    child: AdminMessagesScreen(
+      id: routeData.pathParameters['id']!,
+    ),
+  ),
+  '/message-details/:id': (routeData) => MaterialPage(
+    child: MessageDetailsScreen(
+      id: routeData.pathParameters['id']!,
+    ),
+  ),
+
 
   //item
   '/create-item/:id': (routeData) => MaterialPage(child: CreateItemScreen(
@@ -79,6 +93,11 @@ final loggedInRoute = RouteMap(routes: {
   ),
   '/edit-profile/:uid': (routeData) => MaterialPage(
     child: EditProfileScreen(
+      uid: routeData.pathParameters['uid']!,
+    ),
+  ),
+  '/responses/:uid': (routeData) => MaterialPage(
+    child: MessageResponsesScreen(
       uid: routeData.pathParameters['uid']!,
     ),
   ),

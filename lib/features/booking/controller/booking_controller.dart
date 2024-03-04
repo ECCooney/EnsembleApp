@@ -66,7 +66,7 @@ class BookingController extends StateNotifier<bool> {
     final res = await _bookingRepository.addBooking(booking);
     state = false;
     res.fold((l) => showSnackBar(context, l.message), (r) {
-      showSnackBar(context, 'Added successfully!');
+      showSnackBar(context, 'Request sent!');
       Routemaster.of(context).pop();
     });
   }

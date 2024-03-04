@@ -59,6 +59,39 @@ class MessageRepository {
     }
   }
 
+  FutureVoid addResponse(MessageModel message) async {
+    try {
+      return right(_messages.doc(message.id).update(message.toMap()));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  FutureVoid changeToRead(MessageModel message) async {
+    try {
+      return right(_messages.doc(message.id).update(message.toMap()));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
+  Stream<List<MessageModel>> getGroupMessages(String id) {
+    return _messages.where('groupId', isEqualTo: id).snapshots().map(
+          (event) => event.docs
+          .map(
+            (e) => MessageModel.fromMap(
+          e.data() as Map<String, dynamic>,
+        ),
+      )
+          .toList(),
+    );
+  }
+
+
   Stream<MessageModel> getMessageById(String id) {
     return _messages.doc(id).snapshots().map((event) => MessageModel.fromMap(event.data() as Map<String, dynamic>));
   }

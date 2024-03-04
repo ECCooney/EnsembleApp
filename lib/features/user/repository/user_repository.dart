@@ -47,7 +47,7 @@ class UserRepository {
   }
 
   Stream<List<MessageModel>> getUserSentMessages(String uid) {
-    return _itemMessages.where('sender', isEqualTo: uid).snapshots().map(
+    return _itemMessages.where('senderId', isEqualTo: uid).snapshots().map(
           (event) => event.docs
           .map(
             (e) => MessageModel.fromMap(

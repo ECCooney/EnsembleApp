@@ -30,6 +30,11 @@ class _AdminToolsScreenState extends ConsumerState<AdminToolsScreen> {
     Routemaster.of(context).push('/edit-group/${widget.id}');
   }
 
+  void navigateToAdminMessages(BuildContext context) {
+    Routemaster.of(context).push('/view-messages/${widget.id}');
+  }
+
+
   void navigateToAddAdmins(BuildContext context) {
     Routemaster.of(context).push('/add-admins/${widget.id}');
   }
@@ -59,8 +64,7 @@ class _AdminToolsScreenState extends ConsumerState<AdminToolsScreen> {
             ListTile(
               leading: const Icon(Icons.message_outlined),
               title: const Text('View Messages'),
-              onTap: () {
-              },
+              onTap: () => navigateToAdminMessages(context)
             ),
             Expanded(
               child: Align(

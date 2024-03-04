@@ -4,9 +4,7 @@ import 'package:routemaster/routemaster.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/providers/storage_repository_providers.dart';
 import '../../../core/utils.dart';
-import '../../../models/booking_model.dart';
 import '../../../models/group_model.dart';
-import '../../../models/item_model.dart';
 import '../../../models/message_model.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../repository/message_repository.dart';
@@ -25,6 +23,11 @@ final messageControllerProvider = StateNotifierProvider<MessageController, bool>
 final getMessageByIdProvider = StreamProvider.family((ref, String id) {
   final messageController = ref.watch(messageControllerProvider.notifier);
   return messageController.getMessageById(id);
+});
+
+final getGroupMessagesProvider = StreamProvider.family((ref, String id) {
+  final messageController = ref.watch(messageControllerProvider.notifier);
+  return messageController.getGroupMessages(id);
 });
 
 class MessageController extends StateNotifier<bool> {
@@ -64,11 +67,26 @@ class MessageController extends StateNotifier<bool> {
     final res = await _messageRepository.addMessage(message);
     state = false;
     res.fold((l) => showSnackBar(context, l.message), (r) {
-      showSnackBar(context, 'Added successfully!');
+      showSnackBar(context, 'Message sent!');
       Routemaster.of(context).pop();
     });
   }
 
+  void addResponse({
+    required String? response,
+    required BuildContext context,
+    required MessageModel message,
+  }) async {
+    if (response != null) {
+      message = message.copyWith(response: response);
+    }
+    final res = await _messageRepository.addResponse(message);
+
+    res.fold(
+          (l) => showSnackBar(context, l.message),
+          (r) => Routemaster.of(context).pop(),
+    );
+  }
 
   Stream<List<MessageModel>> getMessages(List<GroupModel> groups) {
     if (groups.isNotEmpty) {
@@ -77,12 +95,27 @@ class MessageController extends StateNotifier<bool> {
     return Stream.value([]);
   }
 
+  void changeToRead(MessageModel message, BuildContext context) async {
+    message = message.copyWith(isRead: true);
+    final res = await _messageRepository.changeToRead(message);
+
+    res.fold(
+          (l) => showSnackBar(context, l.message),
+          (r) => Routemaster.of(context).pop(),
+    );
+  }
+
   void deleteMessage(MessageModel message, BuildContext context) async {
     final res = await _messageRepository.deleteMessage(message);
     res.fold((l) => null, (r) => showSnackBar(context, 'Message Deleted successfully!'));
   }
 
+  Stream<List<MessageModel>> getGroupMessages(String id) {
+    return _messageRepository.getGroupMessages(id);
+  }
+
   Stream<MessageModel> getMessageById(String id) {
     return _messageRepository.getMessageById(id);
   }
+
 }
