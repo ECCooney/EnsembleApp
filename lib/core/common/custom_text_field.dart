@@ -9,7 +9,6 @@ class CustomTextField extends StatelessWidget {
 
   final FormFieldValidator validator;
 
-
   const CustomTextField({
     Key? key,
     required this.controller,

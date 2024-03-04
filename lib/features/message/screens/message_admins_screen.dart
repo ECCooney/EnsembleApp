@@ -12,53 +12,39 @@ import '../../../core/common/error_text.dart';
 import '../../../core/utils.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../../nav/nav_drawer.dart';
+import '../controller/message_controller.dart';
 
-class CreateItemScreen extends ConsumerStatefulWidget {
+class MessageAdminsScreen extends ConsumerStatefulWidget {
   final String id;
-  const CreateItemScreen({
+  const MessageAdminsScreen({
     required this.id,
     Key? key,
   }) : super(key: key);
 
   @override
-  ConsumerState createState() => _CreateItemScreenState();
+  ConsumerState createState() => _MessageAdminsScreenState();
 }
 
-class _CreateItemScreenState extends ConsumerState<CreateItemScreen> {
-  File? itemPicFile;
+class _MessageAdminsScreenState extends ConsumerState<MessageAdminsScreen> {
 
-  List<String> categories = ['DIY', 'Household', 'Clothing', 'Other'];
-  String? category;
-
-  final itemNameController = TextEditingController();
-  final itemDescriptionController = TextEditingController();
-  final itemCategoryController = TextEditingController();
+  final messageSubjectController = TextEditingController();
+  final messageTextController = TextEditingController();
 
   //https://javeedishaq.medium.com/understanding-the-dispose-method-in-flutter-e96d9a19442a#:~:text=In%20Flutter%2C%20the%20dispose%20method,can%20be%20safely%20cleaned%20up.
   @override
   void dispose() {
     super.dispose();
-    itemNameController.dispose();
-    itemDescriptionController.dispose();
+    messageSubjectController.dispose();
+    messageTextController.dispose();
   }
 
-  void chooseItemPic() async {
-    final res = await pickImage();
 
-    if (res != null) {
-      setState(() {
-        itemPicFile = File(res.files.first.path!);
-      });
-    }
-  }
-
-  void createItem(GroupModel group) {
-    if (itemNameController.text.isNotEmpty) {
-      ref.read(itemControllerProvider.notifier).createItem(
+  void sendMessage(GroupModel group) {
+    if (messageSubjectController.text.isNotEmpty) {
+      ref.read(messageControllerProvider.notifier).sendMessage(
         context: context,
-        name: itemNameController.text.trim(),
-        description: itemDescriptionController.text.trim(),
-        category: category ?? categories[0],
+        subject: messageSubjectController.text.trim(),
+        text: messageTextController.text.trim(),
         group: group,
       );
     } else {
@@ -73,7 +59,7 @@ class _CreateItemScreenState extends ConsumerState<CreateItemScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create a Item'),
+        title: const Text('Message Group Admins'),
       ),
       drawer: const NavDrawer(),
       body: isLoading
@@ -86,60 +72,34 @@ class _CreateItemScreenState extends ConsumerState<CreateItemScreen> {
               children: [
                 const Align(
                   alignment: Alignment.topLeft,
-                  child: Text('Item Name'),
+                  child: Text('Subject'),
                 ),
                 const SizedBox(height: 10,),
                 TextField(
-                  controller: itemNameController,
+                  controller: messageSubjectController,
                   decoration: const InputDecoration(
-                    hintText: 'My Item Name',
+                    hintText: 'Subject',
                     filled: true,
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.all(18),
                   ),
                   maxLength: 30,
                 ),
-
                 const SizedBox(height: 20),
                 const Align(
                   alignment: Alignment.topLeft,
-                  child: Text(
-                    'Select Category',
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: DropdownButton(
-                    value: category ?? categories[0],
-                    items: categories
-                        .map(
-                          (e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(e), // Changed 'category' to e
-                      ),
-                    )
-                        .toList(),
-                    onChanged: (val) {
-                      setState(() {
-                        category = val;
-                      });
-                    },
-                  ),
-                ),
-                const Align(
-                  alignment: Alignment.topLeft,
-                  child: Text('Item Description'),
+                  child: Text('Message Content'),
                 ),
                 const SizedBox(height: 10,),
                 SizedBox(
                   height: 140, // <-- TextField height
                   child: TextField(
-                    controller: itemDescriptionController,
+                    controller: messageTextController,
                     maxLines: null,
                     expands: true,
                     keyboardType: TextInputType.multiline,
                     decoration: const InputDecoration(
-                      hintText: 'A Short Description',
+                      hintText: 'Message Body',
                       filled: true,
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.all(18),
@@ -149,7 +109,7 @@ class _CreateItemScreenState extends ConsumerState<CreateItemScreen> {
                 ),
                 const SizedBox(height: 30,),
                 ElevatedButton(
-                  onPressed: () => createItem(group),
+                  onPressed: () => sendMessage(group),
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
@@ -157,7 +117,7 @@ class _CreateItemScreenState extends ConsumerState<CreateItemScreen> {
                     ),
                   ),
                   child: const Text(
-                    'Create Item',
+                    'Send Message',
                     style: TextStyle(
                       fontSize: 17,
                     ),

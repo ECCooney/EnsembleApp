@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
 import '../../auth/controller/auth_controller.dart';
+import '../../nav/nav_drawer.dart';
 import '../controller/group_controller.dart';
 
 
@@ -53,6 +54,7 @@ class _AddAdminsScreenState extends ConsumerState<AddAdminsScreen> {
           ),
         ],
       ),
+      drawer: const NavDrawer(),
       body: ref.watch(getGroupByIdProvider(widget.id)).when(
         data: (group) => ListView.builder(
           itemCount: group.members.length,

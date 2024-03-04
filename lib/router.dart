@@ -1,5 +1,6 @@
 //logged out
 
+import 'package:ensemble/features/booking/screens/booking_requests.dart';
 import 'package:ensemble/features/group/screens/admin_tools_screen.dart';
 import 'package:ensemble/features/group/screens/create_group_screen.dart';
 import 'package:ensemble/features/group/screens/edit_group_screen.dart';
@@ -9,12 +10,15 @@ import 'package:routemaster/routemaster.dart';
 
 import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/register_screen.dart';
+import 'features/booking/screens/booking_details.dart';
+import 'features/booking/screens/bookings.dart';
 import 'features/group/screens/add_admins_screen.dart';
 import 'features/group/screens/group_screen.dart';
 import 'features/group/screens/join_group.dart';
 import 'features/item/screens/create_item_screen.dart';
 import 'features/item/screens/edit_item_screen.dart';
 import 'features/item/screens/item_screen.dart';
+import 'features/message/screens/message_admins_screen.dart';
 import 'features/user/screens/edit_profile_screen.dart';
 import 'features/user/screens/user_profile_screen.dart';
 
@@ -35,6 +39,9 @@ final loggedInRoute = RouteMap(routes: {
     id: routeData.pathParameters['id']!,
   )),
   '/join-group/:id': (routeData) => MaterialPage(child: JoinGroupScreen(
+    id: routeData.pathParameters['id']!,
+  )),
+  '/message-admins/:id': (routeData) => MaterialPage(child: MessageAdminsScreen(
     id: routeData.pathParameters['id']!,
   )),
   '/:id' : (route) => MaterialPage(
@@ -75,5 +82,29 @@ final loggedInRoute = RouteMap(routes: {
       uid: routeData.pathParameters['uid']!,
     ),
   ),
+
+  //bookings
+
+  '/booking-requests/:uid': (routeData) => MaterialPage(
+    child: BookingRequests(
+      uid: routeData.pathParameters['uid']!,
+    ),
+  ),
+  '/booking-request-details/:id': (routeData) => MaterialPage(
+    child: BookingRequests(
+      uid: routeData.pathParameters['id']!,
+    ),
+  ),
+  '/bookings/:uid': (routeData) => MaterialPage(
+    child: Bookings(
+      uid: routeData.pathParameters['uid']!,
+    ),
+  ),
+  '/booking-details/:id': (routeData) => MaterialPage(
+    child: BookingDetails(
+      id: routeData.pathParameters['id']!,
+    ),
+  ),
+
 });
 

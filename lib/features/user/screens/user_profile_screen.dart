@@ -7,6 +7,7 @@ import '../../../core/common/error_text.dart';
 import '../../../core/common/item_card.dart';
 import '../../../core/common/loader.dart';
 import '../../auth/controller/auth_controller.dart';
+import '../../nav/nav_drawer.dart';
 import '../controller/user_controller.dart';
 
 class UserProfileScreen extends ConsumerWidget {
@@ -23,6 +24,7 @@ class UserProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      drawer: const NavDrawer(),
       body: ref.watch(getUserDataProvider(uid)).when(
         data: (user) => NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) {

@@ -9,6 +9,7 @@ import '../../../models/group_model.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../../group/controller/group_controller.dart';
 import '../../../theme/pallete.dart';
+import '../../nav/nav_drawer.dart';
 
 class GroupScreen extends ConsumerWidget {
   final String id;
@@ -34,15 +35,18 @@ class GroupScreen extends ConsumerWidget {
     ref.read(groupControllerProvider.notifier).leaveGroup(group, context);
   }
 
+  void navigateToMessageAdmins(BuildContext context) {
+    Routemaster.of(context).push('/message-admins/$id');
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
-
     return Scaffold(
+      drawer: const NavDrawer(),
       body: ref.watch(getGroupByIdProvider(id)).when(
         data: (group) {
           final bool isMember = group.members.contains(user.uid);
-
           return NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) {
               return [
@@ -135,22 +139,37 @@ class GroupScreen extends ConsumerWidget {
         error: (error, stackTrace) => ErrorText(error: error.toString()),
         loading: () => const Loader(),
       ),
-      floatingActionButton: ref.watch(getGroupByIdProvider(id)).maybeWhen(
-        data: (group) {
-          final bool isMember = group.members.contains(user.uid);
-          if (isMember) {
-            return FloatingActionButton(
-              onPressed: () {
-                navigateToCreateItem(context);
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+            ref.watch(getGroupByIdProvider(id)).maybeWhen(
+              data: (group) {
+                final bool isMember = group.members.contains(user.uid);
+                if (isMember) {
+                  return FloatingActionButton(
+                    onPressed: () {
+                      navigateToCreateItem(context);
+                    },
+                    backgroundColor: Pallete.sageCustomColor,
+                    heroTag: null,
+                    child: const Icon(Icons.add),
+                  );
+                } else {
+                  return const SizedBox(); // Non-members don't see the FloatingActionButton
+                }
               },
-              backgroundColor: Pallete.sageCustomColor,
-              child: const Icon(Icons.add),
-            );
-          } else {
-            return null; // Non-members don't see the FloatingActionButton
-          }
-        },
-        orElse: () => null,
+              orElse: () => const SizedBox(),
+            ),
+          const SizedBox(height: 10),
+          FloatingActionButton(
+            onPressed: () {
+              navigateToMessageAdmins(context);
+            },
+            backgroundColor: Pallete.sageCustomColor, // Example color
+            child: const Icon(Icons.message),
+            heroTag: null,// Example icon
+          ),
+        ],
       ),
     );
   }

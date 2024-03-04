@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:uuid/uuid.dart';
 import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
+import '../../../models/booking_model.dart';
 import '../../../models/item_model.dart';
 import '../../../theme/pallete.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../../booking/controller/booking_controller.dart';
+import '../../message/controller/message_controller.dart';
+import '../../nav/nav_drawer.dart';
 import '../controller/item_controller.dart';
 
 class ItemScreen extends ConsumerStatefulWidget {
@@ -26,7 +30,9 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
   late DateTime _bookingStart;
   late DateTime _bookingEnd;
 
-  late Future<List<DateTime>> _blackoutDatesFuture;
+  String bookingId = const Uuid().v1();
+
+  Future <List<DateTime>>? _blackoutDatesFuture;
 
 
   void navigateToEditItem(BuildContext context) {
@@ -41,15 +47,35 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
     }
   }
 
-  createBooking(ItemModel item) {
+
+  void createBooking(ItemModel item) {
     ref.read(bookingControllerProvider.notifier).createBooking(
       bookingStart: _bookingStart,
+      bookingId: bookingId,
       bookingEnd: _bookingEnd,
       bookingStatus: 'Pending',
       item: item,
       context: context,
     );
   }
+
+
+
+  // void createItemMessage(BookingModel booking) async {
+  //   ItemModel item = await ref.watch(getItemByIdProvider(widget.id).future);
+  //   ref.watch(getBookingByIdProvider(bookingId)).when(
+  //     data: (booking) {
+  //       ref.read(messageControllerProvider.notifier).createItemMessage(
+  //         context: context,
+  //         subject: "Booking Request", // Provide the subject for the message
+  //         text: "A request has been submitted", // Provide the text for the message
+  //         booking: booking,
+  //       );
+  //     },
+  //     error: (error, stackTrace) => ErrorText(error: error.toString()),
+  //     loading: () => Loader(),
+  //   );
+  // }
 
   Future<List<DateTime>> getDates() async {
     ItemModel item = await ref.watch(getItemByIdProvider(widget.id).future);
@@ -62,23 +88,24 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
       bookings.when(
         data: (bookingsData) {
           for (var booking in bookingsData) {
-            final bookingStart = booking.bookingStart;
-            final bookingEnd = booking.bookingEnd;
+            if (booking.bookingStatus == 'Confirmed') { // Filter by booking status
+              final bookingStart = booking.bookingStart;
+              final bookingEnd = booking.bookingEnd;
 
-            final bookingRange = List<DateTime>.generate(
-              (bookingEnd
-                  .difference(bookingStart)
-                  .inDays + 1),
-                  (index) => bookingStart.add(Duration(days: index)),
-            );
-            blackoutDates.addAll(bookingRange);
+              final bookingRange = List<DateTime>.generate(
+                (bookingEnd.difference(bookingStart).inDays + 1),
+                    (index) => bookingStart.add(Duration(days: index)),
+              );
+              blackoutDates.addAll(bookingRange);
+            }
           }
           blackoutDates.add(today);
         },
-        loading: () {},
         error: (error, stackTrace) {
-          // Handle error
+          print(error); // Print error for debugging purposes
+          return ErrorText(error: error.toString());
         },
+        loading: () => Loader(),
       );
     }
     // Return an empty list if bookings is null or no data is loaded yet
@@ -109,6 +136,7 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
       appBar: AppBar(
         title: const Text('Item Details'),
       ),
+      drawer: const NavDrawer(),
       body: FutureBuilder<List<DateTime>>(
         future: _blackoutDatesFuture,
         builder: (context, snapshot) {

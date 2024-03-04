@@ -44,11 +44,12 @@ class BookingController extends StateNotifier<bool> {
     required DateTime bookingStart,
     required DateTime bookingEnd,
     required String bookingStatus,
+    required String bookingId,
     required ItemModel item
 
   }) async {
     state = true;
-    String bookingId = const Uuid().v1();
+
     final user = _ref.read(userProvider)!;
 
     final BookingModel booking = BookingModel(
@@ -70,7 +71,7 @@ class BookingController extends StateNotifier<bool> {
     });
   }
 
-  void editBooking({
+  void approveBooking({
     required String? bookingStatus,
     required BuildContext context,
     required BookingModel booking,
@@ -79,14 +80,13 @@ class BookingController extends StateNotifier<bool> {
     if (bookingStatus != null) {
       booking = booking.copyWith(bookingStatus: bookingStatus);
     }
-    final res = await _bookingRepository.editBooking(booking);
+    final res = await _bookingRepository.approveBooking(booking);
 
     res.fold(
           (l) => showSnackBar(context, l.message),
           (r) => Routemaster.of(context).pop(),
     );
   }
-
 
   Stream<List<BookingModel>> getBookings(List<ItemModel> items) {
     if (items.isNotEmpty) {
@@ -95,13 +95,10 @@ class BookingController extends StateNotifier<bool> {
     return Stream.value([]);
   }
 
-
-
-  void deleteBooking(BookingModel booking, BuildContext context) async {
+  void cancelBooking(BookingModel booking, BuildContext context) async {
     final res = await _bookingRepository.deleteBooking(booking);
     res.fold((l) => null, (r) => showSnackBar(context, 'Booking Deleted successfully!'));
   }
-
 
   Stream<BookingModel> getBookingById(String id) {
     return _bookingRepository.getBookingById(id);

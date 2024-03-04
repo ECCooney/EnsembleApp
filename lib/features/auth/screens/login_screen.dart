@@ -1,4 +1,5 @@
 import 'package:ensemble/core/common/google_sign_in_button.dart';
+import 'package:ensemble/core/common/protected_text_field.dart';
 import 'package:ensemble/features/auth/controller/auth_controller.dart';
 import 'package:ensemble/features/auth/repository/auth_repository.dart';
 import 'package:flutter/gestures.dart';
@@ -20,6 +21,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
 
+  bool _obscureText = true;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -95,7 +97,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     const SizedBox(height: 15),
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 20),
-                      child: CustomTextField(
+                      child: ProtectedTextField(
+                        obscureText: _obscureText,
                         icon: const Icon(Icons.password),
                         controller: passwordController,
                         hintText: 'Enter your password',
@@ -111,15 +114,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     const SizedBox(height: 20),
                     SizedBox(
                       width:double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: Pallete.sageCustomColor,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Pallete.sageCustomColor,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))
+                          ),
+                          onPressed: logIn,
+                          child: const Text("Sign In", style: TextStyle(color: Colors.white, fontSize: 16)
+                          )
                         ),
-                        onPressed: logIn,
-                        child: const Text("Sign In", style: TextStyle(color: Colors.white, fontSize: 16)
-                        )
                       ),
                     ),
                     const SizedBox(height: 10),

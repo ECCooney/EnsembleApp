@@ -12,8 +12,16 @@ class NavDrawer extends ConsumerWidget {
     Routemaster.of(context).push('/create-group');
   }
 
+  void navigateToRequests(BuildContext context, String uid){
+    Routemaster.of(context).push('/booking-requests/$uid');
+  }
+
   void navigateToHome(BuildContext context){
     Routemaster.of(context).push('/');
+  }
+
+  void navigateToBookings(BuildContext context, String uid){
+    Routemaster.of(context).push('/bookings/$uid');
   }
 
   void navigateToUserProfile(BuildContext context, String uid) {
@@ -88,14 +96,26 @@ class NavDrawer extends ConsumerWidget {
             ),
           ),
           ListTile(
-            onTap: (){},
+            onTap: () => navigateToRequests(context, user.uid),
             selectedColor: Pallete.orangeCustomColor,
             selected: true,
             contentPadding:
             const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.add),
+            leading: const Icon(Icons.question_answer),
             title: const Text(
-              "Messages",
+              "Requests",
+              style: TextStyle(color: Colors.black, fontSize: 16),
+            ),
+          ),
+          ListTile(
+            onTap: () => navigateToBookings(context, user.uid),
+            selectedColor: Pallete.orangeCustomColor,
+            selected: true,
+            contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+            leading: const Icon(Icons.calendar_month),
+            title: const Text(
+              "Bookings",
               style: TextStyle(color: Colors.black, fontSize: 16),
             ),
           ),

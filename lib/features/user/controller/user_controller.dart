@@ -7,6 +7,7 @@ import '../../../core/providers/storage_repository_providers.dart';
 import '../../../core/utils.dart';
 import '../../../models/booking_model.dart';
 import '../../../models/item_model.dart';
+import '../../../models/message_model.dart';
 import '../../../models/user_model.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../repository/user_repository.dart';
@@ -23,6 +24,18 @@ final userControllerProvider = StateNotifierProvider<UserController, bool>((ref)
 
 final getUserItemsProvider = StreamProvider.family((ref, String uid) {
   return ref.read(userControllerProvider.notifier).getUserItems(uid);
+});
+
+final getUserBookingsProvider = StreamProvider.family((ref, String uid) {
+  return ref.read(userControllerProvider.notifier).getUserBookings(uid);
+});
+
+final getUserSentMessagesProvider = StreamProvider.family((ref, String uid) {
+  return ref.read(userControllerProvider.notifier).getUserSentMessages(uid);
+});
+
+final getRequests = StreamProvider.family((ref, String uid) {
+  return ref.read(userControllerProvider.notifier).getRequests(uid);
 });
 
 class UserController extends StateNotifier<bool> {
@@ -78,5 +91,13 @@ class UserController extends StateNotifier<bool> {
 
   Stream<List<BookingModel>> getUserBookings(String uid) {
     return _userRepository.getUserBookings(uid);
+  }
+
+  Stream<List<MessageModel>> getUserSentMessages(String uid) {
+    return _userRepository.getUserSentMessages(uid);
+  }
+
+  Stream<List<BookingModel>> getRequests(String uid) {
+    return _userRepository.getRequests(uid);
   }
 }

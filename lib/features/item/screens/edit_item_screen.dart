@@ -8,6 +8,7 @@ import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
 import '../../../core/constants/constants.dart';
 import '../../../models/item_model.dart';
+import '../../nav/nav_drawer.dart';
 
 class EditItemScreen extends ConsumerStatefulWidget {
   final String id;
@@ -61,6 +62,7 @@ class _EditItemScreenState extends ConsumerState<EditItemScreen> {
               TextButton(onPressed: () => saveEdit(item), child: const Text('Save')),
             ]
         ),
+        drawer: const NavDrawer(),
         body: isLoading
             ? const Loader()
             : Padding(
