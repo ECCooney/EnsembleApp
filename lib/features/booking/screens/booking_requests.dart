@@ -1,16 +1,11 @@
 import 'package:ensemble/features/booking/screens/booking_request_details.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:routemaster/routemaster.dart';
-
+import 'package:intl/intl.dart';
 import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
-import '../../../models/booking_model.dart';
-import '../../auth/controller/auth_controller.dart';
 import '../../nav/nav_drawer.dart';
 import '../../user/controller/user_controller.dart';
-import '../../user/repository/user_repository.dart';
-
 class BookingRequests extends ConsumerWidget {
 
   final String uid;
@@ -18,7 +13,6 @@ class BookingRequests extends ConsumerWidget {
   const BookingRequests({
     super.key,
     required this.uid,});
-
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,10 +23,10 @@ class BookingRequests extends ConsumerWidget {
       drawer: const NavDrawer(),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
             child: Text(
-              'Booking Requests',
+              'Pending Requests',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
@@ -43,9 +37,13 @@ class BookingRequests extends ConsumerWidget {
                   itemCount: bookings.length,
                   itemBuilder: (BuildContext context, int index) {
                     final booking = bookings[index];
+                    final formattedBookingStart =
+                    DateFormat('dd/MM/yy').format(booking.bookingStart);
+                    final formattedBookingEnd =
+                    DateFormat('dd/MM/yy').format(booking.bookingEnd);
                     return ListTile(
                       title: Text('Booking Request for: ${booking.itemName}'),
-                      subtitle: Text('Status: ${booking.bookingStatus}'),
+                      subtitle: Text('For pickup on: $formattedBookingStart, Drop-off on $formattedBookingEnd'),
                       trailing: IconButton(
                         icon: Icon(Icons.open_in_new),
                         onPressed: () {

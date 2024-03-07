@@ -26,7 +26,7 @@ class MessageResponsesScreen extends ConsumerWidget {
                 final message = messages[index];
                 return ListTile(
                   title: Text(message.subject),
-                  subtitle: Text('Status: ${message.response}'),
+                  subtitle: Text('Status: ${message.response ?? "No response"}'),
                 );
               },
             );

@@ -1,8 +1,8 @@
 //logged out
 
 import 'package:ensemble/features/booking/screens/booking_requests.dart';
-import 'package:ensemble/features/group/screens/admin_messages_screen.dart';
-import 'package:ensemble/features/group/screens/admin_tools_screen.dart';
+import 'package:ensemble/features/admin/screens/admin_messages_screen.dart';
+import 'package:ensemble/features/admin/screens/admin_tools_screen.dart';
 import 'package:ensemble/features/group/screens/create_group_screen.dart';
 import 'package:ensemble/features/group/screens/edit_group_screen.dart';
 import 'package:ensemble/features/home/screens/home_screen.dart';
@@ -14,7 +14,7 @@ import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/register_screen.dart';
 import 'features/booking/screens/booking_details.dart';
 import 'features/booking/screens/bookings.dart';
-import 'features/group/screens/add_admins_screen.dart';
+import 'features/admin/screens/add_admins_screen.dart';
 import 'features/group/screens/group_screen.dart';
 import 'features/group/screens/join_group.dart';
 import 'features/item/screens/create_item_screen.dart';

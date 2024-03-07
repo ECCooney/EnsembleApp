@@ -6,7 +6,7 @@ import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
 import '../../../models/group_model.dart';
 import '../../nav/nav_drawer.dart';
-import '../controller/group_controller.dart';
+import '../../group/controller/group_controller.dart';
 
 
 class AdminToolsScreen extends ConsumerStatefulWidget {

@@ -23,8 +23,8 @@ class _BookingDetailsState extends ConsumerState<BookingDetails> {
     ref.read(bookingControllerProvider.notifier).cancelBooking(booking, context);
   }
 
+  @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(bookingControllerProvider);
     return ref.watch(getBookingByIdProvider(widget.id)).when(
       data: (booking) =>
           Scaffold(

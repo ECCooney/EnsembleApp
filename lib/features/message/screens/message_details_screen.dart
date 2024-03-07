@@ -116,7 +116,7 @@ class _MessageDetailsScreenState extends ConsumerState<MessageDetailsScreen> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            addResponse(message, "Thanks for requesting to join ${group.name}. Use ${group.inviteCode}");
+                            addResponse(message, "Thanks for requesting to join ${group.name}. Use code '${group.inviteCode}' to join");
                           },
                           child: const Text('Approve Request'),
                         ),

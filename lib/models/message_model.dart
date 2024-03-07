@@ -9,6 +9,7 @@ class MessageModel {
   final String subject;
   final bool isRead;
   final String? response; // New field
+  final DateTime sentAt; // New field
 
   MessageModel({
     required this.senderName,
@@ -19,6 +20,7 @@ class MessageModel {
     required this.subject,
     this.isRead = false,
     this.response, // Added response field
+    required this.sentAt, // Added sentAt field
   });
 
   MessageModel copyWith({
@@ -30,6 +32,7 @@ class MessageModel {
     String? subject,
     bool? isRead,
     String? response, // Added response parameter
+    DateTime? sentAt, // Added sentAt parameter
   }) {
     return MessageModel(
       senderName: senderName ?? this.senderName,
@@ -40,6 +43,7 @@ class MessageModel {
       subject: subject ?? this.subject,
       isRead: isRead ?? this.isRead,
       response: response ?? this.response, // Updated copyWith
+      sentAt: sentAt ?? this.sentAt, // Updated copyWith
     );
   }
 
@@ -53,6 +57,7 @@ class MessageModel {
       'subject': subject,
       'isRead': isRead,
       'response': response, // Added response to the map
+      'sentAt': sentAt.toIso8601String(), // Added sentAt to the map
     };
   }
 
@@ -66,12 +71,13 @@ class MessageModel {
       subject: map['subject'] ?? '',
       isRead: map['isRead'] ?? false,
       response: map['response'], // Added response from map
+      sentAt: DateTime.parse(map['sentAt']), // Added sentAt from map
     );
   }
 
   @override
   String toString() {
-    return 'MessageModel(senderName: $senderName, senderId: $senderId, groupId: $groupId, id: $id, text: $text, subject: $subject, isRead: $isRead, response: $response)';
+    return 'MessageModel(senderName: $senderName, senderId: $senderId, groupId: $groupId, id: $id, text: $text, subject: $subject, isRead: $isRead, response: $response, sentAt: $sentAt)';
   }
 
   @override
@@ -86,7 +92,8 @@ class MessageModel {
         other.text == text &&
         other.subject == subject &&
         other.isRead == isRead &&
-        other.response == response; // Added response comparison
+        other.response == response &&
+        other.sentAt == sentAt; // Added sentAt comparison
   }
 
   @override
@@ -98,6 +105,7 @@ class MessageModel {
     text.hashCode ^
     subject.hashCode ^
     isRead.hashCode ^
-    response.hashCode; // Added response hashCode
+    response.hashCode ^
+    sentAt.hashCode; // Added sentAt hashCode
   }
 }

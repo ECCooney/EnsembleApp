@@ -28,7 +28,6 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
     groupInviteCodeController.dispose();
     groupDescriptionController.dispose();
   }
-
   void createGroup() {
     ref.read(groupControllerProvider.notifier).createGroup(
       //trim removes white space at end of anything typed in
@@ -38,7 +37,6 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
       context,
     );
   }
-
 
   @override
   Widget build(BuildContext context) {

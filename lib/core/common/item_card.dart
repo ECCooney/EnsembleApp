@@ -4,6 +4,8 @@ import 'package:routemaster/routemaster.dart';
 import '../../features/auth/controller/auth_controller.dart';
 import '../../features/item/controller/item_controller.dart';
 import '../../models/item_model.dart';
+import 'error_text.dart';
+import 'loader.dart';
 
 class ItemCard extends ConsumerWidget {
   final ItemModel item;
@@ -45,242 +47,108 @@ class ItemCard extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Hero(
-                transitionOnUserGestures: true,
-                tag: item.id!,
-                child: Image.network(
-                  item.itemPic!,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: 180,
-                )),
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: GestureDetector(
+                  onDoubleTap: () {
+                    navigateToItem(context);
+                  },
+                  child: Hero(
+                    transitionOnUserGestures: true,
+                    tag: item.id!,
+                    child: Image.network(
+                      item.itemPic!,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: 180,
+                    ),
+                  ),
+                ),
+              ),
+              if (item.owner == user.uid)
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: IconButton(
+                    onPressed: () {
+                                    navigateToEditItem(context);
+                    },
+                    icon: const Icon(Icons.edit),
+                  ),
+                ),
+              if (item.owner != user.uid)
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: IconButton(
+                    icon: const Icon(Icons.open_in_new),
+                    color: Colors.black,
+                    iconSize: 25,
+                    onPressed: () {
+                      navigateToItem(context);
+                    },
+                  ),
+                ),
+            ],
           ),
           const SizedBox(
             height: 5,
           ),
-          Text(item.name!,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              item.name!,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.left,
-              style: Theme.of(context).textTheme.bodyMedium),
-          Row(
-            children: [
-               Text(item.description,
-                  style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.bold)),
-              Expanded(
-                child: Container(),
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 20, // Adjust the font size as per your requirement
               ),
-              IconButton(
-                  icon: const Icon(Icons.open_in_new),
-                  color: Colors.black,
-                  iconSize: 25,
-                  onPressed: () {navigateToItem(context);
-                  }),
-            ],
-          )
+            ),
+          ),
+          FutureBuilder<List<DateTime>>(
+            future: ref.read(getBookedDatesProvider(item.id!).future),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Loader();
+              } else if (snapshot.hasError) {
+                return ErrorText(error: snapshot.error.toString());
+              } else {
+                final today = DateTime.now();
+                final bookedDates = snapshot.data!;
+                final isBookedToday = bookedDates.contains(
+                  DateTime(today.year, today.month, today.day),
+                );
+                return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          navigateToItem(context);
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            isBookedToday ? Colors.white : Colors.white, // Set button color based on availability
+                          ),
+                        ),
+                        child: Text(
+                          isBookedToday ? 'Check Availability' : 'Available Today',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ),
+                );
+              }
+            },
+          ),
         ],
       ),
     );
   }
 }
-
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final user = ref.watch(userProvider)!;
-//     final width = MediaQuery.of(context).size.width;
-//
-//     return Flexible(
-//       child: Padding(
-//         padding: const EdgeInsets.all(15.0),
-//         child: Container(
-//           // boundary needed for web
-//           decoration: BoxDecoration(
-//             border: Border.all(
-//               color: Pallete.sageCustomColor,
-//             ),
-//             color: Pallete.whiteColor,
-//           ),
-//           padding: const EdgeInsets.symmetric(
-//             vertical: 10,
-//           ),
-//           child: Column(
-//             children: [
-//               // header section
-//               Container(
-//                 padding: const EdgeInsets.symmetric(
-//                   vertical: 4,
-//                   horizontal: 16,
-//                 ).copyWith(right: 0),
-//                 child: Row(
-//                   children: <Widget>[
-//                     CircleAvatar(
-//                       radius: 16,
-//                       backgroundImage: NetworkImage(
-//                         user.profilePic,
-//                       ),
-//                     ),
-//                     Expanded(
-//                       child: Padding(
-//                         padding: const EdgeInsets.only(
-//                           left: 8,
-//                         ),
-//                         child: Column(
-//                           mainAxisSize: MainAxisSize.min,
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: <Widget>[
-//                             Text(
-//                               item.name,
-//                               style: const TextStyle(
-//                                 fontSize: 30,
-//                                 fontWeight: FontWeight.bold,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                     ),
-//                     if (item.owner == user.uid)
-//                       IconButton(
-//                         onPressed: () {
-//                           showDialog(
-//                             useRootNavigator: false,
-//                             context: context,
-//                             builder: (context) {
-//                               return Dialog(
-//                                 child: ListView(
-//                                   padding: const EdgeInsets.symmetric(
-//                                       vertical: 16),
-//                                   shrinkWrap: true,
-//                                   children: [
-//                                     'Delete',
-//                                   ]
-//                                       .map(
-//                                         (e) => InkWell(
-//                                       child: Container(
-//                                         padding: const EdgeInsets.symmetric(
-//                                             vertical: 12, horizontal: 16),
-//                                         child: Text(e),
-//                                       ),
-//                                       onTap: () {
-//                                         deleteItem(ref, context);
-//                                         // remove the dialog box
-//                                         Navigator.of(context).pop();
-//                                       },
-//                                     ),
-//                                   )
-//                                       .toList(),
-//                                 ),
-//                               );
-//                             },
-//                           );
-//                         },
-//                         icon: const Icon(Icons.more_vert),
-//                       ),
-//                   ],
-//                 ),
-//               ),
-//               // IMAGE SECTION OF THE POST
-//               GestureDetector(
-//                 onDoubleTap: () {
-//                   navigateToItem(context);
-//                 },
-//                 child: Stack(
-//                   alignment: Alignment.center,
-//                   children: [
-//                     SizedBox(
-//                       height: MediaQuery.of(context).size.height * 0.35,
-//                       width: double.infinity,
-//                       child: Image.network(
-//                         item.itemPic,
-//                         fit: BoxFit.cover,
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//               Row(
-//                 children: <Widget>[
-//                   IconButton(
-//                       icon: const Icon(
-//                         Icons.open_in_new,
-//                       ),
-//                       onPressed: () {
-//                         navigateToItem(context);
-//                       }),
-//                   Expanded(
-//                       child: Align(
-//                         alignment: Alignment.bottomRight,
-//                         child: IconButton(
-//                             icon: const Icon(Icons.edit),
-//                             onPressed: () {
-//                               navigateToEditItem(context);
-//                             }),
-//                       ))
-//                 ],
-//               ),
-//               //DESCRIPTION
-//               Container(
-//                 padding: const EdgeInsets.symmetric(horizontal: 16),
-//                 child: Column(
-//                   mainAxisSize: MainAxisSize.min,
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: <Widget>[
-//                     Container(
-//                       width: double.infinity,
-//                       padding: const EdgeInsets.only(top: 8),
-//                       child: Column(
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Row(
-//                             children: [
-//                               Text(
-//                                 item.description,
-//                                 style: const TextStyle(fontSize: 16),
-//                               ),
-//                             ],
-//                           ),
-//                           FutureBuilder<List<DateTime>>(
-//                             future: ref.read(getBookedDatesProvider(item.id).future),
-//                             builder: (context, snapshot) {
-//                               if (snapshot.connectionState ==
-//                                   ConnectionState.waiting) {
-//                                 return Loader();
-//                               } else if (snapshot.hasError) {
-//                                 return ErrorText(error: snapshot.error.toString());
-//                               } else {
-//                                 final today = DateTime.now();
-//                                 final bookedDates = snapshot.data!;
-//                                 final isBookedToday =
-//                                 bookedDates.contains(DateTime(
-//                                     today.year, today.month, today.day));
-//                                 return Row(
-//                                   children: [
-//                                     Text(
-//                                       isBookedToday
-//                                           ? 'Check Availability'
-//                                           : 'Available Today',
-//                                       style: const TextStyle(
-//                                         fontWeight: FontWeight.w300,
-//                                       ),
-//                                     ),
-//                                   ],
-//                                 );
-//                               }
-//                             },
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               )
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }

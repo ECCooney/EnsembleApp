@@ -62,6 +62,8 @@ class MessageController extends StateNotifier<bool> {
       subject: subject,
       text: text,
       isRead: false,
+      response: 'None',
+      sentAt: DateTime.now(),
     );
 
     final res = await _messageRepository.addMessage(message);

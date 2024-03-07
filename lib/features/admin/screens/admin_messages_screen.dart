@@ -8,7 +8,7 @@ import '../../../models/group_model.dart';
 import '../../../models/message_model.dart';
 import '../../message/controller/message_controller.dart';
 import '../../nav/nav_drawer.dart';
-import '../controller/group_controller.dart';
+import '../../group/controller/group_controller.dart';
 
 class AdminMessagesScreen extends ConsumerWidget {
 
@@ -40,18 +40,27 @@ class AdminMessagesScreen extends ConsumerWidget {
               itemCount: messages.length,
               itemBuilder: (BuildContext context, int index) {
                 final message = messages[index];
+
                 return ListTile(
-                  title: Text( message.subject),
+                  leading: message.isRead ? const Icon(Icons.mail_outline) : const Icon(Icons.mail),
+                  title: Text(
+                    message.subject,
+                    style: TextStyle(
+                      fontWeight: message.isRead ? FontWeight.normal : FontWeight.bold,
+                    ),
+                  ),
                   subtitle: Text(message.text),
                   trailing: IconButton(
-                    icon: Icon(Icons.open_in_new),
+                    icon: const Icon(Icons.open_in_new),
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => MessageDetailsScreen(id: message.id),
                         ),
                       );
-                      changeToRead(ref, context, message);
+                      if (!message.isRead) {
+                        changeToRead(ref, context, message);
+                      }
                     },
                   ),
                 );
@@ -62,13 +71,12 @@ class AdminMessagesScreen extends ConsumerWidget {
             return ErrorText(error: error.toString());
           },
           loading: () => const Loader(),
-        )
-    ), error: (error, stackTrace) {
-    print(error); // Print error for debugging purposes
-    return ErrorText(error: error.toString());
-    },
-    loading: () => Loader()
+        ),
+      ),
+      error: (error, stackTrace) {
+        return ErrorText(error: error.toString());
+      },
+      loading: () => const Loader(),
     );
   }
 }
-

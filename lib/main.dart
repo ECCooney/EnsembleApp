@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ensemble/core/common/error_text.dart';
 import 'package:ensemble/core/common/loader.dart';
 import 'package:ensemble/features/auth/controller/auth_controller.dart';
@@ -11,17 +13,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'core/providers/firebase_providers.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'firebase_options.dart';
 import 'models/user_model.dart';
 
 void main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FirebaseMessaging.instance.setAutoInitEnabled(true);
+  final fcmToken = await FirebaseMessaging.instance.getToken();
+  print("FCMToken $fcmToken");
   await FirebaseAppCheck.instance.activate(
     // // You can also use a `ReCaptchaEnterpriseProvider` provider instance as an
     // // argument for `webProvider`
