@@ -73,6 +73,16 @@ class BookingRepository {
     }
   }
 
+  FutureVoid denyBooking(BookingModel booking) async {
+    try {
+      return right(_bookings.doc(booking.id).update(booking.toMap()));
+    } on FirebaseException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
+
 
   FutureVoid deleteBooking(BookingModel booking) async {
     try {

@@ -88,6 +88,24 @@ class BookingController extends StateNotifier<bool> {
     );
   }
 
+  void denyBooking({
+    required String? bookingStatus,
+    required BuildContext context,
+    required BookingModel booking,
+  }) async {
+
+    if (bookingStatus != null) {
+      booking = booking.copyWith(bookingStatus: bookingStatus);
+    }
+    final res = await _bookingRepository.denyBooking(booking);
+
+    res.fold(
+          (l) => showSnackBar(context, l.message),
+          (r) => Routemaster.of(context).pop(),
+    );
+  }
+
+
   Stream<List<BookingModel>> getBookings(List<ItemModel> items) {
     if (items.isNotEmpty) {
       return _bookingRepository.getBookings(items);

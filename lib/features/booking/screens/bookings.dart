@@ -25,53 +25,65 @@ class Bookings extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Booking Details'),
-        ),
-        drawer: const NavDrawer(),
-        body: ref.watch(getUserBookingsProvider(uid)).when(
-          data: (bookings) {
-            return ListView.builder(
-              itemCount: bookings.length,
-              itemBuilder: (BuildContext context, int index) {
-                final booking = bookings[index];
-                return ListTile(
-                  title: Text('Booking Request for: ${booking.itemName}'),
-                  subtitle: Text('Status: ${booking.bookingStatus}'),
-                  leading: ref.watch(getItemByIdProvider(booking.itemId)).when(
-                    data: (item) {
-                      // Display user details
-                      return CircleAvatar (
-                        backgroundImage : NetworkImage(item.itemPic),
-                      );
-                    },
-                    loading: () => const CircularProgressIndicator(),
-                    // Show loading indicator while fetching user details
-                    error: (error, stackTrace) =>
-                        ErrorText(
+      appBar: AppBar(
+        title: Text('Booking Details'),
+      ),
+      drawer: const NavDrawer(),
+      body: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'All Bookings',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            child: ref.watch(getUserBookingsProvider(uid)).when(
+              data: (bookings) {
+                return ListView.builder(
+                  itemCount: bookings.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final booking = bookings[index];
+                    return ListTile(
+                      title: Text('Booking Request for: ${booking.itemName}'),
+                      subtitle: Text('Status: ${booking.bookingStatus}'),
+                      leading: ref.watch(getItemByIdProvider(booking.itemId)).when(
+                        data: (item) {
+                          // Display user details
+                          return CircleAvatar (
+                            backgroundImage : NetworkImage(item.itemPic),
+                          );
+                        },
+                        loading: () => const CircularProgressIndicator(),
+                        // Show loading indicator while fetching user details
+                        error: (error, stackTrace) => ErrorText(
                           error: error.toString(),
                         ),
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(Icons.open_in_new),
-                    onPressed: () {
-                      // Navigate to a new route when IconButton is pressed
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => BookingDetails(id: booking.id),
-                        ),
-                      );
-                    },
-                  ),
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.open_in_new),
+                        onPressed: () {
+                          // Navigate to a new route when IconButton is pressed
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => BookingDetails(id: booking.id),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
                 );
               },
-            );
-          },
-          error: (error, stackTrace) {
-            return ErrorText(error: error.toString());
-          },
-          loading: () => const Loader(),
-        )
-    ) ;
+              error: (error, stackTrace) {
+                return ErrorText(error: error.toString());
+              },
+              loading: () => const Loader(),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

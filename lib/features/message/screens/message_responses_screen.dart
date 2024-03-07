@@ -25,7 +25,7 @@ class MessageResponsesScreen extends ConsumerWidget {
               itemBuilder: (BuildContext context, int index) {
                 final message = messages[index];
                 return ListTile(
-                  title: Text('Booking Request for: ${message.subject}'),
+                  title: Text(message.subject),
                   subtitle: Text('Status: ${message.response}'),
                 );
               },
