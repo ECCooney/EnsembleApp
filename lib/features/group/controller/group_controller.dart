@@ -90,6 +90,7 @@ class GroupController extends StateNotifier<bool> {
     required File? groupPicFile,
     required File? groupBannerFile,
     required String? description,
+    required String? inviteCode,
     required BuildContext context,
     required GroupModel group,
   }) async {
@@ -120,6 +121,13 @@ class GroupController extends StateNotifier<bool> {
     if (description != null) {
       // groups/banner/memes
       group = group.copyWith(description: description);
+    }
+    else{
+      description = group.description;
+    }
+    if (inviteCode != null) {
+      // groups/banner/memes
+      group = group.copyWith(inviteCode: inviteCode);
     }
     else{
       description = group.description;

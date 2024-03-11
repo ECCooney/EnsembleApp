@@ -141,7 +141,7 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
         future: _blackoutDatesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Loader(); // Show a loader while waiting for data
+            return const Loader(); // Show a loader while waiting for data
           } else if (snapshot.hasError) {
             return ErrorText(
                 error: snapshot.error.toString()); // Show error if any

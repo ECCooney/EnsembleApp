@@ -27,6 +27,7 @@ class _EditGroupScreenState extends ConsumerState<EditGroupScreen> {
   File? groupPicFile;
 
   final groupDescriptionController = TextEditingController();
+  final groupCodeController = TextEditingController();
 
   void chooseBannerImage() async {
     final res = await pickImage();
@@ -53,6 +54,7 @@ class _EditGroupScreenState extends ConsumerState<EditGroupScreen> {
       groupPicFile: groupPicFile,
       groupBannerFile: groupBannerFile,
       description: groupDescriptionController.text.trim(),
+      inviteCode: groupCodeController.text.trim(),
       context: context,
       group: group,
     );
@@ -82,80 +84,98 @@ class _EditGroupScreenState extends ConsumerState<EditGroupScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 200,
-                    child: Stack(
-                      children: [
-                        GestureDetector(
-                        onTap: chooseBannerImage,
-                          child: DottedBorder(
-                          //rounded rectangle
-                          borderType: BorderType.RRect,
-                          radius: const Radius.circular(20),
-                          dashPattern: const [10, 5],
-                          strokeCap: StrokeCap.round,
-                          child: Container(
-                            width: double.infinity,
-                            height: 150,
-                            //round border not working?
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: groupBannerFile != null
-                            ? Image.file(groupBannerFile!): group.groupBanner.isEmpty || group.groupBanner == Constants.backgroundDefault?
-                                const Center(
-                                  child: Icon(
-                                      Icons.camera_alt_outlined,
-                                  size: 50),
-                                ): Image.network(group.groupBanner)
-                                                ),
-                                                ),
-                        ),
-                        Positioned(
-                          bottom: 20,
-                          left: 20,
-                          child: GestureDetector(
-                            onTap: chooseGroupImage,
-                            child: groupPicFile!=null?
-                              CircleAvatar(
-                              backgroundImage: FileImage(groupPicFile!),
-                              radius: 32,
-                            )
-                                : CircleAvatar(
-                              backgroundImage: NetworkImage(group.groupPic),
-                              radius: 32,
-                            ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 200,
+                      child: Stack(
+                        children: [
+                          GestureDetector(
+                          onTap: chooseBannerImage,
+                            child: DottedBorder(
+                            //rounded rectangle
+                            borderType: BorderType.RRect,
+                            radius: const Radius.circular(20),
+                            dashPattern: const [10, 5],
+                            strokeCap: StrokeCap.round,
+                            child: Container(
+                              width: double.infinity,
+                              height: 150,
+                              //round border not working?
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: groupBannerFile != null
+                              ? Image.file(groupBannerFile!): group.groupBanner.isEmpty || group.groupBanner == Constants.backgroundDefault?
+                                  const Center(
+                                    child: Icon(
+                                        Icons.camera_alt_outlined,
+                                    size: 50),
+                                  ): Image.network(group.groupBanner)
+                                                  ),
+                                                  ),
                           ),
-                        )
-                                  ],
-                    ),
-                  ),
-                  const SizedBox(height: 10,),
-                 SizedBox(
-                    height: 140, // <-- TextField height
-                    child:
-                    TextField(
-                      controller: groupDescriptionController,
-                      maxLines: null,
-                      expands: true,
-                      keyboardType: TextInputType.multiline,
-                      decoration: const InputDecoration(
-                        hintText: 'Add a New Description',
-                        filled: true,
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(18),
+                          Positioned(
+                            bottom: 20,
+                            left: 20,
+                            child: GestureDetector(
+                              onTap: chooseGroupImage,
+                              child: groupPicFile!=null?
+                                CircleAvatar(
+                                backgroundImage: FileImage(groupPicFile!),
+                                radius: 32,
+                              )
+                                  : CircleAvatar(
+                                backgroundImage: NetworkImage(group.groupPic),
+                                radius: 32,
+                              ),
+                            ),
+                          )
+                                    ],
                       ),
-                      maxLength: 150,
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () => deleteGroup(group),
-                    child: const Text('Delete Group'),
-                  ),
-                ],
-
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 140,
+                      child: TextField(
+                        controller: groupDescriptionController,
+                        maxLines: null,
+                        expands: true,
+                        keyboardType: TextInputType.multiline,
+                        decoration: const InputDecoration(
+                          hintText: 'Add a New Description',
+                          filled: true,
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.all(18),
+                        ),
+                        maxLength: 150,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 140,
+                      child: TextField(
+                        controller: groupCodeController,
+                        maxLines: null,
+                        expands: true,
+                        keyboardType: TextInputType.multiline,
+                        decoration: const InputDecoration(
+                          hintText: 'Change the invite code',
+                          filled: true,
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.all(18),
+                        ),
+                        maxLength: 150,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () => deleteGroup(group),
+                      child: const Text('Delete Group'),
+                    ),
+                  ],
+                
+                ),
               ),
             ),
           ),

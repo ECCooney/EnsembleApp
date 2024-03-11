@@ -66,7 +66,7 @@ class BookingController extends StateNotifier<bool> {
     final res = await _bookingRepository.addBooking(booking);
     state = false;
     res.fold((l) => showSnackBar(context, l.message), (r) {
-      showSnackBar(context, 'Added successfully!');
+      showSnackBar(context, 'Request sent!');
       Routemaster.of(context).pop();
     });
   }
@@ -87,6 +87,24 @@ class BookingController extends StateNotifier<bool> {
           (r) => Routemaster.of(context).pop(),
     );
   }
+
+  void denyBooking({
+    required String? bookingStatus,
+    required BuildContext context,
+    required BookingModel booking,
+  }) async {
+
+    if (bookingStatus != null) {
+      booking = booking.copyWith(bookingStatus: bookingStatus);
+    }
+    final res = await _bookingRepository.denyBooking(booking);
+
+    res.fold(
+          (l) => showSnackBar(context, l.message),
+          (r) => Routemaster.of(context).pop(),
+    );
+  }
+
 
   Stream<List<BookingModel>> getBookings(List<ItemModel> items) {
     if (items.isNotEmpty) {

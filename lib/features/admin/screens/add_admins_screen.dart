@@ -5,7 +5,7 @@ import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../../nav/nav_drawer.dart';
-import '../controller/group_controller.dart';
+import '../../group/controller/group_controller.dart';
 
 
 class AddAdminsScreen extends ConsumerStatefulWidget {

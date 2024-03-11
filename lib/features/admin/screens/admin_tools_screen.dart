@@ -6,7 +6,7 @@ import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
 import '../../../models/group_model.dart';
 import '../../nav/nav_drawer.dart';
-import '../controller/group_controller.dart';
+import '../../group/controller/group_controller.dart';
 
 
 class AdminToolsScreen extends ConsumerStatefulWidget {
@@ -29,6 +29,11 @@ class _AdminToolsScreenState extends ConsumerState<AdminToolsScreen> {
   void navigateToEditGroup(BuildContext context) {
     Routemaster.of(context).push('/edit-group/${widget.id}');
   }
+
+  void navigateToAdminMessages(BuildContext context) {
+    Routemaster.of(context).push('/view-messages/${widget.id}');
+  }
+
 
   void navigateToAddAdmins(BuildContext context) {
     Routemaster.of(context).push('/add-admins/${widget.id}');
@@ -59,8 +64,7 @@ class _AdminToolsScreenState extends ConsumerState<AdminToolsScreen> {
             ListTile(
               leading: const Icon(Icons.message_outlined),
               title: const Text('View Messages'),
-              onTap: () {
-              },
+              onTap: () => navigateToAdminMessages(context)
             ),
             Expanded(
               child: Align(

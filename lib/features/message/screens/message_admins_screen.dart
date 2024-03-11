@@ -11,8 +11,8 @@ import 'package:ensemble/core/common/loader.dart';
 import '../../../core/common/error_text.dart';
 import '../../../core/utils.dart';
 import '../../auth/controller/auth_controller.dart';
+import '../../message/controller/message_controller.dart';
 import '../../nav/nav_drawer.dart';
-import '../controller/message_controller.dart';
 
 class MessageAdminsScreen extends ConsumerStatefulWidget {
   final String id;
@@ -27,24 +27,26 @@ class MessageAdminsScreen extends ConsumerStatefulWidget {
 
 class _MessageAdminsScreenState extends ConsumerState<MessageAdminsScreen> {
 
-  final messageSubjectController = TextEditingController();
-  final messageTextController = TextEditingController();
+  List<String> subjects = ['Code Request', 'Report an Issue'];
+  String? subject;
+
+  final subjectController = TextEditingController();
+  final textController = TextEditingController();
 
   //https://javeedishaq.medium.com/understanding-the-dispose-method-in-flutter-e96d9a19442a#:~:text=In%20Flutter%2C%20the%20dispose%20method,can%20be%20safely%20cleaned%20up.
   @override
   void dispose() {
     super.dispose();
-    messageSubjectController.dispose();
-    messageTextController.dispose();
+    subjectController.dispose();
+    textController.dispose();
   }
 
-
   void sendMessage(GroupModel group) {
-    if (messageSubjectController.text.isNotEmpty) {
+    if (textController.text.isNotEmpty) {
       ref.read(messageControllerProvider.notifier).sendMessage(
         context: context,
-        subject: messageSubjectController.text.trim(),
-        text: messageTextController.text.trim(),
+        subject: subject ?? subjects[0],
+        text: textController.text.trim(),
         group: group,
       );
     } else {
@@ -55,11 +57,11 @@ class _MessageAdminsScreenState extends ConsumerState<MessageAdminsScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider)!;
-    final isLoading = ref.watch(itemControllerProvider);
+    final isLoading = ref.watch(messageControllerProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Message Group Admins'),
+        title: const Text('Message Admins'),
       ),
       drawer: const NavDrawer(),
       body: isLoading
@@ -75,17 +77,23 @@ class _MessageAdminsScreenState extends ConsumerState<MessageAdminsScreen> {
                   child: Text('Subject'),
                 ),
                 const SizedBox(height: 10,),
-                TextField(
-                  controller: messageSubjectController,
-                  decoration: const InputDecoration(
-                    hintText: 'Subject',
-                    filled: true,
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(18),
-                  ),
-                  maxLength: 30,
+                DropdownButton(
+                  value:subject ?? subjects[0],
+                  items: subjects
+                      .map(
+                        (e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(e), // Changed 'category' to e
+                    ),
+                  )
+                      .toList(),
+                  onChanged: (val) {
+                    setState(() {
+                      subject = val;
+                    });
+                  },
                 ),
-                const SizedBox(height: 20),
+
                 const Align(
                   alignment: Alignment.topLeft,
                   child: Text('Message Content'),
@@ -94,12 +102,11 @@ class _MessageAdminsScreenState extends ConsumerState<MessageAdminsScreen> {
                 SizedBox(
                   height: 140, // <-- TextField height
                   child: TextField(
-                    controller: messageTextController,
+                    controller: textController,
                     maxLines: null,
                     expands: true,
                     keyboardType: TextInputType.multiline,
                     decoration: const InputDecoration(
-                      hintText: 'Message Body',
                       filled: true,
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.all(18),

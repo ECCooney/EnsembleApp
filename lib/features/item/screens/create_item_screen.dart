@@ -27,7 +27,7 @@ class CreateItemScreen extends ConsumerStatefulWidget {
 class _CreateItemScreenState extends ConsumerState<CreateItemScreen> {
   File? itemPicFile;
 
-  List<String> categories = ['DIY', 'Household', 'Clothing', 'Other'];
+  List<String> categories = ['DIY', 'Household', 'Clothing', 'Family', 'Other'];
   String? category;
 
   final itemNameController = TextEditingController();

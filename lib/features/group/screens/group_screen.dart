@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
-
 import '../../../core/common/error_text.dart';
 import '../../../core/common/item_card.dart';
 import '../../../core/common/loader.dart';
@@ -11,40 +10,53 @@ import '../../group/controller/group_controller.dart';
 import '../../../theme/pallete.dart';
 import '../../nav/nav_drawer.dart';
 
-class GroupScreen extends ConsumerWidget {
-  final String id;
 
+class GroupScreen extends ConsumerStatefulWidget {
+
+  final String id;
   const GroupScreen({
     Key? key,
     required this.id,
   }) : super(key: key);
 
+
+  @override
+  ConsumerState createState() => _GroupScreenState();
+}
+
+class _GroupScreenState extends ConsumerState<GroupScreen> {
+
+  final List<String> categories = ['DIY', 'Household', 'Clothing', 'Family', 'Other'];
+  List <String> selectedCategories = [];
+
+
   void navigateToAdminTools(BuildContext context) {
-    Routemaster.of(context).push('/admin-tools/$id');
+    Routemaster.of(context).push('/admin-tools/$widget.id');
   }
 
   void navigateToJoinGroup(BuildContext context) {
-    Routemaster.of(context).push('/join-group/$id');
+    Routemaster.of(context).push('/join-group/$widget.id');
   }
 
   void navigateToCreateItem(BuildContext context) {
-    Routemaster.of(context).push('/create-item/$id');
+    Routemaster.of(context).push('/create-item/$widget.id');
   }
+
 
   void leaveGroup(WidgetRef ref, GroupModel group, BuildContext context) {
     ref.read(groupControllerProvider.notifier).leaveGroup(group, context);
   }
 
   void navigateToMessageAdmins(BuildContext context) {
-    Routemaster.of(context).push('/message-admins/$id');
+    Routemaster.of(context).push('/message-admins/$widget.id');
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final user = ref.watch(userProvider)!;
     return Scaffold(
       drawer: const NavDrawer(),
-      body: ref.watch(getGroupByIdProvider(id)).when(
+      body: ref.watch(getGroupByIdProvider(widget.id)).when(
         data: (group) {
           final bool isMember = group.members.contains(user.uid);
           return NestedScrollView(
@@ -99,7 +111,8 @@ class GroupScreen extends ConsumerWidget {
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 ),
-                                padding: const EdgeInsets.symmetric(horizontal: 25),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 25),
                               ),
                               child: Text(
                                 group.admins.contains(user.uid)
@@ -111,6 +124,32 @@ class GroupScreen extends ConsumerWidget {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 10),
+                        Text(
+                          group.description, // Add group description here
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black54,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: categories.map((category) => FilterChip(
+                              selected: selectedCategories.contains(category),
+                              label: Text(category),
+                              onSelected: (selected){
+                                setState(() {
+                                  if(selected) {selectedCategories.add(category);}
+                                  else{selectedCategories.remove(category);}
+                                });
+
+                              },
+                            )).toList(),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -118,13 +157,28 @@ class GroupScreen extends ConsumerWidget {
               ];
             },
             body: isMember
-                ? ref.watch(getGroupItemsProvider(id)).when(
+                ? ref.watch(getGroupItemsProvider(widget.id)).when(
               data: (items) {
-                return ListView.builder(
-                  itemCount: items.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final item = items[index];
-                    return ItemCard(item: item);
+                final filteredItems = items.where((item) {
+                  return selectedCategories.isEmpty|| selectedCategories.contains(item.category);
+                }).toList();
+                return GridView.builder(
+                  padding: const EdgeInsets.all(4.0),
+                  itemCount: filteredItems.length,
+                  shrinkWrap: true,
+                  physics: const ScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    childAspectRatio: 3 / 4.8,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemBuilder: (context, index) {
+                    var item = filteredItems[index];
+                    return GestureDetector(
+                      onTap: () {},
+                      child: ItemCard(item: item),
+                    );
                   },
                 );
               },
@@ -133,7 +187,7 @@ class GroupScreen extends ConsumerWidget {
               },
               loading: () => const Loader(),
             )
-                : const SizedBox(), // Non-members don't see the ListView
+                : const SizedBox(), // Non-members don't see the GridView
           );
         },
         error: (error, stackTrace) => ErrorText(error: error.toString()),
@@ -142,24 +196,24 @@ class GroupScreen extends ConsumerWidget {
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-            ref.watch(getGroupByIdProvider(id)).maybeWhen(
-              data: (group) {
-                final bool isMember = group.members.contains(user.uid);
-                if (isMember) {
-                  return FloatingActionButton(
-                    onPressed: () {
-                      navigateToCreateItem(context);
-                    },
-                    backgroundColor: Pallete.sageCustomColor,
-                    heroTag: null,
-                    child: const Icon(Icons.add),
-                  );
-                } else {
-                  return const SizedBox(); // Non-members don't see the FloatingActionButton
-                }
-              },
-              orElse: () => const SizedBox(),
-            ),
+          ref.watch(getGroupByIdProvider(widget.id)).maybeWhen(
+            data: (group) {
+              final bool isMember = group.members.contains(user.uid);
+              if (isMember) {
+                return FloatingActionButton(
+                  onPressed: () {
+                    navigateToCreateItem(context);
+                  },
+                  backgroundColor: Pallete.sageCustomColor,
+                  heroTag: null,
+                  child: const Icon(Icons.add),
+                );
+              } else {
+                return const SizedBox(); // Non-members don't see the FloatingActionButton
+              }
+            },
+            orElse: () => const SizedBox(),
+          ),
           const SizedBox(height: 10),
           FloatingActionButton(
             onPressed: () {
@@ -167,7 +221,7 @@ class GroupScreen extends ConsumerWidget {
             },
             backgroundColor: Pallete.sageCustomColor, // Example color
             child: const Icon(Icons.message),
-            heroTag: null,// Example icon
+            heroTag: null, // Example icon
           ),
         ],
       ),

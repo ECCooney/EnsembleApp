@@ -14,14 +14,15 @@ import '../../user/repository/user_repository.dart';
 import 'booking_details.dart';
 
 class Bookings extends ConsumerWidget {
-
   final String uid;
 
   const Bookings({
     Key? key,
     required this.uid,
   }) : super(key: key);
-  
+
+
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -54,7 +55,6 @@ class Bookings extends ConsumerWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-
                 },
                 child: Text('Completed'),
               ),
@@ -67,8 +67,9 @@ class Bookings extends ConsumerWidget {
                   itemCount: bookings.length,
                   itemBuilder: (BuildContext context, int index) {
                     final booking = bookings[index];
+                    if (booking.bookingStart.isAfter(DateTime.now())) {
                       return ListTile(
-                        title: Text('Booking for: ${booking.itemName}'),
+                        title: Text('Upcoming Booking for: ${booking.itemName}'),
                         subtitle: Text('Status: ${booking.bookingStatus}'),
                         leading: ref.watch(getItemByIdProvider(booking.itemId)).when(
                           data: (item) {
@@ -95,6 +96,9 @@ class Bookings extends ConsumerWidget {
                           },
                         ),
                       );
+                    } else {
+                      return SizedBox(); // Return an empty SizedBox for bookings in the past
+                    }
                   },
                 );
               },
