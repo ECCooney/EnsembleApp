@@ -13,18 +13,28 @@ import '../../user/controller/user_controller.dart';
 import '../../user/repository/user_repository.dart';
 import 'booking_details.dart';
 
-class Bookings extends ConsumerWidget {
+class BookingsScreen extends ConsumerStatefulWidget {
   final String uid;
 
-  const Bookings({
+
+
+  const BookingsScreen({
     Key? key,
     required this.uid,
   }) : super(key: key);
 
+  @override
+  ConsumerState createState() => _BookingsScreenState();
+}
+
+class _BookingsScreenState extends ConsumerState<BookingsScreen> {
+  final List<String> statuses = ['Request Denied', 'Confirmed', 'Pending'];
+  List <String> selectedStatuses = [];
 
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: Text('All Bookings'),
@@ -39,30 +49,30 @@ class Bookings extends ConsumerWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                },
-                child: Text('All'),
-              ),
-              ElevatedButton(
-                onPressed: () {
+          const SizedBox(height: 10),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: statuses.map((status) => FilterChip(
+                selected: selectedStatuses.contains(status),
+                label: Text(status),
+                onSelected: (selected){
+                  setState(() {
+                    if(selected) {selectedStatuses.add(status);}
+                    else{selectedStatuses.remove(status);}
+                  });
 
                 },
-                child: Text('Upcoming'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                },
-                child: Text('Completed'),
-              ),
-            ],
+              )).toList(),
+            ),
           ),
           Expanded(
-            child: ref.watch(getUserBookingsProvider(uid)).when(
+            child: ref.watch(getUserBookingsProvider(widget.uid)).when(
               data: (bookings) {
+                final filteredBookings = bookings.where((booking) {
+                  return selectedStatuses.isEmpty|| selectedStatuses.contains(booking.bookingStatus);
+                }).toList();
                 return ListView.builder(
                   itemCount: bookings.length,
                   itemBuilder: (BuildContext context, int index) {
