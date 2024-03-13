@@ -1,6 +1,3 @@
-
-import 'package:flutter/foundation.dart';
-
 class ItemModel {
   final String name;
   final String itemPic;
@@ -9,6 +6,7 @@ class ItemModel {
   final String description;
   final String category;
   final String owner;
+
 
   ItemModel({
     required this.name,

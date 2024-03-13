@@ -1,6 +1,4 @@
-import 'package:ensemble/core/providers/firebase_providers.dart';
 import 'package:ensemble/core/providers/storage_repository_providers.dart';
-import 'package:ensemble/features/group/controller/group_controller.dart';
 import 'package:ensemble/features/item/repository/item_repository.dart';
 import 'package:ensemble/models/group_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -90,6 +88,7 @@ class ItemController extends StateNotifier<bool> {
   void editItem({
     required File? itemPicFile,
     required String? description,
+    required String? name,
     required BuildContext context,
     required ItemModel item,
   }) async {
@@ -105,8 +104,11 @@ class ItemController extends StateNotifier<bool> {
             (r) => item = item.copyWith(itemPic: r),
       );
     }
-    if (description != null) {
+    if (description != null && description.isNotEmpty) {
       item = item.copyWith(description: description);
+    }
+    if (name != null && name.isNotEmpty) { // Check if name is not null and not empty
+      item = item.copyWith(name: name);
     }
     final res = await _itemRepository.editItem(item);
 

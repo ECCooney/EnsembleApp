@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -46,6 +47,8 @@ void main() async {
     // // 4. App Attest provider with fallback to Device Check provider (App Attest provider is only available on iOS 14.0+, macOS 14.0+)
     // appleProvider: AppleProvider.appAttest,
   );
+  // WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -69,6 +72,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         .getUserData(data.uid)
         .first;
     ref.read(userProvider.notifier).update((state) => userModel);
+    // FlutterNativeSplash.remove();
     setState((){});
   }
 

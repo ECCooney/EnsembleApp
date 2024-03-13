@@ -57,6 +57,7 @@ class UserController extends StateNotifier<bool> {
     required File? profilePicFile,
     required BuildContext context,
     required String name,
+    required String email,
   }) async {
     state = true;
     UserModel user = _ref.read(userProvider)!;
@@ -73,7 +74,17 @@ class UserController extends StateNotifier<bool> {
       );
     }
 
-    user = user.copyWith(name: name);
+    // Check if name and email are not empty or null before copying
+    if (name.isNotEmpty && email.isNotEmpty) {
+      user = user.copyWith(name: name, email: email);
+    } else if (name.isEmpty) {
+      showSnackBar(context, 'Name cannot be empty');
+      return;
+    } else if (email.isEmpty) {
+      showSnackBar(context, 'Email cannot be empty');
+      return;
+    }
+
     final res = await _userRepository.editProfile(user);
     state = false;
     res.fold(

@@ -1,11 +1,12 @@
-import 'package:flutter/foundation.dart';
-
 class BookingModel {
   final String id;
   final String requester;
   final String itemId;
   final String itemOwner;
   final String itemName; // New field
+  final String pickupLocation; // New field
+  final String pickupTime; // New field
+  final String dropoffTime; // New field
   late final DateTime bookingStart;
   late final DateTime bookingEnd;
   final String bookingStatus;
@@ -16,6 +17,9 @@ class BookingModel {
     required this.itemId,
     required this.itemOwner,
     required this.itemName, // Updated constructor
+    required this.pickupLocation, // New field
+    required this.pickupTime, // New field
+    required this.dropoffTime, // New field
     required this.bookingStart,
     required this.bookingEnd,
     required this.bookingStatus,
@@ -27,6 +31,9 @@ class BookingModel {
     String? itemId,
     String? itemOwner,
     String? itemName, // Updated copyWith method
+    String? pickupLocation, // New field
+    String? pickupTime, // New field
+    String? dropoffTime, // New field
     DateTime? bookingStart,
     DateTime? bookingEnd,
     String? bookingStatus,
@@ -37,6 +44,9 @@ class BookingModel {
       itemId: itemId ?? this.itemId,
       itemOwner: itemOwner ?? this.itemOwner,
       itemName: itemName ?? this.itemName,
+      pickupLocation: pickupLocation ?? this.pickupLocation, // New field
+      pickupTime: pickupTime ?? this.pickupTime, // New field
+      dropoffTime: dropoffTime ?? this.dropoffTime, // New field
       bookingStart: bookingStart ?? this.bookingStart,
       bookingEnd: bookingEnd ?? this.bookingEnd,
       bookingStatus: bookingStatus ?? this.bookingStatus,
@@ -50,6 +60,9 @@ class BookingModel {
       'itemId': itemId,
       'itemOwner': itemOwner,
       'itemName': itemName, // Updated toMap method
+      'pickupLocation': pickupLocation, // New field
+      'pickupTime': pickupTime,// New field
+      'dropoffTime': dropoffTime, // New field
       'bookingStart': bookingStart.millisecondsSinceEpoch,
       'bookingEnd': bookingEnd.millisecondsSinceEpoch,
       'bookingStatus': bookingStatus,
@@ -62,7 +75,10 @@ class BookingModel {
       requester: map['requester'] ?? '',
       itemId: map['itemId'] ?? '',
       itemOwner: map['itemOwner'] ?? '',
-      itemName: map['itemName'] ?? '', // Updated fromMap method
+      itemName: map['itemName'] ?? '',
+      pickupLocation: map['pickupLocation'] ?? '', // New field
+      pickupTime: map['pickupTime'] ?? '',
+      dropoffTime: map['dropoffTime'] ?? '', // New field
       //datetime needs to be converted back from timestamp firebase
       bookingStart: DateTime.fromMillisecondsSinceEpoch(map['bookingStart']),
       bookingEnd: DateTime.fromMillisecondsSinceEpoch(map['bookingEnd']),
@@ -72,7 +88,7 @@ class BookingModel {
 
   @override
   String toString() {
-    return 'BookingModel(id: $id, requester: $requester, itemId: $itemId, itemOwner: $itemOwner, itemName: $itemName, bookingStart: $bookingStart, bookingEnd: $bookingEnd, bookingStatus: $bookingStatus)';
+    return 'BookingModel(id: $id, requester: $requester, itemId: $itemId, itemOwner: $itemOwner, itemName: $itemName, pickupLocation: $pickupLocation, pickupTime: $pickupTime, dropoffTime: $dropoffTime, bookingStart: $bookingStart, bookingEnd: $bookingEnd, bookingStatus: $bookingStatus)';
   }
 
   @override
@@ -85,6 +101,9 @@ class BookingModel {
         other.itemId == itemId &&
         other.itemOwner == itemOwner &&
         other.itemName == itemName && // Updated equality check
+        other.pickupLocation == pickupLocation && // New field
+        other.pickupTime == pickupTime && // New field
+        other.dropoffTime == dropoffTime && // New field
         other.bookingStart == bookingStart &&
         other.bookingEnd == bookingEnd &&
         other.bookingStatus == bookingStatus;
@@ -96,7 +115,10 @@ class BookingModel {
     requester.hashCode ^
     itemId.hashCode ^
     itemOwner.hashCode ^
-    itemName.hashCode ^ // Updated hashCode calculation
+    itemName.hashCode ^
+    pickupLocation.hashCode ^ // New field
+    pickupTime.hashCode ^ // New field
+    dropoffTime.hashCode ^ // New field
     bookingStart.hashCode ^
     bookingEnd.hashCode ^
     bookingStatus.hashCode;

@@ -73,7 +73,7 @@ class _CreateItemScreenState extends ConsumerState<CreateItemScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create a Item'),
+        title: const Text('Create an Item'),
       ),
       drawer: const NavDrawer(),
       body: isLoading

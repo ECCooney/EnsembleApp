@@ -61,6 +61,9 @@ class BookingController extends StateNotifier<bool> {
       itemName: item.name,
       itemOwner: item.owner,
       requester: user.uid,
+      pickupLocation: 'Not set',
+      pickupTime: 'Not set',
+      dropoffTime: 'Not set',
     );
 
     final res = await _bookingRepository.addBooking(booking);
@@ -73,14 +76,20 @@ class BookingController extends StateNotifier<bool> {
 
   void approveBooking({
     required String? bookingStatus,
+    required String? pickupLocation,
+    required String? pickupTime,
+    required String? dropoffTime,
     required BuildContext context,
     required BookingModel booking,
   }) async {
+    BookingModel updatedBooking = booking.copyWith(
+      bookingStatus: bookingStatus ?? booking.bookingStatus,
+      pickupLocation: pickupLocation ?? booking.pickupLocation,
+      pickupTime: pickupTime ?? booking.pickupTime,
+      dropoffTime: dropoffTime ?? booking.dropoffTime,
+    );
 
-    if (bookingStatus != null) {
-      booking = booking.copyWith(bookingStatus: bookingStatus);
-    }
-    final res = await _bookingRepository.approveBooking(booking);
+    final res = await _bookingRepository.approveBooking(updatedBooking);
 
     res.fold(
           (l) => showSnackBar(context, l.message),

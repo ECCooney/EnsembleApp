@@ -43,71 +43,62 @@ class ItemCard extends ConsumerWidget {
             offset: const Offset(0, 3),
           ),
         ],
+        border: Border.all(color: Colors.orange, width: 2), // Add border here
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: GestureDetector(
-                  onDoubleTap: () {
-                    navigateToItem(context);
-                  },
-                  child: Hero(
-                    transitionOnUserGestures: true,
-                    tag: item.id!,
-                    child: Image.network(
-                      item.itemPic!,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: 180,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    item.name!,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20, // Adjust the font size as per your requirement
                     ),
                   ),
                 ),
               ),
               if (item.owner == user.uid)
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: IconButton(
-                    onPressed: () {
-                                    navigateToEditItem(context);
-                    },
-                    icon: const Icon(Icons.edit),
-                  ),
-                ),
-              if (item.owner != user.uid)
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: IconButton(
-                    icon: const Icon(Icons.open_in_new),
-                    color: Colors.black,
-                    iconSize: 25,
-                    onPressed: () {
-                      navigateToItem(context);
-                    },
-                  ),
+                IconButton(
+                  onPressed: () {
+                    navigateToEditItem(context);
+                  },
+                  icon: const Icon(Icons.edit),
                 ),
             ],
           ),
-          const SizedBox(
-            height: 5,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              item.name!,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.left,
-              style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 20, // Adjust the font size as per your requirement
+          GestureDetector(
+            onTap: () {
+              navigateToItem(context);
+            },
+            child: Hero(
+              transitionOnUserGestures: true,
+              tag: item.id!,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.network(
+                  item.itemPic!,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: 180,
+                ),
               ),
             ),
+          ),
+          const SizedBox(
+            height: 5,
           ),
           FutureBuilder<List<DateTime>>(
             future: ref.read(getBookedDatesProvider(item.id!).future),
@@ -123,26 +114,30 @@ class ItemCard extends ConsumerWidget {
                   DateTime(today.year, today.month, today.day),
                 );
                 return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          navigateToItem(context);
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            isBookedToday ? Colors.white : Colors.white, // Set button color based on availability
-                          ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        navigateToItem(context);
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          Colors
+                              .white, // Set button color based on availability
                         ),
-                        child: Text(
-                          isBookedToday ? 'Check Availability' : 'Available Today',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
+                      ),
+                      child: Text(
+                        isBookedToday
+                            ? 'Check Availability'
+                            : 'Available Today',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontSize: 12,
                         ),
                       ),
                     ),
+                  ),
                 );
               }
             },
