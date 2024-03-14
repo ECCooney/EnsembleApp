@@ -6,6 +6,7 @@ import 'dart:io';
 import '../../../core/providers/storage_repository_providers.dart';
 import '../../../core/utils.dart';
 import '../../../models/booking_model.dart';
+import '../../../models/group_model.dart';
 import '../../../models/item_model.dart';
 import '../../../models/message_model.dart';
 import '../../../models/user_model.dart';
@@ -24,6 +25,10 @@ final userControllerProvider = StateNotifierProvider<UserController, bool>((ref)
 
 final getUserItemsProvider = StreamProvider.family((ref, String uid) {
   return ref.read(userControllerProvider.notifier).getUserItems(uid);
+});
+
+final getGroupsProvider = StreamProvider.family((ref, String uid) {
+  return ref.read(userControllerProvider.notifier).getUserGroups(uid);
 });
 
 final getUserBookingsProvider = StreamProvider.family((ref, String uid) {
@@ -110,5 +115,9 @@ class UserController extends StateNotifier<bool> {
 
   Stream<List<BookingModel>> getRequests(String uid) {
     return _userRepository.getRequests(uid);
+  }
+
+  Stream<List<GroupModel>> getUserGroups(String uid) {
+    return _userRepository.getGroups(uid);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:ensemble/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -31,9 +32,8 @@ class ItemCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
     return Container(
-      padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(2),
         color: Colors.white,
         boxShadow: [
           BoxShadow(
@@ -43,41 +43,48 @@ class ItemCard extends ConsumerWidget {
             offset: const Offset(0, 3),
           ),
         ],
-        border: Border.all(color: Colors.orange, width: 2), // Add border here
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    item.name!,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.left,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .titleLarge!
-                        .copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20, // Adjust the font size as per your requirement
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: Colors.black, // Change the color as per your requirement
+                  width: 2, // Change the width as per your requirement
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      item.name!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: Pallete.blackColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20, // Adjust the font size as per your requirement
+                      ),
                     ),
                   ),
                 ),
-              ),
-              if (item.owner == user.uid)
-                IconButton(
-                  onPressed: () {
-                    navigateToEditItem(context);
-                  },
-                  icon: const Icon(Icons.edit),
-                ),
-            ],
+                if (item.owner == user.uid)
+                  IconButton(
+                    onPressed: () {
+                      navigateToEditItem(context);
+                    },
+                    icon: const Icon(Icons.edit,
+                      color: Pallete.whiteColor,),
+                  ),
+              ],
+            ),
           ),
           GestureDetector(
             onTap: () {
@@ -86,13 +93,13 @@ class ItemCard extends ConsumerWidget {
             child: Hero(
               transitionOnUserGestures: true,
               tag: item.id!,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  item.itemPic!,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                  height: 180,
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: ClipRRect(
+                  child: Image.network(
+                    item.itemPic!,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -122,8 +129,7 @@ class ItemCard extends ConsumerWidget {
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
-                          Colors
-                              .white, // Set button color based on availability
+                          Pallete.orangeCustomColor, // Set button color based on availability
                         ),
                       ),
                       child: Text(
@@ -132,7 +138,7 @@ class ItemCard extends ConsumerWidget {
                             : 'Available Today',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: Pallete.whiteColor,
                           fontSize: 12,
                         ),
                       ),

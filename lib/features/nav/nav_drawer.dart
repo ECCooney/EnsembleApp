@@ -131,32 +131,9 @@ class NavDrawer extends ConsumerWidget {
             Spacer(),
             Divider(color: Pallete.orangeCustomColor),
             ListTile(
-              onTap: () async {
-                showDialog(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text("Logout"),
-                      content: Text("Are you sure you want to logout?"),
-                      actions: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.cancel, color: Pallete.redCustomColor),
-                        ),
-                        IconButton(
-                          onPressed: () async {
-                            logOut(ref);
-                           navigateToHome(context);
-                          },
-                          icon: Icon(Icons.done, color: Colors.green),
-                        ),
-                      ],
-                    );
-                  },
-                );
+              onTap: () {
+                logOut(ref);
+                navigateToHome(context);
               },
               leading: Icon(Icons.exit_to_app, color: Pallete.orangeCustomColor),
               title: Text(
@@ -164,6 +141,41 @@ class NavDrawer extends ConsumerWidget {
                 style: TextStyle(fontSize: 16, color: Colors.black),
               ),
             ),
+            //removed function for pop up as couldn't get it to automatically disappear
+            // ListTile(
+            //   onTap: () async {
+            //     showDialog(
+            //       barrierDismissible: false,
+            //       context: context,
+            //       builder: (context) {
+            //         return AlertDialog(
+            //           title: Text("Logout"),
+            //           content: Text("Are you sure you want to logout?"),
+            //           actions: [
+            //             IconButton(
+            //               onPressed: () {
+            //                 Navigator.pop(context);
+            //               },
+            //               icon: Icon(Icons.cancel, color: Pallete.redCustomColor),
+            //             ),
+            //             IconButton(
+            //               onPressed: () async {
+            //                 logOut(ref);
+            //                navigateToHome(context);
+            //               },
+            //               icon: Icon(Icons.done, color: Colors.green),
+            //             ),
+            //           ],
+            //         );
+            //       },
+            //     );
+            //   },
+            //   leading: Icon(Icons.exit_to_app, color: Pallete.orangeCustomColor),
+            //   title: Text(
+            //     "Logout",
+            //     style: TextStyle(fontSize: 16, color: Colors.black),
+            //   ),
+            // ),
           ],
         ),
       ),

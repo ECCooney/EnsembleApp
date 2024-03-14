@@ -31,24 +31,24 @@ class _GroupScreenState extends ConsumerState<GroupScreen> {
 
 
   void navigateToAdminTools(BuildContext context) {
-    Routemaster.of(context).push('/admin-tools/$widget.id');
+    Routemaster.of(context).push('/admin-tools/${widget.id}');
   }
 
   void navigateToJoinGroup(BuildContext context) {
-    Routemaster.of(context).push('/join-group/$widget.id');
+    Routemaster.of(context).push('/join-group/${widget.id}');
   }
 
   void navigateToCreateItem(BuildContext context) {
-    Routemaster.of(context).push('/create-item/$widget.id');
+    Routemaster.of(context).push('/create-item/${widget.id}');
+  }
+
+  void navigateToMessageAdmins(BuildContext context) {
+    Routemaster.of(context).push('/message-admins/${widget.id}');
   }
 
 
   void leaveGroup(WidgetRef ref, GroupModel group, BuildContext context) {
     ref.read(groupControllerProvider.notifier).leaveGroup(group, context);
-  }
-
-  void navigateToMessageAdmins(BuildContext context) {
-    Routemaster.of(context).push('/message-admins/$widget.id');
   }
 
   @override
@@ -142,7 +142,7 @@ class _GroupScreenState extends ConsumerState<GroupScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: categories.map((category) => Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
                               child: FilterChip(
                                 selected: selectedCategories.contains(category),
                                 label: Text(category),
@@ -176,9 +176,9 @@ class _GroupScreenState extends ConsumerState<GroupScreen> {
                   itemCount: filteredItems.length,
                   shrinkWrap: true,
                   physics: const ScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 3 / 4.8,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 3 / 3.8,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),

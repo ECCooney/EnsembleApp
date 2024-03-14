@@ -81,11 +81,12 @@ class UserProfileScreen extends ConsumerWidget {
               data: (data) {
                 return Expanded(
                   child: GridView.builder(
-                    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200,
-                      childAspectRatio: 3 / 4.8,
+                    padding: const EdgeInsets.all(8.0),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 3 / 4,
                       crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
+                      mainAxisSpacing: 1,
                     ),
                     itemCount: data.length,
                     itemBuilder: (BuildContext context, int index) {

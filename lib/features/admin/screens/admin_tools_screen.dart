@@ -1,3 +1,4 @@
+import 'package:ensemble/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -52,27 +53,55 @@ class _AdminToolsScreenState extends ConsumerState<AdminToolsScreen> {
         body: Column(
           children: [
             ListTile(
-              leading: const Icon(Icons.add_moderator),
+              leading: const Icon(Icons.add_moderator,
+              color: Pallete.orangeCustomColor),
               title: const Text('Add New Admin'),
               onTap: () => navigateToAddAdmins(context),
             ),
             ListTile(
-              leading: const Icon(Icons.edit),
+              leading: const Icon(Icons.edit,
+                  color: Pallete.orangeCustomColor),
               title: const Text('Edit Group Details'),
               onTap: () => navigateToEditGroup(context),
             ),
             ListTile(
-              leading: const Icon(Icons.message_outlined),
+              leading: const Icon(Icons.message_outlined,
+                  color: Pallete.orangeCustomColor),
               title: const Text('View Messages'),
               onTap: () => navigateToAdminMessages(context)
             ),
             Expanded(
               child: Align(
                 alignment: FractionalOffset.bottomCenter,
-                child: ListTile(
-                  leading: const Icon(Icons.message_outlined),
-                  title: const Text('Delete Group'),
-                  onTap: () => deleteGroup(group),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton(
+                    onPressed: () => deleteGroup(group), // Use deleteGroup function for onPressed
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      backgroundColor: Pallete.orangeCustomColor, // Change the button color to orange
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 10), // Add spacing between icon and text
+                        Text(
+                          'Delete Group',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),

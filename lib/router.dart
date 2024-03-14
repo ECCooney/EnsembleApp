@@ -9,7 +9,6 @@ import 'package:ensemble/features/home/screens/home_screen.dart';
 import 'package:ensemble/features/message/screens/message_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
-
 import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/register_screen.dart';
 import 'features/booking/screens/booking_details.dart';
