@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 
+import '../../theme/pallete.dart';
+
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
@@ -24,11 +26,15 @@ class CustomTextField extends StatelessWidget {
         decoration: InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.transparent, width: 0),
+            borderSide: const BorderSide(color: Pallete.orangeCustomColor, width: 1), // Set custom orange color for border
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Pallete.blackColor, width: 2), // Set custom orange color for focused border
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.transparent, width: 0),
+            borderSide: const BorderSide(color: Pallete.orangeCustomColor, width: 1), // Set custom orange color for border
           ),
           contentPadding:
           const EdgeInsets.symmetric(horizontal: 16, vertical: 14),

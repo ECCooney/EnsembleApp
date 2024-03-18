@@ -56,11 +56,22 @@ class AuthController extends StateNotifier<bool> {
 
   void signUpWithEmail(String name, String email, String password, BuildContext context) async {
     state = true;
-    final user = await _authRepository.signUpWithEmail(name: name, email: email, password: password, context: context);
-    state = false;
-    user.fold(
-          (l) => showSnackBar(context, l.message),
-          (userModel) => _ref.read(userProvider.notifier).update((state) => userModel),
+    final userOrFailure = await _authRepository.signUpWithEmail(name: name, email: email, password: password, context: context);
+    state = false; // Move this line inside the fold
+    userOrFailure.fold(
+          (failure) {
+        state = false;
+        showSnackBar(context, failure.message);
+      },
+          (userModel) {
+        if (userModel != null) {
+          _ref.read(userProvider.notifier).update((state) => userModel);
+        } else {
+          state = false;
+          // Handle the case where userModel is null
+          showSnackBar(context, "Registration failed. Please try again.");
+        }
+      },
     );
   }
 

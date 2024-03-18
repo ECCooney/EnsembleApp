@@ -1,17 +1,19 @@
 import 'dart:io';
-import 'package:ensemble/features/group/controller/group_controller.dart';
-import 'package:ensemble/features/item/controller/item_controller.dart';
-import 'package:ensemble/models/group_model.dart';
-import 'package:ensemble/models/item_model.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:ensemble/core/common/loader.dart';
+import 'package:ensemble/theme/pallete.dart';
 
 import '../../../core/common/error_text.dart';
 import '../../../core/utils.dart';
+import '../../../theme/borders.dart';
 import '../../auth/controller/auth_controller.dart';
+import '../../group/controller/group_controller.dart';
 import '../../nav/nav_drawer.dart';
+import '../controller/item_controller.dart';
+import '../../../models/group_model.dart';
 
 class CreateItemScreen extends ConsumerStatefulWidget {
   final String id;
@@ -34,7 +36,6 @@ class _CreateItemScreenState extends ConsumerState<CreateItemScreen> {
   final itemDescriptionController = TextEditingController();
   final itemCategoryController = TextEditingController();
 
-  //https://javeedishaq.medium.com/understanding-the-dispose-method-in-flutter-e96d9a19442a#:~:text=In%20Flutter%2C%20the%20dispose%20method,can%20be%20safely%20cleaned%20up.
   @override
   void dispose() {
     super.dispose();
@@ -73,7 +74,7 @@ class _CreateItemScreenState extends ConsumerState<CreateItemScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create a Item'),
+        title: const Text('Create an Item'),
       ),
       drawer: const NavDrawer(),
       body: isLoading
@@ -82,91 +83,120 @@ class _CreateItemScreenState extends ConsumerState<CreateItemScreen> {
         data: (group) {
           return Padding(
             padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                const Align(
-                  alignment: Alignment.topLeft,
-                  child: Text('Item Name'),
-                ),
-                const SizedBox(height: 10,),
-                TextField(
-                  controller: itemNameController,
-                  decoration: const InputDecoration(
-                    hintText: 'My Item Name',
-                    filled: true,
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(18),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Item Name',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
                   ),
-                  maxLength: 30,
-                ),
-
-                const SizedBox(height: 20),
-                const Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Select Category',
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: DropdownButton(
-                    value: category ?? categories[0],
-                    items: categories
-                        .map(
-                          (e) => DropdownMenuItem(
-                        value: e,
-                        child: Text(e), // Changed 'category' to e
-                      ),
-                    )
-                        .toList(),
-                    onChanged: (val) {
-                      setState(() {
-                        category = val;
-                      });
-                    },
-                  ),
-                ),
-                const Align(
-                  alignment: Alignment.topLeft,
-                  child: Text('Item Description'),
-                ),
-                const SizedBox(height: 10,),
-                SizedBox(
-                  height: 140, // <-- TextField height
-                  child: TextField(
-                    controller: itemDescriptionController,
-                    maxLines: null,
-                    expands: true,
-                    keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
-                      hintText: 'A Short Description',
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: itemNameController,
+                    decoration: InputDecoration(
+                      hintText: 'My Item Name',
                       filled: true,
-                      border: InputBorder.none,
+                      fillColor: Colors.white,
+                      border: Borders.outlinedBorder,
+                      focusedBorder: Borders.focusedBorder,
+                      enabledBorder: Borders.enabledBorder,
                       contentPadding: EdgeInsets.all(18),
                     ),
-                    maxLength: 150,
+                    maxLength: 30,
                   ),
-                ),
-                const SizedBox(height: 30,),
-                ElevatedButton(
-                  onPressed: () => createItem(group),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: const Text(
-                    'Create Item',
+                  const SizedBox(height: 10),
+                  Text(
+                    'Select Category',
                     style: TextStyle(
-                      fontSize: 17,
+                      color: Colors.black,
+                      fontSize: 18,
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(height: 5),
+                  Container(
+                    width: double.infinity,
+                      child: InputDecorator(
+                        decoration: InputDecoration(
+                          border: Borders.outlinedBorder,
+                          focusedBorder: Borders.focusedBorder,
+                          enabledBorder: Borders.enabledBorder,
+                        ),
+                        child: DropdownButton(
+                          value: category ?? categories[0],
+                          underline: SizedBox(), // Hides the default underline
+                          isExpanded: true,
+                          items: categories
+                              .map(
+                                (e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e),
+                            ),
+                          )
+                              .toList(),
+                          onChanged: (val) {
+                            setState(() {
+                              category = val;
+                            });
+                          },
+                        ),
+                      ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Item Description',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  SizedBox(
+                    height: 140,
+                    child: TextField(
+                      controller: itemDescriptionController,
+                      maxLines: null,
+                      expands: true,
+                      keyboardType: TextInputType.multiline,
+                      decoration: InputDecoration(
+                        hintText: 'A Short Description',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: Borders.outlinedBorder,
+                        focusedBorder: Borders.focusedBorder,
+                        enabledBorder: Borders.enabledBorder,
+                        contentPadding: EdgeInsets.all(18),
+                      ),
+                      maxLength: 150,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: () => createItem(group),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      backgroundColor: Pallete.orangeCustomColor,
+                    ),
+                    child: const Text(
+                      'Create Item',
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
-        }, loading: () => const Loader(),
+        },
+        loading: () => const Loader(),
         error: (error, stackTrace) => ErrorText(
           error: error.toString(),
         ),

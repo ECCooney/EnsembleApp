@@ -1,4 +1,5 @@
 import 'package:ensemble/features/message/screens/message_details_screen.dart';
+import 'package:ensemble/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -41,27 +42,26 @@ class AdminMessagesScreen extends ConsumerWidget {
               itemBuilder: (BuildContext context, int index) {
                 final message = messages[index];
 
-                return ListTile(
-                  leading: message.isRead ? const Icon(Icons.mail_outline) : const Icon(Icons.mail),
-                  title: Text(
-                    message.subject,
-                    style: TextStyle(
-                      fontWeight: message.isRead ? FontWeight.normal : FontWeight.bold,
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => MessageDetailsScreen(id: message.id),
+                      ),
+                    );
+                    if (!message.isRead) {
+                      changeToRead(ref, context, message);
+                    }
+                  },
+                  child: ListTile(
+                    leading: message.isRead ? const Icon(Icons.mail_outline, color: Pallete.orangeCustomColor) : const Icon(Icons.mail, color: Pallete.orangeCustomColor),
+                    title: Text(
+                      message.subject,
+                      style: TextStyle(
+                        fontWeight: message.isRead ? FontWeight.normal : FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  subtitle: Text(message.text),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.open_in_new),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => MessageDetailsScreen(id: message.id),
-                        ),
-                      );
-                      if (!message.isRead) {
-                        changeToRead(ref, context, message);
-                      }
-                    },
+                    subtitle: Text(message.text),
                   ),
                 );
               },

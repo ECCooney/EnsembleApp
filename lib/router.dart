@@ -9,7 +9,6 @@ import 'package:ensemble/features/home/screens/home_screen.dart';
 import 'package:ensemble/features/message/screens/message_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
-
 import 'features/auth/screens/login_screen.dart';
 import 'features/auth/screens/register_screen.dart';
 import 'features/booking/screens/booking_details.dart';
@@ -22,11 +21,13 @@ import 'features/item/screens/edit_item_screen.dart';
 import 'features/item/screens/item_screen.dart';
 import 'features/message/screens/message_admins_screen.dart';
 import 'features/message/screens/message_responses_screen.dart';
+import 'features/splash/screens/splash_screen.dart';
 import 'features/user/screens/edit_profile_screen.dart';
 import 'features/user/screens/user_profile_screen.dart';
 
 final loggedOutRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child:LoginScreen()),
+  '/splash': (_) => const MaterialPage(child:SplashScreen()),
   '/register': (_) => const MaterialPage(child: RegisterScreen()),
 });
 
@@ -115,7 +116,7 @@ final loggedInRoute = RouteMap(routes: {
     ),
   ),
   '/bookings/:uid': (routeData) => MaterialPage(
-    child: Bookings(
+    child: BookingsScreen(
       uid: routeData.pathParameters['uid']!,
     ),
   ),

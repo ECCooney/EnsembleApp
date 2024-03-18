@@ -15,22 +15,28 @@ class GoogleSignInButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.all(18.0),
-      child: ElevatedButton.icon(
-        onPressed: () => signInWithGoogle(context, ref),
-        icon: Image.asset(
-          Constants.googleLogoPath,
-          width: 35,
-        ),
-        label: const Text(
-          'Continue with Google',
-          style: TextStyle(fontSize: 18),
-        ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xffF5F6FA),
-          elevation: 0,
-          minimumSize: const Size(double.infinity, 50),
-          shape: RoundedRectangleBorder(
+      child: GestureDetector(
+        onTap: () => signInWithGoogle(context, ref),
+        child: Container(
+          decoration: BoxDecoration(
+            color: const Color(0xffF5F6FA),
             borderRadius: BorderRadius.circular(30),
+          ),
+          height: 50,
+          width: double.infinity,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                Constants.googleLogoPath,
+                width: 35,
+              ),
+              const SizedBox(width: 10),
+              const Text(
+                'Continue with Google',
+                style: TextStyle(fontSize: 18),
+              ),
+            ],
           ),
         ),
       ),

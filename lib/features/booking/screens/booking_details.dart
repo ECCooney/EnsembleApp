@@ -29,7 +29,7 @@ class _BookingDetailsState extends ConsumerState<BookingDetails> {
       data: (booking) =>
           Scaffold(
             appBar: AppBar(
-              title: const Text('Request Details'),
+              title: const Text('Booking Details'),
               centerTitle: false,
               actions: [
                 TextButton(
@@ -87,8 +87,18 @@ class _BookingDetailsState extends ConsumerState<BookingDetails> {
                   ),
                   // Display booking details
                   Text('Item Name: ${booking.itemName}'),
+                  const Text(
+                    'Other Details:',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
                   Text('Booking Start: ${booking.bookingStart}'),
+                  Text('Pickup Time: ${booking.pickupTime}'),
                   Text('Booking End: ${booking.bookingEnd}'),
+                  Text('Drop off Time: ${booking.dropoffTime}'),
+                  Text('Pickup Location: ${booking.pickupLocation}'),
                 ],
               ),
             ),

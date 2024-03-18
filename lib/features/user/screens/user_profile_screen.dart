@@ -6,6 +6,7 @@ import 'package:routemaster/routemaster.dart';
 import '../../../core/common/error_text.dart';
 import '../../../core/common/item_card.dart';
 import '../../../core/common/loader.dart';
+import '../../../theme/pallete.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../../nav/nav_drawer.dart';
 import '../controller/user_controller.dart';
@@ -13,7 +14,7 @@ import '../controller/user_controller.dart';
 class UserProfileScreen extends ConsumerWidget {
   final String uid;
   const UserProfileScreen({
-    super.key,
+    Key? key,
     required this.uid,
   });
 
@@ -25,81 +26,82 @@ class UserProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       drawer: const NavDrawer(),
+      appBar: AppBar(
+        title: const Text('User Profile'),
+      ),
       body: ref.watch(getUserDataProvider(uid)).when(
-        data: (user) => NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return [
-              SliverAppBar(
-                expandedHeight: 250,
-                floating: true,
-                snap: true,
-                flexibleSpace: Stack(
-                  children: [
-                    Container(
-                      alignment: Alignment.bottomLeft,
-                      padding: const EdgeInsets.all(20).copyWith(bottom: 70),
-                      child: CircleAvatar(
+        data: (user) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomRight,
+                      colors: [Pallete.orangeCustomColor, Colors.black],
+                    ),
+                  ),
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
                         backgroundImage: NetworkImage(user.profilePic),
-                        radius: 45,
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.bottomLeft,
-                      padding: const EdgeInsets.all(20),
-                      child: OutlinedButton(
-                        onPressed: () => navigateToEditUser(context),
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 25),
-                        ),
-                        child: const Text('Edit Profile'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.all(16),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate(
-                    [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            user.name,
-                            style: const TextStyle(
-                              fontSize: 19,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                        radius: 72,
                       ),
                       const SizedBox(height: 10),
-                      const Divider(thickness: 2),
+                      Text(
+                        user.name,
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        user.email,
+                        style: const TextStyle(fontSize: 16, color: Colors.white),
+                      ),
                     ],
                   ),
                 ),
-              ),
-            ];
-          },
-          body: ref.watch(getUserItemsProvider(uid)).when(
-            data: (data) {
-              return ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final item = data[index];
-                  return ItemCard(item: item);
-                },
-              );
-            },
-            error: (error, stackTrace) {
-              return ErrorText(error: error.toString());
-            },
-            loading: () => const Loader(),
-          ),
+                Positioned(
+                  top: 20,
+                  right: 20,
+                  child: FloatingActionButton(
+                    onPressed: () => navigateToEditUser(context),
+                    child: Icon(Icons.edit),
+                    backgroundColor: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 30),
+            ref.watch(getUserItemsProvider(uid)).when(
+              data: (data) {
+                return Expanded(
+                  child: GridView.builder(
+                    padding: const EdgeInsets.all(8.0),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 3 / 4,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 1,
+                    ),
+                    itemCount: data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final item = data[index];
+                      return ItemCard(item: item);
+                    },
+                  ),
+                );
+              },
+              error: (error, stackTrace) {
+                return ErrorText(error: error.toString());
+              },
+              loading: () => const Loader(),
+            ),
+          ],
         ),
         error: (error, stackTrace) => ErrorText(error: error.toString()),
         loading: () => const Loader(),

@@ -1,3 +1,4 @@
+import 'package:ensemble/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -47,6 +48,7 @@ class _AddAdminsScreenState extends ConsumerState<AddAdminsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text('Select New Admins'),
         actions: [
           IconButton(
             onPressed: saveAdmins,
@@ -69,6 +71,8 @@ class _AddAdminsScreenState extends ConsumerState<AddAdminsScreen> {
                 ctr++;
                 return CheckboxListTile(
                   value: uids.contains(user.uid),
+                  activeColor: Pallete.orangeCustomColor,
+                  checkColor: Pallete.whiteColor,
                   onChanged: (val) {
                     if (val!) {
                       addUid(user.uid);
@@ -86,11 +90,14 @@ class _AddAdminsScreenState extends ConsumerState<AddAdminsScreen> {
             );
           },
         ),
+
         error: (error, stackTrace) => ErrorText(
           error: error.toString(),
         ),
+
         loading: () => const Loader(),
       ),
+
     );
   }
 }

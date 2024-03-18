@@ -6,6 +6,7 @@ import '../../../core/failure.dart';
 import '../../../core/providers/firebase_providers.dart';
 import '../../../core/type_defs.dart';
 import '../../../models/booking_model.dart';
+import '../../../models/group_model.dart';
 import '../../../models/item_model.dart';
 import '../../../models/message_model.dart';
 import '../../../models/user_model.dart';
@@ -20,6 +21,8 @@ class UserRepository {
   UserRepository({required FirebaseFirestore firestore}) : _firestore = firestore;
 
   CollectionReference get _users => _firestore.collection(FirebaseConstants.usersCollection);
+
+  CollectionReference get _groups => _firestore.collection(FirebaseConstants.groupsCollection);
   CollectionReference get _items => _firestore.collection(FirebaseConstants.itemsCollection);
   CollectionReference get _itemMessages => _firestore.collection(FirebaseConstants.messagesCollection);
   CollectionReference get _bookings => _firestore.collection(FirebaseConstants.bookingsCollection);
@@ -68,6 +71,16 @@ class UserRepository {
       )
           .toList(),
     );
+  }
+
+  Stream<List<GroupModel>> getGroups(String uid) {
+    return _groups.where('members', arrayContains: uid).snapshots().map((event) {
+      List<GroupModel> groups = [];
+      for (var doc in event.docs) {
+        groups.add(GroupModel.fromMap(doc.data() as Map<String, dynamic>));
+      }
+      return groups;
+    });
   }
 
   Stream<List<BookingModel>> getRequests(String uid) {

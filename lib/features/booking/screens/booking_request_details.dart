@@ -18,11 +18,18 @@ class BookingRequestDetails extends ConsumerStatefulWidget {
 }
 
 class _BookingRequestDetailsState extends ConsumerState<BookingRequestDetails> {
+
+  final locationController = TextEditingController();
+  final pickupTimeController = TextEditingController();
+  final dropoffTimeController = TextEditingController();
   void approveBooking(BookingModel booking) {
     ref.read(bookingControllerProvider.notifier).approveBooking(
+      pickupLocation: locationController.text.trim(),
       bookingStatus: 'Confirmed',
       context: context,
       booking: booking,
+      pickupTime: pickupTimeController.text.trim(),
+      dropoffTime: dropoffTimeController.text.trim(),
     );
   }
 
@@ -32,6 +39,14 @@ class _BookingRequestDetailsState extends ConsumerState<BookingRequestDetails> {
       context: context,
       booking: booking,
     );
+  }
+
+  @override
+  void dispose() {
+    pickupTimeController.dispose();
+    locationController.dispose();
+    dropoffTimeController.dispose();
+    super.dispose();
   }
 
   @override
@@ -94,6 +109,42 @@ class _BookingRequestDetailsState extends ConsumerState<BookingRequestDetails> {
               Text('Item Name: ${booking.itemName}'),
               Text('Booking Start: ${booking.bookingStart}'),
               Text('Booking End: ${booking.bookingEnd}'),
+              const SizedBox(height: 16), // Add some space
+              // Container to wrap text fields
+              Container(
+                padding: const EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Column(
+                  children: [
+                    // Text input field for pickup location
+                    TextField(
+                      controller: pickupTimeController,
+                      decoration: const InputDecoration(
+                        labelText: 'Pick Up Time',
+                        hintText: 'From : To',
+                      ),
+                    ),
+                    TextField(
+                      controller: dropoffTimeController,
+                      decoration: const InputDecoration(
+                        labelText: 'Drop off Time',
+                        hintText: 'From : To',
+                      ),
+                    ),
+                    const SizedBox(height: 16), // Add some space
+                    TextField(
+                      controller: locationController,
+                      decoration: const InputDecoration(
+                        labelText: 'Pickup Location',
+                        hintText: 'Enter pickup location',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

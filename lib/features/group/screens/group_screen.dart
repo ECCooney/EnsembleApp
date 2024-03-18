@@ -31,24 +31,24 @@ class _GroupScreenState extends ConsumerState<GroupScreen> {
 
 
   void navigateToAdminTools(BuildContext context) {
-    Routemaster.of(context).push('/admin-tools/$widget.id');
+    Routemaster.of(context).push('/admin-tools/${widget.id}');
   }
 
   void navigateToJoinGroup(BuildContext context) {
-    Routemaster.of(context).push('/join-group/$widget.id');
+    Routemaster.of(context).push('/join-group/${widget.id}');
   }
 
   void navigateToCreateItem(BuildContext context) {
-    Routemaster.of(context).push('/create-item/$widget.id');
+    Routemaster.of(context).push('/create-item/${widget.id}');
+  }
+
+  void navigateToMessageAdmins(BuildContext context) {
+    Routemaster.of(context).push('/message-admins/${widget.id}');
   }
 
 
   void leaveGroup(WidgetRef ref, GroupModel group, BuildContext context) {
     ref.read(groupControllerProvider.notifier).leaveGroup(group, context);
-  }
-
-  void navigateToMessageAdmins(BuildContext context) {
-    Routemaster.of(context).push('/message-admins/$widget.id');
   }
 
   @override
@@ -93,7 +93,7 @@ class _GroupScreenState extends ConsumerState<GroupScreen> {
                             Text(
                               group.name,
                               style: const TextStyle(
-                                fontSize: 19,
+                                fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -107,12 +107,12 @@ class _GroupScreenState extends ConsumerState<GroupScreen> {
                                   navigateToJoinGroup(context);
                                 }
                               },
-                              style: ElevatedButton.styleFrom(
+                              style: OutlinedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 ),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 25),
+                                side: BorderSide(color: Pallete.orangeCustomColor),
+                                padding: const EdgeInsets.symmetric(horizontal: 25),
                               ),
                               child: Text(
                                 group.admins.contains(user.uid)
@@ -120,13 +120,17 @@ class _GroupScreenState extends ConsumerState<GroupScreen> {
                                     : isMember
                                     ? 'Leave'
                                     : 'Join',
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                ),
                               ),
                             ),
                           ],
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          group.description, // Add group description here
+                          group.description,
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.black54,
@@ -137,16 +141,21 @@ class _GroupScreenState extends ConsumerState<GroupScreen> {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: categories.map((category) => FilterChip(
-                              selected: selectedCategories.contains(category),
-                              label: Text(category),
-                              onSelected: (selected){
-                                setState(() {
-                                  if(selected) {selectedCategories.add(category);}
-                                  else{selectedCategories.remove(category);}
-                                });
-
-                              },
+                            children: categories.map((category) => Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: FilterChip(
+                                selected: selectedCategories.contains(category),
+                                label: Text(category),
+                                onSelected: (selected) {
+                                  setState(() {
+                                    if (selected) {
+                                      selectedCategories.add(category);
+                                    } else {
+                                      selectedCategories.remove(category);
+                                    }
+                                  });
+                                },
+                              ),
                             )).toList(),
                           ),
                         ),
@@ -167,9 +176,9 @@ class _GroupScreenState extends ConsumerState<GroupScreen> {
                   itemCount: filteredItems.length,
                   shrinkWrap: true,
                   physics: const ScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    childAspectRatio: 3 / 4.8,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 3 / 3.8,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
@@ -204,7 +213,8 @@ class _GroupScreenState extends ConsumerState<GroupScreen> {
                   onPressed: () {
                     navigateToCreateItem(context);
                   },
-                  backgroundColor: Pallete.sageCustomColor,
+                  backgroundColor: Pallete.orangeCustomColor,
+                  foregroundColor: Pallete.whiteColor,
                   heroTag: null,
                   child: const Icon(Icons.add),
                 );
@@ -219,7 +229,8 @@ class _GroupScreenState extends ConsumerState<GroupScreen> {
             onPressed: () {
               navigateToMessageAdmins(context);
             },
-            backgroundColor: Pallete.sageCustomColor, // Example color
+            backgroundColor: Pallete.orangeCustomColor,
+            foregroundColor: Pallete.whiteColor,// Example color
             child: const Icon(Icons.message),
             heroTag: null, // Example icon
           ),

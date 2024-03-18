@@ -1,3 +1,4 @@
+import 'package:ensemble/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:routemaster/routemaster.dart';
@@ -31,9 +32,8 @@ class ItemCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
     return Container(
-      padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(2),
         color: Colors.white,
         boxShadow: [
           BoxShadow(
@@ -47,67 +47,65 @@ class ItemCard extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: GestureDetector(
-                  onDoubleTap: () {
-                    navigateToItem(context);
-                  },
-                  child: Hero(
-                    transitionOnUserGestures: true,
-                    tag: item.id!,
-                    child: Image.network(
-                      item.itemPic!,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: 180,
+          Container(
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: Colors.black, // Change the color as per your requirement
+                  width: 2, // Change the width as per your requirement
+                ),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      item.name!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                        color: Pallete.blackColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20, // Adjust the font size as per your requirement
+                      ),
                     ),
                   ),
                 ),
+                if (item.owner == user.uid)
+                  IconButton(
+                    onPressed: () {
+                      navigateToEditItem(context);
+                    },
+                    icon: const Icon(Icons.edit,
+                      color: Pallete.whiteColor,),
+                  ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              navigateToItem(context);
+            },
+            child: Hero(
+              transitionOnUserGestures: true,
+              tag: item.id!,
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: ClipRRect(
+                  child: Image.network(
+                    item.itemPic!,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-              if (item.owner == user.uid)
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: IconButton(
-                    onPressed: () {
-                                    navigateToEditItem(context);
-                    },
-                    icon: const Icon(Icons.edit),
-                  ),
-                ),
-              if (item.owner != user.uid)
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: IconButton(
-                    icon: const Icon(Icons.open_in_new),
-                    color: Colors.black,
-                    iconSize: 25,
-                    onPressed: () {
-                      navigateToItem(context);
-                    },
-                  ),
-                ),
-            ],
+            ),
           ),
           const SizedBox(
             height: 5,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              item.name!,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.left,
-              style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 20, // Adjust the font size as per your requirement
-              ),
-            ),
           ),
           FutureBuilder<List<DateTime>>(
             future: ref.read(getBookedDatesProvider(item.id!).future),
@@ -123,26 +121,29 @@ class ItemCard extends ConsumerWidget {
                   DateTime(today.year, today.month, today.day),
                 );
                 return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          navigateToItem(context);
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            isBookedToday ? Colors.white : Colors.white, // Set button color based on availability
-                          ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        navigateToItem(context);
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          Pallete.orangeCustomColor, // Set button color based on availability
                         ),
-                        child: Text(
-                          isBookedToday ? 'Check Availability' : 'Available Today',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12,
-                          ),
+                      ),
+                      child: Text(
+                        isBookedToday
+                            ? 'Check Availability'
+                            : 'Available Today',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Pallete.whiteColor,
+                          fontSize: 12,
                         ),
                       ),
                     ),
+                  ),
                 );
               }
             },

@@ -1,148 +1,148 @@
-import 'package:ensemble/core/common/google_sign_in_button.dart';
-import 'package:ensemble/features/auth/controller/auth_controller.dart';
-import 'package:ensemble/features/auth/repository/auth_repository.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 import 'package:ensemble/core/common/custom_text_field.dart';
-
 import 'package:ensemble/core/common/loader.dart';
 import 'package:ensemble/core/common/protected_text_field.dart';
 import 'package:ensemble/core/constants/constants.dart';
 import 'package:ensemble/theme/pallete.dart';
-import 'package:routemaster/routemaster.dart';
+import '../controller/auth_controller.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
-
-  const RegisterScreen({super.key});
+  const RegisterScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState createState() => _RegisterScreenState();
 }
+
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
-
- // https://stackoverflow.com/questions/49125064/how-to-show-hide-password-in-textformfield
   bool _obscureText = true;
-
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final nameController = TextEditingController();
 
   void signUp() {
     ref.read(authControllerProvider.notifier).signUpWithEmail(
-      //trim removes white space at end of anything typed in
       nameController.text.trim(),
       emailController.text.trim(),
       passwordController.text.trim(),
-      context);
-    }
-
-  void navigateToHome(BuildContext context) {
-    Routemaster.of(context).push('/');
+      context,
+    );
   }
 
+  void navigateToLogin(BuildContext context) {
+    Routemaster.of(context).push('/');
+  }
 
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(authControllerProvider);
-    final GlobalKey<FormState> _formKey = GlobalKey();
+
     return Scaffold(
-      appBar: AppBar(
-        title: Image.asset(Constants.initialLogoPath,height: 40,),
-        actions: [
-          TextButton(
-            onPressed: () {},
-            child: const Text(
-              'About',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+      body: isLoading
+          ? const Loader()
+          : SingleChildScrollView(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Pallete.orangeCustomColor, Colors.white],
             ),
           ),
-        ],
-        backgroundColor: Pallete.orangeCustomColor,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 200),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                const Text(
+                  "Sign Up",
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+                const SizedBox(height: 40),
+                CustomTextField(
+                  icon: const Icon(Icons.person, color: Colors.white),
+                  controller: nameController,
+                  hintText: 'Enter your name',
+                  validator: (val) {
+                    if (val!.length < 6) {
+                      return "Name must be at least 6 characters";
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                const SizedBox(height: 15),
+                CustomTextField(
+                  icon: const Icon(Icons.email, color: Colors.white),
+                  controller: emailController,
+                  hintText: 'Enter your email',
+                  validator: (val) {
+                    return RegExp(
+                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                        .hasMatch(val!)
+                        ? null
+                        : "Please enter a valid email";
+                  },
+                ),
+                const SizedBox(height: 15),
+                ProtectedTextField(
+                  obscureText: _obscureText,
+                  icon: const Icon(Icons.lock, color: Colors.white),
+                  controller: passwordController,
+                  hintText: 'Enter your password',
+                  validator: (val) {
+                    if (val!.length < 6) {
+                      return "Password must be at least 6 characters";
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Pallete.orangeCustomColor,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                    ),
+                    onPressed: signUp,
+                    child: const Text(
+                      "Sign Up",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text.rich(
+                  TextSpan(
+                    text: "Already have an account? ",
+                    style: const TextStyle(color: Colors.black, fontSize: 14),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: "Sign in Here",
+                        style: const TextStyle(
+                          color: Colors.black,
+                          decoration: TextDecoration.underline,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => navigateToLogin(context),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
-     body: isLoading ? const Loader(): Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text(
-          "Sign Up",
-          style: TextStyle(fontSize: 30),
-        ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.08),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          child: CustomTextField(
-            icon: const Icon(Icons.person),
-            controller: nameController,
-            hintText: 'Enter your name',
-            validator: (val){
-              if (val!.length < 6) {
-                return "Name must be at least 6 characters";
-              } else {
-                return null;
-              }
-            },
-          )
-        ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.08),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          child: CustomTextField(
-            icon: const Icon(Icons.email),
-            controller: emailController,
-            hintText: 'Enter your email',
-            validator: (val) {
-              return RegExp(
-                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                  .hasMatch(val!)
-                  ? null //return nothing if that value matchs the pattern
-                  : "Please enter a valid email";
-            },
-          ),
-        ),
-        const SizedBox(height: 20),
-        Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20),
-          child: ProtectedTextField(
-            obscureText: _obscureText,
-            icon: const Icon(Icons.lock),
-            controller: passwordController,
-            hintText: 'Enter your password',
-            validator: (val){
-              if (val!.length < 6) {
-                return "Password must be at least 6 characters";
-              } else {
-                return null;
-              }
-            },
-          ),
-        ),
-        const SizedBox(height: 40),
-        ElevatedButton(
-          onPressed: () {
-            signUp();
-            navigateToHome(context);
-          },
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Colors.blue),
-            textStyle: MaterialStateProperty.all(
-              const TextStyle(color: Colors.white),
-            ),
-            minimumSize: MaterialStateProperty.all(
-              Size(MediaQuery.of(context).size.width / 2.5, 50),
-            ),
-          ),
-          child: const Text(
-            "Sign Up",
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ),
-      ],
-    ),
     );
   }
 }
-

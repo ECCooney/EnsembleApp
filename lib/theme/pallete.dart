@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 class Pallete {
   // Colors
   //https://colorhunt.co/palette/eba83abb371afff8d9d5dbb3
-  static const orangeCustomColor = Color.fromRGBO(235, 168, 58, 1); // primary color
+  static const orangeCustomColor = Color.fromRGBO(240, 95, 64, 1); // primary color
+  static const orangeCustomColorTransp = Color.fromRGBO(240, 95, 64, 0.7); // primary color
   static const redCustomColor = Color.fromRGBO(187, 55, 26, 1); // secondary color
-  static const drawerColor = Color.fromRGBO(255, 248, 217, 1);
-  static const sageCustomColor = Color.fromRGBO(213, 219, 179, 1);
+  static const drawerColor = Colors.white70;
+  static const whiteFaded = Color.fromRGBO(255, 255, 255, 0.7);
   static const whiteColor = Colors.white;
   static var redColor = Colors.red.shade600;
   static var blueColor = Colors.blue.shade300;

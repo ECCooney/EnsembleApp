@@ -6,21 +6,21 @@ import 'package:ensemble/theme/pallete.dart';
 import 'package:ensemble/features/auth/controller/auth_controller.dart';
 
 class NavDrawer extends ConsumerWidget {
-  const NavDrawer({super.key});
+  const NavDrawer({Key? key});
 
-  void navigateToCreateGroup(BuildContext context){
+  void navigateToCreateGroup(BuildContext context) {
     Routemaster.of(context).push('/create-group');
   }
 
-  void navigateToRequests(BuildContext context, String uid){
+  void navigateToRequests(BuildContext context, String uid) {
     Routemaster.of(context).push('/booking-requests/$uid');
   }
 
-  void navigateToHome(BuildContext context){
+  void navigateToHome(BuildContext context) {
     Routemaster.of(context).push('/');
   }
 
-  void navigateToBookings(BuildContext context, String uid){
+  void navigateToBookings(BuildContext context, String uid) {
     Routemaster.of(context).push('/bookings/$uid');
   }
 
@@ -41,142 +41,144 @@ class NavDrawer extends ConsumerWidget {
     final user = ref.watch(userProvider);
     return Drawer(
       child: SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 50),
-        children: <Widget>[
-          IconButton(
-            icon: CircleAvatar(
-              radius: 60.0,
-              backgroundImage: NetworkImage(user!.profilePic),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          // padding: EdgeInsets.zero,
+          children: <Widget>[
+            SizedBox(
+              height: 230,
+              child: DrawerHeader(
+                decoration: const BoxDecoration(
+              gradient: LinearGradient(
+              begin: Alignment.topCenter,
+                end: Alignment.bottomRight,
+                colors: [Pallete.orangeCustomColor, Colors.black],
+              ),
+        ),
+                    child: GestureDetector(
+                      onTap: () => navigateToUserProfile(context, user.uid),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 20),
+                         CircleAvatar(
+                                  radius: 60.0,
+                                  backgroundImage: NetworkImage(user!.profilePic),
+                                ),
+                              // onPressed:(){navigateToUserProfile(context, user.uid);},
+                          SizedBox(height: 10),
+                          Text(
+                            user.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+              ),
             ),
-            onPressed:(){},
-          ),
-          const SizedBox(height: 15),
-          Text(
-            user!.name,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          const Divider(
-            height: 2,
-          ),
-          ListTile(
-            onTap: () => navigateToHome(context),
-            selectedColor: Pallete.orangeCustomColor,
-            selected: true,
-            contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.group),
-            title: const Text(
-              "Groups",
-              style: TextStyle(color: Colors.black, fontSize: 16),
+            ListTile(
+              onTap: () => navigateToHome(context),
+              leading: Icon(Icons.group, color: Pallete.orangeCustomColor),
+              title: const Text(
+                "Groups",
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
             ),
-          ),
-          ListTile(
-            onTap: ()  => navigateToUserProfile(context, user.uid),
-            selectedColor: Pallete.orangeCustomColor,
-            selected: true,
-            contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.person_2),
-            title: const Text(
-              "Profile",
-              style: TextStyle(color: Colors.black, fontSize: 16),
+            ListTile(
+              onTap: () => navigateToUserProfile(context, user.uid),
+              leading: Icon(Icons.person, color: Pallete.orangeCustomColor),
+              title: const Text(
+                "Profile",
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
             ),
-          ),
-          ListTile(
-            onTap: () => navigateToCreateGroup(context),
-            selectedColor: Pallete.orangeCustomColor,
-            selected: true,
-            contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.add),
-            title: const Text(
-              "Create a New Group",
-              style: TextStyle(color: Colors.black, fontSize: 16),
+            ListTile(
+              onTap: () => navigateToCreateGroup(context),
+              leading: const Icon(Icons.add, color: Pallete.orangeCustomColor),
+              title: const Text(
+                "Create a New Group",
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
             ),
-          ),
-          ListTile(
-            onTap: () => navigateToRequests(context, user.uid),
-            selectedColor: Pallete.orangeCustomColor,
-            selected: true,
-            contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.question_answer),
-            title: const Text(
-              "Requests",
-              style: TextStyle(color: Colors.black, fontSize: 16),
+            ListTile(
+              onTap: () => navigateToRequests(context, user.uid),
+              leading: const Icon(Icons.question_answer, color: Pallete.orangeCustomColor),
+              title: const Text(
+                "Requests",
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
             ),
-          ),
-          ListTile(
-            onTap: () => navigateToBookings(context, user.uid),
-            selectedColor: Pallete.orangeCustomColor,
-            selected: true,
-            contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.calendar_month),
-            title: const Text(
-              "Bookings",
-              style: TextStyle(color: Colors.black, fontSize: 16),
+            ListTile(
+              onTap: () => navigateToBookings(context, user.uid),
+              leading: const Icon(Icons.calendar_month, color: Pallete.orangeCustomColor),
+              title: const Text(
+                "Bookings",
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
             ),
-          ),
-          ListTile(
-            onTap: () => navigateToMessageResponses(context, user.uid),
-            selectedColor: Pallete.orangeCustomColor,
-            selected: true,
-            contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.message),
-            title: const Text(
-              "Message Responses",
-              style: TextStyle(color: Colors.black, fontSize: 16),
+            ListTile(
+              onTap: () => navigateToMessageResponses(context, user.uid),
+              leading: const Icon(Icons.message, color: Pallete.orangeCustomColor),
+              title: const Text(
+                "Message Responses",
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
             ),
-          ),
-          ListTile(
-            onTap: () async {
-              showDialog(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: const Text("Logout"),
-                      content: const Text("Are you sure you want to logout?"),
-                      actions: [
-                        IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: const Icon(
-                              Icons.cancel,
-                              color: Pallete.redCustomColor
-                            )),
-                        IconButton(
-                            onPressed: () async {logOut(ref);
-                            Navigator.pop(context);},
-                            icon: const Icon(
-                              Icons.done,
-                              color: Colors.green
-                            )),
-                      ],
-                    );
-                  });
-            },
-            selectedColor: Pallete.orangeCustomColor,
-            selected: true,
-            contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-            leading: const Icon(Icons.exit_to_app),
-            title: const Text(
-              "Logout",
-              style: TextStyle(color: Colors.black, fontSize: 16),
+            Spacer(),
+            Divider(color: Pallete.orangeCustomColor),
+            ListTile(
+              onTap: () {
+                logOut(ref);
+                navigateToHome(context);
+              },
+              leading: Icon(Icons.exit_to_app, color: Pallete.orangeCustomColor),
+              title: Text(
+                "Logout",
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
             ),
-          )
-        ],
+            //removed function for pop up as couldn't get it to automatically disappear
+            // ListTile(
+            //   onTap: () async {
+            //     showDialog(
+            //       barrierDismissible: false,
+            //       context: context,
+            //       builder: (context) {
+            //         return AlertDialog(
+            //           title: Text("Logout"),
+            //           content: Text("Are you sure you want to logout?"),
+            //           actions: [
+            //             IconButton(
+            //               onPressed: () {
+            //                 Navigator.pop(context);
+            //               },
+            //               icon: Icon(Icons.cancel, color: Pallete.redCustomColor),
+            //             ),
+            //             IconButton(
+            //               onPressed: () async {
+            //                 logOut(ref);
+            //                navigateToHome(context);
+            //               },
+            //               icon: Icon(Icons.done, color: Colors.green),
+            //             ),
+            //           ],
+            //         );
+            //       },
+            //     );
+            //   },
+            //   leading: Icon(Icons.exit_to_app, color: Pallete.orangeCustomColor),
+            //   title: Text(
+            //     "Logout",
+            //     style: TextStyle(fontSize: 16, color: Colors.black),
+            //   ),
+            // ),
+          ],
+        ),
       ),
-    ),
     );
   }
 }

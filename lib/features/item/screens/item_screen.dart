@@ -5,12 +5,10 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
-import '../../../models/booking_model.dart';
 import '../../../models/item_model.dart';
 import '../../../theme/pallete.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../../booking/controller/booking_controller.dart';
-import '../../message/controller/message_controller.dart';
 import '../../nav/nav_drawer.dart';
 import '../controller/item_controller.dart';
 
@@ -59,16 +57,14 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
     );
   }
 
-
-
   // void createItemMessage(BookingModel booking) async {
   //   ItemModel item = await ref.watch(getItemByIdProvider(widget.id).future);
   //   ref.watch(getBookingByIdProvider(bookingId)).when(
   //     data: (booking) {
   //       ref.read(messageControllerProvider.notifier).createItemMessage(
   //         context: context,
-  //         subject: "Booking Request", // Provide the subject for the message
-  //         text: "A request has been submitted", // Provide the text for the message
+  //         subject: "Booking Request",
+  //         text: "A request has been submitted",
   //         booking: booking,
   //       );
   //     },
@@ -99,7 +95,6 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
               blackoutDates.addAll(bookingRange);
             }
           }
-          blackoutDates.add(today);
         },
         error: (error, stackTrace) {
           print(error); // Print error for debugging purposes
@@ -128,7 +123,6 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider)!;
@@ -141,124 +135,149 @@ class _ItemScreenState extends ConsumerState<ItemScreen> {
         future: _blackoutDatesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Loader(); // Show a loader while waiting for data
+            return const Loader();
           } else if (snapshot.hasError) {
             return ErrorText(
                 error: snapshot.error.toString()); // Show error if any
           } else {
-            List<DateTime> blackoutDates = snapshot.data ??
-                []; // Use empty list if data is null
+            List<DateTime> blackoutDates = snapshot.data ?? []; // Use empty list if data is null
             return ref.watch(getItemByIdProvider(widget.id)).when(
-              data: (item) =>
-                  NestedScrollView(
-                    headerSliverBuilder: (context, innerBoxIsScrolled) {
-                      return [
-                        SliverAppBar(
-                          expandedHeight: 200,
-                          floating: true,
-                          snap: true,
-                          flexibleSpace: Stack(
-                            children: [
-                              Positioned.fill(
-                                child: Image.network(
-                                  item.itemPic,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ],
+              data: (item) => NestedScrollView(
+                headerSliverBuilder: (context, innerBoxIsScrolled) {
+                  return [
+                    SliverAppBar(
+                      expandedHeight: 200,
+                      floating: true,
+                      snap: true,
+                      flexibleSpace: Stack(
+                        children: [
+                          Positioned.fill(
+                            child: Image.network(
+                              item.itemPic,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                        SliverPadding(
-                          padding: const EdgeInsets.all(16),
-                          sliver: SliverList(
-                            delegate: SliverChildListDelegate([
-                              const SizedBox(height: 5),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween,
-                                children: [
-                                  Text(
-                                    item.name,
-                                    style: const TextStyle(
-                                      fontSize: 19,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  item.owner.contains(user.uid)
-                                      ? OutlinedButton(
-                                    onPressed: () =>
-                                        navigateToEditItem(context),
-                                    style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 25),
-                                    ),
-                                    child: const Text('Edit Item'),
-                                  )
-                                      : SizedBox(),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween,
-                                children: [
-                                  Text(
-                                    item.description,
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ]),
-                          ),
-                        ),
-                      ];
-                    },
-                    body: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: 400,
-                          child: Column(
-                            children: [
-                              SfDateRangePicker(
-                                initialSelectedDate: today,
-                                minDate: today,
-                                enablePastDates: false,
-                                view: DateRangePickerView.month,
-                                monthViewSettings: DateRangePickerMonthViewSettings(
-                                  blackoutDates: blackoutDates,
-                                ),
-                                monthCellStyle: const DateRangePickerMonthCellStyle(
-                                  blackoutDateTextStyle: TextStyle(
-                                    color: Colors.red,
-                                    decoration: TextDecoration.lineThrough,
+                        ],
+                      ),
+                    ),
+                    SliverPadding(
+                      padding: const EdgeInsets.all(16),
+                      sliver: SliverList(
+                        delegate: SliverChildListDelegate(
+                          [
+                            const SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  item.name,
+                                  style: const TextStyle(
+                                    fontSize: 19,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                selectionMode: DateRangePickerSelectionMode
-                                    .range,
-                                selectionColor: Pallete.sageCustomColor,
-                                onSelectionChanged: selectionChanged,
-                                showActionButtons: true,
-                                onSubmit: (bookings) {
-                                  createBooking(item);
-                                  Navigator.pop(context);
-                                },
-                                onCancel: () {
-                                  _datePickerController.selectedRanges = null;
-                                },
+                                item.owner.contains(user.uid)
+                                    ? OutlinedButton(
+                                  onPressed: () => navigateToEditItem(context),
+                                  style: OutlinedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    side: BorderSide(color: Pallete.orangeCustomColor),
+                                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                                  ),
+                                  child: const Text(
+                                    'Edit Item',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                )
+                                    : SizedBox(),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  item.description,
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            const Divider(), // Divider
+                            const SizedBox(height: 15),
+                            const Center(
+                              child: Text(
+                                'Make a Booking',
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  color: Pallete.orangeCustomColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
+                  ];
+                },
+                body: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: SizedBox(
+                      height: 400,
+                      child: Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey), // Border color
+                              borderRadius: BorderRadius.circular(10), // Border radius
+                            ),
+                            child: SfDateRangePicker(
+                              initialSelectedDate: today,
+                              minDate: today,
+                              enablePastDates: false,
+                              view: DateRangePickerView.month,
+                              monthViewSettings: DateRangePickerMonthViewSettings(
+                                blackoutDates: blackoutDates,
+                              ),
+                              monthCellStyle: const DateRangePickerMonthCellStyle(
+                                blackoutDateTextStyle: TextStyle(
+                                  color: Colors.black,
+                                  decoration: TextDecoration.lineThrough,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                              selectionMode: DateRangePickerSelectionMode.range,
+                              startRangeSelectionColor: Pallete.orangeCustomColor,
+                              rangeSelectionColor: Pallete.orangeCustomColorTransp,
+                              endRangeSelectionColor: Pallete.orangeCustomColor,
+                              todayHighlightColor: Pallete.orangeCustomColor,
+                              onSelectionChanged: selectionChanged,
+                              showActionButtons: true,
+                              onSubmit: (bookings) {
+                                createBooking(item);
+                                Navigator.pop(context);
+                              },
+                              onCancel: () {
+                                _datePickerController.selectedRanges = null;
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
+                ),
+              ),
               error: (error, stackTrace) => ErrorText(error: error.toString()),
-              loading: () => Loader(),
+              loading: () => const Loader(),
             );
           }
         },
