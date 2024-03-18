@@ -118,20 +118,11 @@ class GroupController extends StateNotifier<bool> {
             (r) => group = group.copyWith(groupBanner: r),
       );
     }
-    if (description != null) {
-      // groups/banner/memes
-      group = group.copyWith(description: description);
-    }
-    else{
-      description = group.description;
-    }
-    if (inviteCode != null) {
-      // groups/banner/memes
-      group = group.copyWith(inviteCode: inviteCode);
-    }
-    else{
-      description = group.description;
-    }
+    description ??= group.description;
+    inviteCode ??= group.inviteCode;
+
+    group = group.copyWith(description: description, inviteCode: inviteCode);
+
     final res = await _groupRepository.editGroup(group);
 
     res.fold(

@@ -82,14 +82,23 @@ class _JoinGroupScreenState extends ConsumerState<JoinGroupScreen> {
                                 )
                             ),
                             OutlinedButton(
-                              onPressed: () => joinGroup(ref, group, group.inviteCode, context),
-                              style: ElevatedButton.styleFrom(
+                              onPressed: () {
+                                joinGroup(ref, group, group.inviteCode, context);
+                                Navigator.pop(context); // Pop the context after joining the group
+                              },
+                              style: OutlinedButton.styleFrom(
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 ),
+                                side: BorderSide(color: Pallete.orangeCustomColor),
                                 padding: const EdgeInsets.symmetric(horizontal: 25),
                               ),
-                              child: Text( 'Join now'),
+                              child: Text(
+                                'Join now',
+                                style: TextStyle(
+                                  color: Pallete.blackColor,
+                                ),
+                              ),
                             ),
                           ],
                         ),

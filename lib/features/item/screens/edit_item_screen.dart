@@ -1,14 +1,14 @@
 import 'dart:io';
+import 'package:ensemble/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
 import '../../../core/utils.dart';
 import '../../../models/item_model.dart';
 import '../../nav/nav_drawer.dart';
-import '../../auth/controller/auth_controller.dart';
 import '../controller/item_controller.dart';
-import 'package:intl/intl.dart';
 
 class EditItemScreen extends ConsumerStatefulWidget {
   final String id;
@@ -62,11 +62,16 @@ class _EditItemScreenState extends ConsumerState<EditItemScreen> {
     final isLoading = ref.watch(itemControllerProvider);
     return ref.watch(getItemByIdProvider(widget.id)).when(
       data: (item) => Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: const Text('Edit Item'),
           centerTitle: false,
           actions: [
-            TextButton(onPressed: () => saveEdit(item), child: const Text('Save')),
+            TextButton(
+              onPressed: () => saveEdit(item),
+              child: const Text('Save', style: TextStyle(color: Colors.black)),
+            ),
           ],
         ),
         drawer: const NavDrawer(),
@@ -74,125 +79,123 @@ class _EditItemScreenState extends ConsumerState<EditItemScreen> {
             ? const Loader()
             : Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 100,
-                child: Stack(
-                  children: [
-                    Positioned(
-                      bottom: 20,
-                      left: 20,
-                      child: GestureDetector(
-                        onTap: chooseItemImage,
-                        child: itemPicFile != null
-                            ? CircleAvatar(
-                          backgroundImage: FileImage(itemPicFile!),
-                          radius: 32,
-                        )
-                            : CircleAvatar(
-                          backgroundImage: NetworkImage(item.itemPic),
-                          radius: 32,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 200,
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Stack(
+                          children: [
+                            GestureDetector(
+                              onTap: chooseItemImage,
+                              child: itemPicFile != null
+                                  ? CircleAvatar(
+                                backgroundImage: FileImage(itemPicFile!),
+                                radius: 72,
+                              )
+                                  : CircleAvatar(
+                                backgroundImage: NetworkImage(item.itemPic),
+                                radius: 90,
+                              ),
+                            ),
+                            const Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Icon(
+                                Icons.camera_alt,
+                                size: 40,
+                                color: Colors.orange,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    Positioned(
-                      bottom: 10,
-                      right: 20,
-                      child: Row(
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Item Name',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      TextField(
+                        controller: itemNameController,
+                        decoration: InputDecoration(
+                          hintText: item.name,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Item Description',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      TextField(
+                        controller: itemDescriptionController,
+                        maxLines: null,
+                        keyboardType: TextInputType.multiline,
+                        decoration: InputDecoration(
+                          hintText: item.description,
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          IconButton(
-                            onPressed: () {
-                              saveEdit(item);
-                            },
-                            icon: Icon(Icons.save),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () => saveEdit(item),
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                side: BorderSide(color: Pallete.orangeCustomColor),
+                                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                              ),
+                              child: const Text(
+                                'Save',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
                           ),
-                          IconButton(
-                            onPressed: () {
-                              deleteItem(item);
-                            },
-                            icon: Icon(Icons.delete),
+                          SizedBox(width: 10), // Optional spacing between buttons
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                deleteItem(item);
+                                Navigator.pop(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                               backgroundColor: Pallete.orangeCustomColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                              ),
+                              child: Text(
+                                'Delete',
+                                style: TextStyle(color: Pallete.whiteColor),
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 10),
-              TextField(
-                controller: itemNameController,
-                decoration: InputDecoration(
-                  labelText: 'Item Name',
-                  hintText: item.name,
-                ),
-              ),
-              const SizedBox(height: 10),
-              const SizedBox(height: 10),
-              SizedBox(
-                height: 140, // <-- TextField height
-                child: TextField(
-                  controller: itemDescriptionController,
-                  maxLines: null,
-                  expands: true,
-                  keyboardType: TextInputType.multiline,
-                  decoration: InputDecoration(
-                    hintText: item.description,
-                    filled: true,
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(18),
+                    ],
                   ),
-                  maxLength: 150,
                 ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'Item Booking History:',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              Expanded(
-                child: ref.watch(getItemBookingsProvider(widget.id)).when(
-                  data: (bookings) {
-                    return ListView.builder(
-                      itemCount: bookings.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final booking = bookings[index];
-                        final userAsyncValue = ref.watch(getUserDataProvider(booking.requester));
-                        return ListTile(
-                          // Use a conditional expression to check the state of userAsyncValue
-                          title: userAsyncValue.when(
-                            // When data is available, use user.name as the title
-                            data: (user) => Text(user.name),
-                            loading: () => const Text('Loading...'),
-                            // When error occurs, display an error message
-                            error: (error, stackTrace) => const Text('Error'),
-                          ),
-                          subtitle: userAsyncValue.when(
-                            data: (user) {
-                              final startDate = DateFormat('dd/MM/yy').format(booking.bookingStart);
-                              final endDate = DateFormat('dd/MM/yy').format(booking.bookingEnd);
-                              return Text(
-                                'Booked from $startDate to $endDate\nStatus: ${booking.bookingStatus}',
-                                // Adjust the style and format according to your preference
-                              );
-                            },
-                            loading: () => const Text('Loading...'), // Show loading message while data is loading
-                            error: (error, stackTrace) => const Text('Error'), // Handle error state
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  error: (error, stackTrace) {
-                    return ErrorText(error: error.toString());
-                  },
-                  loading: () => const Loader(),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
