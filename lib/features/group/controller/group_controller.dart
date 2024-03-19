@@ -118,10 +118,13 @@ class GroupController extends StateNotifier<bool> {
             (r) => group = group.copyWith(groupBanner: r),
       );
     }
-    description ??= group.description;
-    inviteCode ??= group.inviteCode;
+    if (description != null && description.isNotEmpty) {
+      group = group.copyWith(description: description);
+    }
+    if (inviteCode != null && inviteCode.isNotEmpty) { // Check if name is not null and not empty
+      group = group.copyWith(inviteCode: inviteCode);
+    }
 
-    group = group.copyWith(description: description, inviteCode: inviteCode);
 
     final res = await _groupRepository.editGroup(group);
 

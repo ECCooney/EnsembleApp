@@ -37,11 +37,11 @@ class UserProfileScreen extends ConsumerWidget {
               children: [
                 Container(
                   width: double.infinity,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomRight,
-                      colors: [Pallete.orangeCustomColor, Colors.black],
+                      colors: [Pallete.orangeCustomColor, Pallete.blackColor],
                     ),
                   ),
                   padding: const EdgeInsets.all(20),
@@ -70,13 +70,18 @@ class UserProfileScreen extends ConsumerWidget {
                   right: 20,
                   child: FloatingActionButton(
                     onPressed: () => navigateToEditUser(context),
-                    child: Icon(Icons.edit),
                     backgroundColor: Colors.white,
+                    child: Icon(Icons.edit),
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 30),
+            const Padding(
+              padding: EdgeInsets.all(12.0),
+              child: Text('My Items', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Pallete.orangeCustomColor)),
+            ),
+            const SizedBox(height: 10),
             ref.watch(getUserItemsProvider(uid)).when(
               data: (data) {
                 return Expanded(

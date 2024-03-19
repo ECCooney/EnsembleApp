@@ -144,6 +144,7 @@ class _GroupScreenState extends ConsumerState<GroupScreen> {
                             children: categories.map((category) => Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 4.0),
                               child: FilterChip(
+                                selectedColor: Pallete.orangeCustomColorTransp,
                                 selected: selectedCategories.contains(category),
                                 label: Text(category),
                                 onSelected: (selected) {

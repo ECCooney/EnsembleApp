@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
+import '../../../theme/pallete.dart';
 import '../../nav/nav_drawer.dart';
 
 class MessageResponsesScreen extends ConsumerWidget {
@@ -15,7 +16,7 @@ class MessageResponsesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Messages'),
+          title: Text('Responses'),
         ),
         drawer: const NavDrawer(),
         body: ref.watch(getUserSentMessagesProvider(uid)).when(
@@ -25,7 +26,9 @@ class MessageResponsesScreen extends ConsumerWidget {
               itemBuilder: (BuildContext context, int index) {
                 final message = messages[index];
                 return ListTile(
-                  title: Text(message.subject),
+                 leading: const Icon(Icons.mail_outline, color: Pallete.orangeCustomColor),
+                  title: Text(message.subject,
+                  style: TextStyle(fontWeight: FontWeight.bold)),
                   subtitle: Text('Status: ${message.response ?? "No response"}'),
                 );
               },

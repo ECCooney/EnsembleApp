@@ -27,7 +27,7 @@ import 'features/user/screens/user_profile_screen.dart';
 
 final loggedOutRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child:LoginScreen()),
-  '/splash': (_) => const MaterialPage(child:SplashScreen()),
+  // '/splash': (_) => const MaterialPage(child:SplashScreen()),
   '/register': (_) => const MaterialPage(child: RegisterScreen()),
 });
 

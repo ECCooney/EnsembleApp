@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:ensemble/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +6,8 @@ import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
 import '../../../core/utils.dart';
 import '../../../models/item_model.dart';
+import '../../../theme/pallete.dart';
+import '../../auth/controller/auth_controller.dart';
 import '../../nav/nav_drawer.dart';
 import '../controller/item_controller.dart';
 
@@ -177,7 +178,7 @@ class _EditItemScreenState extends ConsumerState<EditItemScreen> {
                                 Navigator.pop(context);
                               },
                               style: ElevatedButton.styleFrom(
-                               backgroundColor: Pallete.orangeCustomColor,
+                                backgroundColor: Pallete.orangeCustomColor,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20),
                                 ),
@@ -191,10 +192,59 @@ class _EditItemScreenState extends ConsumerState<EditItemScreen> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Item Booking History:',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 200,
+                        child: ref.watch(getItemBookingsProvider(widget.id)).when(
+                          data: (bookings) {
+                            return ListView.builder(
+                              itemCount: bookings.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                final booking = bookings[index];
+                                final userAsyncValue = ref.watch(getUserDataProvider(booking.requester));
+                                return ListTile(
+                                  // Use a conditional expression to check the state of userAsyncValue
+                                  title: userAsyncValue.when(
+                                    // When data is available, use user.name as the title
+                                    data: (user) => Text(user.name),
+                                    loading: () => const Text('Loading...'),
+                                    // When error occurs, display an error message
+                                    error: (error, stackTrace) => const Text('Error'),
+                                  ),
+                                  subtitle: userAsyncValue.when(
+                                    data: (user) {
+                                      final startDate = DateFormat('dd/MM/yy').format(booking.bookingStart);
+                                      final endDate = DateFormat('dd/MM/yy').format(booking.bookingEnd);
+                                      return Text(
+                                        'Booked from $startDate to $endDate\nStatus: ${booking.bookingStatus}',
+                                        // Adjust the style and format according to your preference
+                                      );
+                                    },
+                                    loading: () => const Text('Loading...'), // Show loading message while data is loading
+                                    error: (error, stackTrace) => const Text('Error'), // Handle error state
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          error: (error, stackTrace) {
+                            return ErrorText(error: error.toString());
+                          },
+                          loading: () => const Loader(),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ],
+
             ),
           ),
         ),

@@ -8,10 +8,10 @@ class Pallete {
   static const drawerColor = Colors.white70;
   static const whiteFaded = Color.fromRGBO(255, 255, 255, 0.7);
   static const whiteColor = Colors.white;
-  static var redColor = Colors.red.shade600;
-  static var blueColor = Colors.blue.shade300;
-  static var blackColor = Colors.black;
-  static var greyColor = Colors.grey;
+  static var  redColor = Colors.red.shade600;
+  static var  blueColor = Colors.blue.shade700;
+  static const  blackColor = Colors.black;
+  static const  greyColor = Colors.grey;
 
   static var darkModeAppTheme = ThemeData.dark().copyWith(
     scaffoldBackgroundColor: blackColor,

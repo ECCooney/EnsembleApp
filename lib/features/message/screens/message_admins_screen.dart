@@ -10,6 +10,8 @@ import 'package:ensemble/core/common/loader.dart';
 
 import '../../../core/common/error_text.dart';
 import '../../../core/utils.dart';
+import '../../../theme/borders.dart';
+import '../../../theme/pallete.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../../message/controller/message_controller.dart';
 import '../../nav/nav_drawer.dart';
@@ -62,6 +64,7 @@ class _MessageAdminsScreenState extends ConsumerState<MessageAdminsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Message Admins'),
+        backgroundColor: Pallete.orangeCustomColor, // Change app bar color to orange
       ),
       drawer: const NavDrawer(),
       body: isLoading
@@ -77,39 +80,50 @@ class _MessageAdminsScreenState extends ConsumerState<MessageAdminsScreen> {
                   child: Text('Subject'),
                 ),
                 const SizedBox(height: 10,),
-                DropdownButton(
-                  value:subject ?? subjects[0],
-                  items: subjects
-                      .map(
-                        (e) => DropdownMenuItem(
-                      value: e,
-                      child: Text(e), // Changed 'category' to e
+                Container(
+                  height: 75,
+                  width: double.infinity,
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      border: Borders.outlinedBorder,
+                      focusedBorder: Borders.focusedBorder,
+                      enabledBorder: Borders.enabledBorder,
                     ),
-                  )
-                      .toList(),
-                  onChanged: (val) {
-                    setState(() {
-                      subject = val;
-                    });
-                  },
+                    child: DropdownButton(
+                      value: subject ?? subjects[0],
+                      items: subjects
+                          .map(
+                            (e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e), // Changed 'category' to e
+                        ),
+                      )
+                          .toList(),
+                      onChanged: (val) {
+                        setState(() {
+                          subject = val;
+                        });
+                      },
+                    ),
+                  ),
                 ),
-
+                SizedBox(height: 15),
                 const Align(
                   alignment: Alignment.topLeft,
                   child: Text('Message Content'),
                 ),
                 const SizedBox(height: 10,),
                 SizedBox(
-                  height: 140, // <-- TextField height
+                  height: 160, // <-- TextField height
                   child: TextField(
                     controller: textController,
                     maxLines: null,
                     expands: true,
                     keyboardType: TextInputType.multiline,
-                    decoration: const InputDecoration(
-                      filled: true,
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(18),
+                    decoration: InputDecoration(
+                      border: Borders.outlinedBorder,
+                      focusedBorder: Borders.focusedBorder,
+                      enabledBorder: Borders.enabledBorder,
                     ),
                     maxLength: 150,
                   ),
@@ -122,11 +136,13 @@ class _MessageAdminsScreenState extends ConsumerState<MessageAdminsScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
+                    backgroundColor: Pallete.orangeCustomColor, // Change button color to orange
                   ),
                   child: const Text(
                     'Send Message',
                     style: TextStyle(
                       fontSize: 17,
+                      color: Colors.white,
                     ),
                   ),
                 ),

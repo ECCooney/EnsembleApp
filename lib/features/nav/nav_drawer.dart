@@ -48,11 +48,11 @@ class NavDrawer extends ConsumerWidget {
             SizedBox(
               height: 230,
               child: DrawerHeader(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
               gradient: LinearGradient(
               begin: Alignment.topCenter,
                 end: Alignment.bottomRight,
-                colors: [Pallete.orangeCustomColor, Colors.black],
+                colors: [Pallete.orangeCustomColor, Pallete.blackColor],
               ),
         ),
                     child: GestureDetector(

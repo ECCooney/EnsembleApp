@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
 import '../../../models/booking_model.dart';
+import '../../../theme/pallete.dart';
 import '../../auth/controller/auth_controller.dart';
 import '../../nav/nav_drawer.dart';
 import '../controller/booking_controller.dart';
@@ -73,6 +74,7 @@ class _BookingRequestDetailsState extends ConsumerState<BookingRequestDetails> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
+                    color: Pallete.orangeCustomColor,
                   ),
                 ),
               ),
@@ -94,6 +96,7 @@ class _BookingRequestDetailsState extends ConsumerState<BookingRequestDetails> {
                   error: error.toString(),
                 ),
               ),
+              SizedBox(height: 15),
               // Booking Details Header
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.0),
@@ -102,19 +105,34 @@ class _BookingRequestDetailsState extends ConsumerState<BookingRequestDetails> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
+                    color: Pallete.orangeCustomColor,
                   ),
                 ),
               ),
               // Display booking details
-              Text('Item Name: ${booking.itemName}'),
-              Text('Booking Start: ${booking.bookingStart}'),
-              Text('Booking End: ${booking.bookingEnd}'),
-              const SizedBox(height: 16), // Add some space
+              Text('Item Name: ${booking.itemName}',
+                style: TextStyle(fontSize: 14),),
+              Text('Booking Start: ${booking.bookingStart}',
+                style: TextStyle(fontSize: 14),),
+              Text('Booking End: ${booking.bookingEnd}',
+                style: TextStyle(fontSize: 14),),
+              const SizedBox(height: 15),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  'Add Collection Details',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Pallete.orangeCustomColor,
+                  ),
+                ),
+              ),
               // Container to wrap text fields
               Container(
                 padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
+                  border: Border.all(color: Pallete.orangeCustomColor, width: 2.0,),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
                 child: Column(
@@ -145,21 +163,50 @@ class _BookingRequestDetailsState extends ConsumerState<BookingRequestDetails> {
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ElevatedButton(
-                onPressed: () => approveBooking(booking),
-                child: const Text('Approve'),
-              ),
-              ElevatedButton(
-                onPressed: () => denyBooking(booking),
-                child: const Text('Cancel Request'),
+              Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => approveBooking(booking),
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        side: BorderSide(color: Pallete.orangeCustomColor),
+                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      ),
+                      child: const Text(
+                        'Approve',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10), // Optional spacing between buttons
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                       denyBooking(booking);
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Pallete.orangeCustomColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      ),
+                      child: Text(
+                        'Deny',
+                        style: TextStyle(color: Pallete.whiteColor),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
