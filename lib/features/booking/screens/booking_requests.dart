@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
+import '../../../theme/pallete.dart';
 import '../../nav/nav_drawer.dart';
 import '../../user/controller/user_controller.dart';
 class BookingRequests extends ConsumerWidget {
@@ -27,9 +28,11 @@ class BookingRequests extends ConsumerWidget {
             padding: EdgeInsets.all(8.0),
             child: Text(
               'Pending Requests',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Pallete.orangeCustomColor),
             ),
           ),
+          Divider(),
+          const SizedBox(height: 10),
           Expanded(
             child: ref.watch(getRequests(uid)).when(
               data: (bookings) {
@@ -41,20 +44,16 @@ class BookingRequests extends ConsumerWidget {
                     DateFormat('dd/MM/yy').format(booking.bookingStart);
                     final formattedBookingEnd =
                     DateFormat('dd/MM/yy').format(booking.bookingEnd);
-                    return ListTile(
-                      title: Text('Booking Request for: ${booking.itemName}'),
-                      subtitle: Text('For pickup on: $formattedBookingStart, Drop-off on $formattedBookingEnd'),
-                      trailing: IconButton(
-                        icon: Icon(Icons.open_in_new),
-                        onPressed: () {
-                          // Navigate to a new route when IconButton is pressed
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  BookingRequestDetails(id: booking.id),
-                            ),
-                          );
-                        },
+                    return GestureDetector(
+                      onTap: () =>  Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              BookingRequestDetails(id: booking.id),
+                        ),
+                      ),
+                      child: ListTile(
+                        title: Text('Booking Request for: ${booking.itemName}'),
+                        subtitle: Text('For pickup on: $formattedBookingStart, Drop-off on $formattedBookingEnd'),
                       ),
                     );
                   },

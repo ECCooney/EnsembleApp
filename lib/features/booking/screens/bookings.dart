@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import '../../../core/common/error_text.dart';
 import '../../../core/common/loader.dart';
+import '../../../theme/pallete.dart';
 import '../../nav/nav_drawer.dart';
 import '../../user/controller/user_controller.dart';
 import 'booking_details.dart';
@@ -37,9 +38,10 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen> {
             padding: EdgeInsets.all(8.0),
             child: Text(
               'My Bookings',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Pallete.orangeCustomColor),
             ),
           ),
+          Divider(),
           const SizedBox(height: 10),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -48,6 +50,7 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen> {
               children: statuses.map((status) => Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0), // Adjust spacing as needed
                 child: FilterChip(
+                  selectedColor: Pallete.orangeCustomColorTransp,
                   selected: selectedStatuses.contains(status),
                   label: Text(status),
                   onSelected: (selected) {
@@ -73,32 +76,29 @@ class _BookingsScreenState extends ConsumerState<BookingsScreen> {
                   itemCount: filteredBookings.length,
                   itemBuilder: (BuildContext context, int index) {
                     final booking = filteredBookings[index];
-                      return ListTile(
-                        title: Text('Booking for: ${booking.itemName}'),
-                        subtitle: Text('Status: ${booking.bookingStatus}'),
-                        leading: ref.watch(getItemByIdProvider(booking.itemId)).when(
-                          data: (item) {
-                            // Display user details
-                            return CircleAvatar(
-                              backgroundImage: NetworkImage(item.itemPic),
-                            );
-                          },
-                          loading: () => const CircularProgressIndicator(),
-                          // Show loading indicator while fetching user details
-                          error: (error, stackTrace) => ErrorText(
-                            error: error.toString(),
+                      return GestureDetector(
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => BookingDetails(id: booking.id),
                           ),
                         ),
-                        trailing: IconButton(
-                          icon: Icon(Icons.open_in_new),
-                          onPressed: () {
-                            // Navigate to a new route when IconButton is pressed
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => BookingDetails(id: booking.id),
-                              ),
-                            );
-                          },
+                        child: ListTile(
+                          title: Text('Booking for: ${booking.itemName}'),
+                          subtitle: Text('Status: ${booking.bookingStatus}'),
+                          leading: ref.watch(getItemByIdProvider(booking.itemId)).when(
+                            data: (item) {
+
+                              // Display user details
+                              return CircleAvatar(
+                                backgroundImage: NetworkImage(item.itemPic),
+                              );
+                            },
+                            loading: () => const CircularProgressIndicator(),
+                            // Show loading indicator while fetching user details
+                            error: (error, stackTrace) => ErrorText(
+                              error: error.toString(),
+                            ),
+                          ),
                         ),
                       );
                   },
